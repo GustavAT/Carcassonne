@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Carcassonne</string>
+    <string name="btnRegeln">Regeln</string>
+    <string name="btnAbout">About</string>
+    <string name="btnSettings">Optionen</string>
+    <string name="appTitle">Space Carcassonne</string>
 </resources>
