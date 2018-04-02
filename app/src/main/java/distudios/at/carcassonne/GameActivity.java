@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by Simon on 02.04.2018.
- * Placeholder view for game activity
+ * Placeholder view for whole game activity
  */
 
 public class GameActivity extends AppCompatActivity {
