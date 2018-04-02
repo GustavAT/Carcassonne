@@ -1,5 +1,6 @@
 package distudios.at.carcassonne;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,9 +28,25 @@ public class    MainActivity extends AppCompatActivity {
                 manager.discoverPeers();
             }
         });
+
+        Button newGame = (Button)(findViewById(R.id.new_game));
+        newGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnNewGameClicked();
+            }
+        });
+
     }
 
-    @Override
+    private void btnNewGameClicked(){
+        Intent intent = new Intent(this, SetGameActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+        @Override
     public void onResume() {
         super.onResume();
         receiver = new WifiDirectBroadcastReceiver(manager);
