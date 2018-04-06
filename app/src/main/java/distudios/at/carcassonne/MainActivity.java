@@ -1,5 +1,6 @@
 package distudios.at.carcassonne;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,8 @@ public class    MainActivity extends AppCompatActivity {
 
     public NetworkManager manager;
     public WifiDirectBroadcastReceiver receiver;
+    protected CarcassonneAppClass app;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,25 @@ public class    MainActivity extends AppCompatActivity {
                 manager.discoverPeers();
             }
         });
+
+        Button btnSettings = (Button) findViewById(R.id.btnSettings);
+        Button btnRegeln =(Button)findViewById(R.id.btnShowRules);
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,Settings.class));
+            }
+        });
+
+        btnRegeln.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,Rules.class));
+            }
+        });
+        registerComponentCallbacks(app);
+        app=(CarcassonneAppClass)getApplication();
     }
 
     @Override

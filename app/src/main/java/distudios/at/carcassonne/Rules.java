@@ -14,6 +14,8 @@ public class Rules extends AppCompatActivity {
     String text_rules;
     TextView show_rules;
     TextView close;
+    protected CarcassonneAppClass app;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class Rules extends AppCompatActivity {
                 startActivity(new Intent(Rules.this, MainActivity.class));
             }
         });
+        registerComponentCallbacks(app);
 
         show_rules=(TextView)findViewById(R.id.rulesView);
         try {
