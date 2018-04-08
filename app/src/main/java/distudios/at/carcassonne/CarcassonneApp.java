@@ -10,6 +10,8 @@ import android.os.CountDownTimer;
 
 import java.io.IOException;
 
+import android.app.Application;
+
 import distudios.at.carcassonne.engine.graphics.IGraphicsController;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.gui.ILobbyController;
