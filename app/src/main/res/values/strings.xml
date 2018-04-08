@@ -4,4 +4,11 @@
     <string name="btnAbout">About</string>
     <string name="btnSettings">Optionen</string>
     <string name="appTitle">Space Carcassonne</string>
+    <string name="title_activity_lobby">LobbyActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_search">Search</string>
+    <string name="title_start">Start</string>
+    <string name="title_group_owner">Group Owner</string>
 </resources>
