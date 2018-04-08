@@ -8,6 +8,8 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
+import distudios.at.carcassonne.gui.LobbyActivity;
+
 /**
  * Created by Andreas on 19.03.2018.
  */
@@ -24,7 +26,10 @@ public class NetworkManager {
     private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
     private WifiP2pManager.ActionListener actionListener;
 
-    public NetworkManager(Context context) {
+    private WifiP2pDevice thisDevice;
+    private OnDeviceChangedEventListener deviceChangedEventListener;
+
+    public NetworkManager(Context context, WifiP2pManager.PeerListListener peerListListener) {
 
         this.context = context;
         this.filter = new IntentFilter();
@@ -36,21 +41,9 @@ public class NetworkManager {
         manager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(context, context.getMainLooper(), null);
 
-        initPeerListListener();
+        this.peerListListener = peerListListener;
         initConnectionInfoListener();
         initActionListener();
-    }
-
-    private void initPeerListListener() {
-        peerListListener = new WifiP2pManager.PeerListListener() {
-            @Override
-            public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
-                Log.d("WIFI", "found peers " + wifiP2pDeviceList.getDeviceList().size());
-                for (WifiP2pDevice device: wifiP2pDeviceList.getDeviceList()) {
-                    Log.d("WIFI", "device: " + device.deviceName);
-                }
-            }
-        };
     }
 
     private void initConnectionInfoListener() {
@@ -100,4 +93,18 @@ public class NetworkManager {
         manager.discoverPeers(channel, actionListener);
     }
 
+    public void setOnDeviceChangedEventListener(OnDeviceChangedEventListener listener) {
+        deviceChangedEventListener = listener;
+    }
+
+    public void setDevice(WifiP2pDevice device) {
+        thisDevice = device;
+        if (deviceChangedEventListener != null) {
+            deviceChangedEventListener.onEvent(device);
+        }
+    }
+
+    public WifiP2pDevice getDevice() {
+        return thisDevice;
+    }
 }

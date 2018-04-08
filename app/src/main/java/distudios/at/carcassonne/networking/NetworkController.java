@@ -3,6 +3,11 @@ package distudios.at.carcassonne.networking;
 public class NetworkController implements INetworkController {
 
     private boolean isGroupOwner;
+    private NetworkManager manager;
+
+    public NetworkController(NetworkManager manager) {
+        this.manager = manager;
+    }
 
     @Override
     public void createConnection(boolean isGroupOwner) {
@@ -10,7 +15,7 @@ public class NetworkController implements INetworkController {
     }
 
     @Override
-    public void sendDate(Object data, int type) {
+    public void sendData(Object data, int type) {
 
     }
 

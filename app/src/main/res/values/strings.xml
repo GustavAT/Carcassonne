@@ -13,4 +13,11 @@
         <item name="black">black</item>
 
     </string-array>
+    <string name="title_activity_lobby">LobbyActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_search">Search</string>
+    <string name="title_start">Start</string>
+    <string name="title_group_owner">Group Owner</string>
 </resources>

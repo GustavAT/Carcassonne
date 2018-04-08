@@ -22,7 +22,7 @@ public class    MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        manager = new NetworkManager(this);
+//        manager = new NetworkManager(this);
 
         Button discover = findViewById(R.id.discover_peers);
         discover.setOnClickListener(new View.OnClickListener() {

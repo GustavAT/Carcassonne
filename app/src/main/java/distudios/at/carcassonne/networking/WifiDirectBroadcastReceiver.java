@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
@@ -30,7 +31,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             connectionChanged(intent);
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            // todo:
+            thisDeviceChanged(intent);
         }
     }
 
@@ -71,5 +72,10 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             // It's a disconnect
             Log.d("WIFI", "disconnected");
         }
+    }
+
+    private void thisDeviceChanged(Intent intent) {
+        WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+        networkManager.setDevice(device);
     }
 }
