@@ -19,10 +19,11 @@
     <string name="status_connected">Connected</string>
     <string name="status_failed">Failed</string>
     <string name="status_unavailable">Unavailable</string>
-    <string name="text_create_lobby" type="id">Create Lobby</string>
+    <string name="text_lobbies" type="id">Lobbies</string>
     <string name="text_devices">Devices</string>
     <string name="text_connect">Connect</string>
     <string name="text_disconnect">Disconnect</string>
+    <string name="text_cancel">Cancel</string>
     <string name="text_device_name">Device Name</string>
     <string name="text_host_address">Host-Address</string>
     <string name="text_status">Status</string>
@@ -30,4 +31,6 @@
     <string name="text_connected_to">Connected to</string>
     <string name="text_no_group_formed">No group formed!</string>
     <string name="text_group_status">Group Status</string>
+    <string name="text_refresh">Refresh</string>
+    <string name="text_search_for_peers">Searching for near devices ...</string>
 </resources>
