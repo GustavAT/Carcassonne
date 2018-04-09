@@ -45,7 +45,7 @@ public class MyDeviceItemRecyclerViewAdapter extends RecyclerView.Adapter<MyDevi
         holder.viewDeviceName.setText(holder.mItem.deviceName);
         holder.viewHostAddress.setText(holder.mItem.deviceAddress);
 
-        holder.progressBar.setVisibility(View.GONE);
+        holder.progressBar.setVisibility(View.INVISIBLE);
 
         int statusId;
         int colorId;
@@ -75,7 +75,8 @@ public class MyDeviceItemRecyclerViewAdapter extends RecyclerView.Adapter<MyDevi
                 statusId = R.string.status_invited;
                 colorId = R.color.colorInvited;
                 holder.progressBar.setVisibility(View.VISIBLE);
-                holder.buttonAction.setVisibility(View.INVISIBLE);
+                holder.buttonAction.setVisibility(View.VISIBLE);
+                holder.buttonAction.setText(context.getString(R.string.text_cancel));
                 break;
             default:
                 statusId = R.string.status_unavailable;

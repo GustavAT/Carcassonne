@@ -7,5 +7,6 @@ public interface DeviceActionListener {
     void cancelDisconnect();
     void connect(WifiP2pDevice device);
     void disconnect();
+    void cancelConnect();
 
 }
