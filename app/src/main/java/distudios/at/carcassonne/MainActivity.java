@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import distudios.at.carcassonne.networking.NetworkManager;
-import distudios.at.carcassonne.networking.WifiDirectBroadcastReceiver;
+import distudios.at.carcassonne.networking.lobby.NetworkManager;
+import distudios.at.carcassonne.networking.lobby.WifiDirectBroadcastReceiver;
 
 public class    MainActivity extends AppCompatActivity {
 
@@ -18,7 +18,7 @@ public class    MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        manager = new NetworkManager(this);
+//        manager = new NetworkManager(this);
 
         Button discover = findViewById(R.id.discover_peers);
         discover.setOnClickListener(new View.OnClickListener() {

@@ -1,16 +1,29 @@
 package distudios.at.carcassonne;
 
+import android.app.Application;
+
 import distudios.at.carcassonne.engine.graphics.IGraphicsController;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.gui.ILobbyController;
 import distudios.at.carcassonne.networking.INetworkController;
+import distudios.at.carcassonne.networking.NetworkController;
 
-public class CarcassonneApp {
+/**
+ * Hold global game states here
+ */
+public class CarcassonneApp extends Application{
 
     private static IGraphicsController graphicsController;
     private static INetworkController networkController;
     private static ILobbyController lobbyController;
     private static IGameController gameController;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        networkController = new NetworkController();
+    }
 
     public static void setGraphicsController(IGraphicsController controller) {
         graphicsController = controller;

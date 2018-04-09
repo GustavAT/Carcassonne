@@ -1,10 +1,8 @@
-package distudios.at.carcassonne.networking;
+package distudios.at.carcassonne.networking.lobby;
 
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
@@ -24,7 +22,10 @@ public class NetworkManager {
     private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
     private WifiP2pManager.ActionListener actionListener;
 
-    public NetworkManager(Context context) {
+    private WifiP2pDevice thisDevice;
+    private OnDeviceChangedEventListener deviceChangedEventListener;
+
+    public NetworkManager(Context context, WifiP2pManager.PeerListListener peerListListener, WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
 
         this.context = context;
         this.filter = new IntentFilter();
@@ -34,32 +35,15 @@ public class NetworkManager {
         this.filter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         manager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-        channel = manager.initialize(context, context.getMainLooper(), null);
+        initialize();
 
-        initPeerListListener();
-        initConnectionInfoListener();
+        this.peerListListener = peerListListener;
+        this.connectionInfoListener = connectionInfoListener;
         initActionListener();
     }
 
-    private void initPeerListListener() {
-        peerListListener = new WifiP2pManager.PeerListListener() {
-            @Override
-            public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
-                Log.d("WIFI", "found peers " + wifiP2pDeviceList.getDeviceList().size());
-                for (WifiP2pDevice device: wifiP2pDeviceList.getDeviceList()) {
-                    Log.d("WIFI", "device: " + device.deviceName);
-                }
-            }
-        };
-    }
-
-    private void initConnectionInfoListener() {
-        connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
-            @Override
-            public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
-
-            }
-        };
+    public void initialize() {
+        channel = manager.initialize(context, context.getMainLooper(), null);
     }
 
     private void initActionListener() {
@@ -100,4 +84,18 @@ public class NetworkManager {
         manager.discoverPeers(channel, actionListener);
     }
 
+    public void setOnDeviceChangedEventListener(OnDeviceChangedEventListener listener) {
+        deviceChangedEventListener = listener;
+    }
+
+    public void setDevice(WifiP2pDevice device) {
+        thisDevice = device;
+        if (deviceChangedEventListener != null) {
+            deviceChangedEventListener.onEvent(device);
+        }
+    }
+
+    public WifiP2pDevice getDevice() {
+        return thisDevice;
+    }
 }

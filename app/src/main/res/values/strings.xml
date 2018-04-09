@@ -4,4 +4,33 @@
     <string name="btnAbout">About</string>
     <string name="btnSettings">Optionen</string>
     <string name="appTitle">Space Carcassonne</string>
+    <string name="title_activity_lobby">LobbyActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_search">Search</string>
+    <string name="title_start">Start</string>
+    <string name="title_group_owner">Group Owner</string>
+    <string name="text_start_game">Start Game</string>
+    <string name="text_discover_peers">Search for devices</string>
+    <string name="text_device_info">Device-Info</string>
+    <string name="status_available">Available</string>
+    <string name="status_invited">Invited</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_failed">Failed</string>
+    <string name="status_unavailable">Unavailable</string>
+    <string name="text_lobbies" type="id">Lobbies</string>
+    <string name="text_devices">Devices</string>
+    <string name="text_connect">Connect</string>
+    <string name="text_disconnect">Disconnect</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_device_name">Device Name</string>
+    <string name="text_host_address">Host-Address</string>
+    <string name="text_status">Status</string>
+    <string name="text_player_in_group">Players in group</string>
+    <string name="text_connected_to">Connected to</string>
+    <string name="text_no_group_formed">No group formed!</string>
+    <string name="text_group_status">Group Status</string>
+    <string name="text_refresh">Refresh</string>
+    <string name="text_search_for_peers">Searching for near devices ...</string>
 </resources>
