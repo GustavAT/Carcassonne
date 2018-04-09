@@ -1,0 +1,11 @@
+package distudios.at.carcassonne.networking;
+
+import android.net.wifi.p2p.WifiP2pDevice;
+
+public interface DeviceActionListener {
+
+    void cancelDisconnect();
+    void connect(WifiP2pDevice device);
+    void disconnect();
+
+}

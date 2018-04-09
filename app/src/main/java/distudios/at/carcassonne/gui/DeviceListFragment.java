@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import distudios.at.carcassonne.networking.OnWifiP2pDeviceActionEventListener;
 public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerListListener {
 
     private List<WifiP2pDevice> peers = new ArrayList<>();
+    private ProgressBar progressDiscovering;
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -42,6 +45,7 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
      * fragment (e.g. upon screen orientation changes).
      */
     public DeviceListFragment() {
+
     }
 
 //    // TODO: Customize parameter initialization
@@ -61,6 +65,8 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+
     }
 
     @Override
@@ -77,7 +83,7 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            adapter = new MyDeviceItemRecyclerViewAdapter(peers, actionListener);
+            adapter = new MyDeviceItemRecyclerViewAdapter(peers, actionListener, context);
             recyclerView.setAdapter(adapter);
         }
         return view;
@@ -101,9 +107,36 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
         actionListener = null;
     }
 
+    /**
+     * Set already connected devices (i.e. from group info listener)
+     * @param devices
+     */
+    public void addConnectedDevices(List<WifiP2pDevice> devices) {
+        for (WifiP2pDevice device : devices) {
+            adapter.addDevice(device);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Set already connected devices (i.e. from group info listener)
+     * @param device
+     */
+    public void addConnectedDevice(WifiP2pDevice device) {
+        adapter.addDevice(device);
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
         adapter.setDevices(new ArrayList(wifiP2pDeviceList.getDeviceList()));
+
+        // todo update list
+
+        adapter.notifyDataSetChanged();
+    }
+
+    public void notifyDataSetChanged() {
         adapter.notifyDataSetChanged();
     }
 }
