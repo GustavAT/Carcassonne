@@ -62,11 +62,13 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
         NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
+        manager.requestConnectionInfo(networkManager.getChannel(), networkManager.getConnectionInfoListener());
+
         if (networkInfo.isConnected()) {
 
             // we are connected with the other device, request connection
             // info to find group owner IP
-            manager.requestConnectionInfo(networkManager.getChannel(), networkManager.getConnectionInfoListener());
+
             Log.d("WIFI", "connected");
         } else {
             // It's a disconnect
