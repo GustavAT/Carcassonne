@@ -29,7 +29,7 @@ public class NetworkManager {
     private WifiP2pDevice thisDevice;
     private OnDeviceChangedEventListener deviceChangedEventListener;
 
-    public NetworkManager(Context context, WifiP2pManager.PeerListListener peerListListener) {
+    public NetworkManager(Context context, WifiP2pManager.PeerListListener peerListListener, WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
 
         this.context = context;
         this.filter = new IntentFilter();
@@ -39,20 +39,15 @@ public class NetworkManager {
         this.filter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         manager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-        channel = manager.initialize(context, context.getMainLooper(), null);
+        initialize();
 
         this.peerListListener = peerListListener;
-        initConnectionInfoListener();
+        this.connectionInfoListener = connectionInfoListener;
         initActionListener();
     }
 
-    private void initConnectionInfoListener() {
-        connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
-            @Override
-            public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
-
-            }
-        };
+    public void initialize() {
+        channel = manager.initialize(context, context.getMainLooper(), null);
     }
 
     private void initActionListener() {
