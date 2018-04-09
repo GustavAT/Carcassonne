@@ -8,15 +8,16 @@ import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +44,18 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
         setContentView(R.layout.activity_lobby);
 
         Toolbar toolbar = findViewById(R.id.toolbar_lobby);
-        toolbar.setTitle(R.string.text_create_lobby);
+        toolbar.setTitle(R.string.text_lobbies);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Get back to main activity", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         WifiP2pManager.PeerListListener devices = (WifiP2pManager.PeerListListener) getSupportFragmentManager().findFragmentById(R.id.fragment_devices);
         networkManager = new NetworkManager(this, devices, this);
@@ -58,11 +69,14 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
                 hostAddress.setText(device.deviceAddress);
             }
         });
+        networkManager.discoverPeers();
 
         Button buttonDiscover = findViewById(R.id.button_discover);
         buttonDiscover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Context context = getApplicationContext();
+                Toast.makeText(context, context.getString(R.string.text_search_for_peers), Toast.LENGTH_LONG).show();
                 networkManager.discoverPeers();
             }
         });
@@ -74,6 +88,25 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_lobby, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_refresh:
+                Context context = getApplicationContext();
+                Toast.makeText(context, context.getString(R.string.text_search_for_peers), Toast.LENGTH_LONG).show();
+                networkManager.discoverPeers();
+                break;
+        }
+
+        return true;
     }
 
     @Override
@@ -100,6 +133,8 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
             connect(device);
         } else if (device.status == WifiP2pDevice.CONNECTED) {
             disconnect();
+        } else if (device.status == WifiP2pDevice.INVITED) {
+            cancelConnect();
         }
     }
 
@@ -144,6 +179,22 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
             public void onFailure(int i) {
                 Log.d("CONNECT", "Failure");
 
+            }
+        });
+    }
+
+    @Override
+    public void cancelConnect() {
+        WifiP2pManager manager = networkManager.getManager();
+        manager.cancelConnect(networkManager.getChannel(), new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d("CANCEL CONNECT", "Success");
+            }
+
+            @Override
+            public void onFailure(int i) {
+                Log.d("CANCEL CONNECT", "Failure");
             }
         });
     }
