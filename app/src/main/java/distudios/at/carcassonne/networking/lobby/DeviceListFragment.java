@@ -1,4 +1,4 @@
-package distudios.at.carcassonne.gui;
+package distudios.at.carcassonne.networking.lobby;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -13,13 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.networking.OnWifiP2pDeviceActionEventListener;
 
 /**
  * A fragment representing a list of Items.

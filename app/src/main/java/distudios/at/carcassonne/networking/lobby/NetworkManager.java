@@ -1,14 +1,10 @@
-package distudios.at.carcassonne.networking;
+package distudios.at.carcassonne.networking.lobby;
 
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
-
-import distudios.at.carcassonne.gui.LobbyActivity;
 
 /**
  * Created by Andreas on 19.03.2018.
