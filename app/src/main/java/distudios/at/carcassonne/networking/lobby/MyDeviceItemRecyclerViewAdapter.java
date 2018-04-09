@@ -1,11 +1,9 @@
-package distudios.at.carcassonne.gui;
+package distudios.at.carcassonne.networking.lobby;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.networking.OnWifiP2pDeviceActionEventListener;
 
 import java.util.List;
 
@@ -124,16 +121,16 @@ public class MyDeviceItemRecyclerViewAdapter extends RecyclerView.Adapter<MyDevi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mView;
-        public final TextView viewStatus;
-        public final TextView viewDeviceName;
-        public final TextView viewHostAddress;
-        public final Button buttonAction;
-        public final ProgressBar progressBar;
+        final View mView;
+        final TextView viewStatus;
+        final TextView viewDeviceName;
+        final TextView viewHostAddress;
+        final Button buttonAction;
+        final ProgressBar progressBar;
 
         public WifiP2pDevice mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             viewStatus = view.findViewById(R.id.text_status);

@@ -24,12 +24,14 @@ import java.util.List;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.networking.DeviceActionListener;
+import distudios.at.carcassonne.networking.lobby.DeviceActionListener;
+import distudios.at.carcassonne.networking.lobby.DeviceListFragment;
 import distudios.at.carcassonne.networking.INetworkController;
-import distudios.at.carcassonne.networking.NetworkManager;
-import distudios.at.carcassonne.networking.OnDeviceChangedEventListener;
-import distudios.at.carcassonne.networking.OnWifiP2pDeviceActionEventListener;
-import distudios.at.carcassonne.networking.WifiDirectBroadcastReceiver;
+import distudios.at.carcassonne.networking.lobby.MyDeviceItemRecyclerViewAdapter;
+import distudios.at.carcassonne.networking.lobby.NetworkManager;
+import distudios.at.carcassonne.networking.lobby.OnDeviceChangedEventListener;
+import distudios.at.carcassonne.networking.lobby.OnWifiP2pDeviceActionEventListener;
+import distudios.at.carcassonne.networking.lobby.WifiDirectBroadcastReceiver;
 
 public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.ChannelListener, OnWifiP2pDeviceActionEventListener,
         WifiP2pManager.ConnectionInfoListener, DeviceActionListener {

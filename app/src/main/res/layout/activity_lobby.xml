@@ -140,7 +140,7 @@
 
         <fragment
             android:id="@+id/fragment_devices"
-            android:name="distudios.at.carcassonne.gui.DeviceListFragment"
+            android:name="distudios.at.carcassonne.networking.lobby.DeviceListFragment"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_margin="0dp"

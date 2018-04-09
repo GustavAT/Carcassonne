@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import distudios.at.carcassonne.networking.NetworkManager;
-import distudios.at.carcassonne.networking.WifiDirectBroadcastReceiver;
+import distudios.at.carcassonne.networking.lobby.NetworkManager;
+import distudios.at.carcassonne.networking.lobby.WifiDirectBroadcastReceiver;
 
 public class    MainActivity extends AppCompatActivity {
 

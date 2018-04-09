@@ -1,4 +1,4 @@
-package distudios.at.carcassonne.networking;
+package distudios.at.carcassonne.networking.lobby;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
