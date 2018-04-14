@@ -4,4 +4,12 @@
     <string name="btnAbout">About</string>
     <string name="btnSettings">Optionen</string>
     <string name="appTitle">Space Carcassonne</string>
+    <string name="pick_a_color">Pick a color</string>
+    <string-array name="colors">
+        <item  name="red">red</item>
+        <item name="green">green</item>
+        <item name="blue">blue</item>
+        <item name="yellow">yellow</item>
+        <item name="black">black</item>
+    </string-array>
 </resources>
