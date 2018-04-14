@@ -1,26 +1,28 @@
 package distudios.at.carcassonne;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
+import distudios.at.carcassonne.gui.Rules;
+import distudios.at.carcassonne.gui.Settings;
 import distudios.at.carcassonne.networking.lobby.NetworkManager;
 import distudios.at.carcassonne.networking.lobby.WifiDirectBroadcastReceiver;
 
-public class    MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     public NetworkManager manager;
     public WifiDirectBroadcastReceiver receiver;
-    protected CarcassonneAppClass app;
+    protected CarcassonneApp app;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        registerComponentCallbacks(app);
+        app=(CarcassonneApp)getApplication();
 
 //        manager = new NetworkManager(this);
 
@@ -48,8 +50,7 @@ public class    MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,Rules.class));
             }
         });
-        registerComponentCallbacks(app);
-        app=(CarcassonneAppClass)getApplication();
+
     }
 
     @Override

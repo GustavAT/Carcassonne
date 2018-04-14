@@ -1,4 +1,4 @@
-package distudios.at.carcassonne;
+package distudios.at.carcassonne.gui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +9,16 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 
+import distudios.at.carcassonne.CarcassonneApp;
+import distudios.at.carcassonne.MainActivity;
+import distudios.at.carcassonne.R;
+
 public class Rules extends AppCompatActivity {
 
     String text_rules;
     TextView show_rules;
     TextView close;
-    protected CarcassonneAppClass app;
+    protected CarcassonneApp app;
 
 
     @Override

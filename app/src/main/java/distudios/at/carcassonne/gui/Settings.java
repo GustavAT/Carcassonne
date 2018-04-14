@@ -1,4 +1,4 @@
-package distudios.at.carcassonne;
+package distudios.at.carcassonne.gui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +8,14 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import distudios.at.carcassonne.CarcassonneApp;
+import distudios.at.carcassonne.MainActivity;
+import distudios.at.carcassonne.R;
+
 public class Settings extends AppCompatActivity {
     Switch music_switch;
     TextView close;
-    protected CarcassonneAppClass app;
+    protected CarcassonneApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +27,7 @@ public class Settings extends AppCompatActivity {
 
         close = (TextView) findViewById(R.id.txtclose);
         music_switch = (Switch) findViewById(R.id.switchmusic);
-        app = (CarcassonneAppClass) getApplication();
+        app = (CarcassonneApp) getApplication();
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
