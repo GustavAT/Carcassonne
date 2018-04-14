@@ -11,5 +11,6 @@
         <item name="blue">blue</item>
         <item name="yellow">yellow</item>
         <item name="black">black</item>
+
     </string-array>
 </resources>

@@ -22,6 +22,7 @@ public class ColorPicker extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String str=adapterView.getItemAtPosition(i).toString();
             }
+
         });
 
     }
