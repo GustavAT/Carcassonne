@@ -9,7 +9,8 @@ public class GameController implements IGameController {
     @Override
     public void init() {
         // init game engine
-        gameEngine.init();
+       Orientation defaultOrient = Orientation.NORTH;
+        gameEngine.init(defaultOrient);
     }
 
     @Override
