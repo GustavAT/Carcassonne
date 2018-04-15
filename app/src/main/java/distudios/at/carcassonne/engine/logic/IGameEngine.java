@@ -2,6 +2,6 @@ package distudios.at.carcassonne.engine.logic;
 
 public interface IGameEngine {
 
-    void init();
+    void init(Orientation orientation);
 
 }
