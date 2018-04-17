@@ -1,15 +1,30 @@
 package distudios.at.carcassonne.networking;
 
+import android.app.Activity;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.util.Log;
+
+import com.peak.salut.Callbacks.SalutDataCallback;
+import com.peak.salut.Salut;
+import com.peak.salut.SalutDataReceiver;
+import com.peak.salut.SalutServiceData;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import distudios.at.carcassonne.CarcassonneApp;
+import distudios.at.carcassonne.networking.connection.DataCallback;
 
 public class NetworkController implements INetworkController {
 
     public NetworkController() {
         clients = new ArrayList<>();
     }
+
+    public Salut network;
+    public SalutServiceData serviceData;
+    public SalutDataReceiver dataReceiver;
 
     private boolean isGroupOwner;
     public WifiP2pDevice groupOwner;
@@ -72,4 +87,20 @@ public class NetworkController implements INetworkController {
     }
 
 
+    @Override
+    public void init(Activity activity) {
+        serviceData = new SalutServiceData("CarcassonneService", 60000, CarcassonneApp.playerName);
+        dataReceiver = new SalutDataReceiver(activity, new DataCallback());
+        network = new Salut(dataReceiver, serviceData, null);
+    }
+
+    public Salut getNetwork() {
+        return network;
+    }
+
+    public boolean isConnected() {
+        if (network == null) return false;
+
+        return network.isConnectedToAnotherDevice || network.isRunningAsHost;
+    }
 }

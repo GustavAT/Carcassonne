@@ -1,8 +1,14 @@
 package distudios.at.carcassonne.networking;
 
+import android.app.Activity;
 import android.net.wifi.p2p.WifiP2pDevice;
 
+import com.peak.salut.Callbacks.SalutDataCallback;
+import com.peak.salut.Salut;
+
 import java.util.List;
+
+import distudios.at.carcassonne.networking.connection.DataCallback;
 
 public interface INetworkController {
 
@@ -22,5 +28,11 @@ public interface INetworkController {
     void reset();
 
     boolean canConnect();
+
+    // todo: delete methods above
+
+    void init(Activity activity);
+    Salut getNetwork();
+    boolean isConnected();
 
 }

@@ -24,6 +24,7 @@
     <string name="text_connect">Connect</string>
     <string name="text_disconnect">Disconnect</string>
     <string name="text_cancel">Cancel</string>
+    <string name="text_create">Create</string>
     <string name="text_device_name">Device Name</string>
     <string name="text_host_address">Host-Address</string>
     <string name="text_status">Status</string>
@@ -33,4 +34,25 @@
     <string name="text_group_status">Group Status</string>
     <string name="text_refresh">Refresh</string>
     <string name="text_search_for_peers">Searching for near devices ...</string>
+    <string name="title_activity_lobby_new">LobbyNewActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_group">GroupActivity</string>
+    <string name="text_group">Group</string>
+    <string name="text_discover_groups">Discover Groups</string>
+    <string name="text_browser">Browser</string>
+    <string name="text_todo">ToDo</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_player_name">Player Name</string>
+    <string name="text_mac_address">MAC Address</string>
+    <string name="text_join">Join</string>
+    <string name="text_no_new_lobbies_found">No new groups found!</string>
+    <string name="text_no_group_created">No group created yet!</string>
+    <string name="text_group_name">Group Name</string>
+    <string name="error_player_name">Player name cannot be empty!</string>
 </resources>

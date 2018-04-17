@@ -18,6 +18,8 @@ public class CarcassonneApp extends Application{
     private static ILobbyController lobbyController;
     private static IGameController gameController;
 
+    public static String playerName = "";
+
     @Override
     public void onCreate() {
         super.onCreate();

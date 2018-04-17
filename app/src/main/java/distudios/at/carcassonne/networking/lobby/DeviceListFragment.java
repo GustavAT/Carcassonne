@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.peak.salut.SalutDevice;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +27,9 @@ import distudios.at.carcassonne.R;
  * Activities containing this fragment MUST implement the {@link OnWifiP2pDeviceActionEventListener}
  * interface.
  */
-public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerListListener {
+public class DeviceListFragment extends Fragment {
 
-    private List<WifiP2pDevice> peers = new ArrayList<>();
+    private List<SalutDevice> devices = new ArrayList<>();
     private ProgressBar progressDiscovering;
 
     // TODO: Customize parameter argument names
@@ -81,7 +83,7 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            adapter = new MyDeviceItemRecyclerViewAdapter(peers, actionListener, context);
+            adapter = new MyDeviceItemRecyclerViewAdapter(devices, actionListener, context);
             recyclerView.setAdapter(adapter);
         }
         return view;
@@ -94,8 +96,7 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
         if (context instanceof OnWifiP2pDeviceActionEventListener) {
             actionListener = (OnWifiP2pDeviceActionEventListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+
         }
     }
 
@@ -109,8 +110,8 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
      * Set already connected devices (i.e. from group info listener)
      * @param devices
      */
-    public void addConnectedDevices(List<WifiP2pDevice> devices) {
-        for (WifiP2pDevice device : devices) {
+    public void addConnectedDevices(List<SalutDevice> devices) {
+        for (SalutDevice device : devices) {
             adapter.addDevice(device);
         }
         adapter.notifyDataSetChanged();
@@ -120,21 +121,8 @@ public class DeviceListFragment extends Fragment implements WifiP2pManager.PeerL
      * Set already connected devices (i.e. from group info listener)
      * @param device
      */
-    public void addConnectedDevice(WifiP2pDevice device) {
+    public void addConnectedDevice(SalutDevice device) {
         adapter.addDevice(device);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
-        adapter.setDevices(new ArrayList(wifiP2pDeviceList.getDeviceList()));
-
-        // todo update list
-
-        adapter.notifyDataSetChanged();
-    }
-
-    public void notifyDataSetChanged() {
         adapter.notifyDataSetChanged();
     }
 }

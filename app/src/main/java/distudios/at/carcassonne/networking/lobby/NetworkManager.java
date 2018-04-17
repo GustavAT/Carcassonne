@@ -81,7 +81,12 @@ public class NetworkManager {
     }
 
     public void discoverPeers() {
+        stopPeerDiscovery();
         manager.discoverPeers(channel, actionListener);
+    }
+
+    public void stopPeerDiscovery() {
+        manager.stopPeerDiscovery(channel, actionListener);
     }
 
     public void setOnDeviceChangedEventListener(OnDeviceChangedEventListener listener) {

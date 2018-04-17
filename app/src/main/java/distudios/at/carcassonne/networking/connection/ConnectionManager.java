@@ -3,8 +3,11 @@ package distudios.at.carcassonne.networking.connection;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handling sockets and connections
@@ -12,6 +15,25 @@ import java.nio.channels.SocketChannel;
  */
 public class ConnectionManager {
 
+
+
+    /**
+     * Map of all client channels
+     */
+    private Map<String, SocketChannel> clientChannels = new HashMap<>();
+
+    // global selectors and properties
+    private Selector clientSelector = null;
+    private Selector serverSelector = null;
+    private ServerSocketChannel serverSocketChannel = null;
+    private SocketChannel clientSocketChannel = null;
+    String serverAddress = null;
+    String clientAddress = null;
+
+    public void configIPV4() {
+        java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
+        java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
+    }
 
     /**
      * Create a non-blocking server socket channel.
@@ -59,5 +81,65 @@ public class ConnectionManager {
         while(!channel.finishConnect());
 
         return channel;
+    }
+
+    /**
+     * Called by client.
+     * Connects to the group owner.
+     * @param host
+     * @return
+     */
+    public int startClientSelector(String host) {
+        // closeServer();
+        return -1;
+    }
+
+    /**
+     * Called by group owner.
+     * @return
+     */
+    public int startServerSelector() {
+        closeClient();
+
+
+
+        return -1;
+    }
+
+    /**
+     * Close the connection to the server
+     */
+    public void closeServer() {
+        if (serverSocketChannel != null) {
+            try {
+                serverSocketChannel.close();
+                serverSelector.close();
+            } catch(Exception e) {
+
+            } finally {
+                serverSocketChannel = null;
+                serverSelector = null;
+                serverAddress = null;
+                clientChannels.clear();
+            }
+        }
+    }
+
+    /**
+     * Close the connection to clients
+     */
+    public void closeClient() {
+        if (clientSocketChannel != null) {
+            try {
+                clientSocketChannel.close();
+                clientSelector.close();
+            } catch(Exception e) {
+
+            } finally {
+                clientSocketChannel = null;
+                clientSelector = null;
+                clientAddress = null;
+            }
+        }
     }
 }

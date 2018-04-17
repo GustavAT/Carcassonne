@@ -116,11 +116,13 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
         super.onResume();
         receiver = new WifiDirectBroadcastReceiver(networkManager);
         registerReceiver(receiver, networkManager.getIntentFilter());
+        networkManager.discoverPeers();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        networkManager.stopPeerDiscovery();
         unregisterReceiver(receiver);
     }
 
@@ -157,6 +159,7 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
                 Log.d("CONNECT", "FAILED");
             }
         });
+        networkManager.discoverPeers();
     }
 
     /**
@@ -253,10 +256,10 @@ public class LobbyActivity extends AppCompatActivity implements WifiP2pManager.C
                         playerCount.setText(text);
 
                         // populate fragment list with connected clients
-                        deviceList.addConnectedDevices(clients);
+//                        deviceList.addConnectedDevices(clients);
                     } else {
                         // populate fragment list with group owner
-                        deviceList.addConnectedDevice(owner);
+//                        deviceList.addConnectedDevice(owner);
                     }
                 }
             }
