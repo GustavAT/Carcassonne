@@ -7,7 +7,7 @@ public class Card {
     private int xCoordinate;
     private int yCoordinate;
 
-    public Card(int id, Orientation orientation, int xCoordinate, int yCoordinate) {
+    public Card(int id,  int xCoordinate, int yCoordinate, Orientation orientation) {
         this.id = id;
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;

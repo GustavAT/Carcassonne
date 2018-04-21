@@ -16,7 +16,31 @@ public class GameController implements IGameController {
     @Override
     public void action() {
 
+        //choose card
+
+        Card nextCard=null;
+        actionCardplacement(nextCard);
+
+        //Überprüfe Peep
+
+        //Platziere Peep
+
+        //Überprüfe Punkte
+
+        //Setze Punkte
+
         update();
+    }
+
+    @Override
+    public void actionCardplacement(Card nextCard) {
+        if(gameEngine.checkPlaceable(nextCard)){
+            gameEngine.placeCard(nextCard);
+        }
+        else{
+            //Melde "Nicht platzierbare Karte"
+            System.out.println("Nicht platzierbare Karte");
+        }
     }
 
     private void update() {
