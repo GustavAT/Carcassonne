@@ -59,4 +59,7 @@
     <string name="text_leave_group">Leave Group</string>
     <string name="text_close_group">Close Group</string>
     <string name="text_send">Send</string>
+    <string name="title_activity_game">GameActivity</string>
+    <string name="text_overview">Overview</string>
+    <string name="text_score">Score</string>
 </resources>
