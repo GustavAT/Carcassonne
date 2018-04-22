@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnSettings;
     Button btnRules;
+    CarcassonneApp app;
 
 
     @Override
@@ -20,13 +21,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btnSettings = findViewById(R.id.btnSettings);
         btnRules = findViewById(R.id.btnShowRules);
-
+        app = (CarcassonneApp)getApplication();
 
 
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Settings.class));
+                app.soundPool.play(1,1,1,0,0,1);
             }
         });
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Rules.class));
+                app.soundPool.play(1,1,1,0,0,1);
             }
         });
 
