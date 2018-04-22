@@ -22,20 +22,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-
-        </activity>
-        <activity
-            android:name=".gui.LobbyActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/title_activity_lobby">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Settings" />
-        <activity android:name=".Rules" />
-        <activity android:name=".ColorPicker"></activity>
+        <activity android:name=".gui.Rules" />
+        <activity android:name=".gui.Settings" />
+        <activity android:name=".gui.LobbyActivity" />
+        <activity
+            android:name=".gui.StartGameActivity"
+            android:label="@string/title_activity_start_game"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
