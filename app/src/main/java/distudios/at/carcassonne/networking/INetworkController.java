@@ -12,27 +12,12 @@ import distudios.at.carcassonne.networking.connection.DataCallback;
 
 public interface INetworkController {
 
-    void createConnection(boolean isGroupOwner);
-    void sendData(Object data, int type);
-    Object receiveData(int type);
-
-    boolean isGroupOwner();
-    void isGroupOwner(boolean isGroupOwner);
-
-    List<WifiP2pDevice> getClients();
-    WifiP2pDevice getGroupOwner();
-
-    void setClients(List<WifiP2pDevice> clients);
-    void setGroupOwner(WifiP2pDevice groupOwner);
-
-    void reset();
-
-    boolean canConnect();
-
-    // todo: delete methods above
-
     void init(Activity activity);
     Salut getNetwork();
-    boolean isConnected();
+    void sendToAllDevices(Object data);
+    void sendToHost(Object data);
+
+    boolean isHost();
+    boolean isClient();
 
 }

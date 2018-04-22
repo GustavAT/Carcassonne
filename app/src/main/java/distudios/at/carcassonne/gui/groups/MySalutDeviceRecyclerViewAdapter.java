@@ -1,5 +1,6 @@
-package distudios.at.carcassonne.gui.lobby;
+package distudios.at.carcassonne.gui.groups;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,12 +15,12 @@ import com.peak.salut.SalutDevice;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.networking.INetworkController;
 
 import java.util.List;
 
 public class MySalutDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MySalutDeviceRecyclerViewAdapter.ViewHolder> {
 
+    public IDeviceConnected callback;
     private final List<SalutDevice> mValues;
     private Salut network;
 
@@ -48,8 +49,10 @@ public class MySalutDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MySal
                 network.registerWithHost(holder.mItem, new SalutCallback() {
                     @Override
                     public void call() {
-                        Log.d("CONNECT", "success");
                         holder.mButtonAction.setEnabled(false);
+                        if (callback != null) {
+                            callback.onConnect();
+                        }
                     }
                 }, new SalutCallback() {
                     @Override
@@ -95,5 +98,9 @@ public class MySalutDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MySal
             mMacAddress = view.findViewById(R.id.textView_macAddress);
             mButtonAction = view.findViewById(R.id.button_service_action);
         }
+    }
+
+    public interface IDeviceConnected {
+        void onConnect();
     }
 }

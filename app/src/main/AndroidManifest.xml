@@ -20,16 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <activity
-            android:name=".gui.LobbyActivity"
-            android:label="@string/title_activity_lobby"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".gui.lobby.Main2Activity" />
-        <activity
-            android:name=".gui.lobby.GroupActivity"
-            android:label="@string/title_activity_group">
-        </activity>
 
         <activity android:name=".gui.groups.Group2Activity">
             <intent-filter>

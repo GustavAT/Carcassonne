@@ -1,35 +1,30 @@
 package distudios.at.carcassonne.gui.groups;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
-import com.peak.salut.Callbacks.SalutCallback;
-import com.peak.salut.Callbacks.SalutDeviceCallback;
 import com.peak.salut.Salut;
 import com.peak.salut.SalutDevice;
 
-import java.nio.charset.IllegalCharsetNameException;
 import java.util.ArrayList;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.gui.lobby.SalutDeviceFragment;
-import distudios.at.carcassonne.networking.INetworkController;
+import distudios.at.carcassonne.networking.connection.DataCallback;
+import distudios.at.carcassonne.networking.connection.DiscoveryCallback;
 
-public class GroupList extends AppCompatActivity implements SalutCallback {
+public class GroupList extends AppCompatActivity implements DiscoveryCallback.IDiscoveryCallback, SwipeRefreshLayout.OnRefreshListener, DataCallback.IDataCallback, MySalutDeviceRecyclerViewAdapter.IDeviceConnected {
 
     private Salut network;
-    private BullshitFragment fragment;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    private SalutDeviceFragment fragment;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,18 +33,16 @@ public class GroupList extends AppCompatActivity implements SalutCallback {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-//        swipeRefreshLayout.setOnRefreshListener(this);
-//        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        setRefreshing();
 
-//        fragment = (BullshitFragment) getSupportFragmentManager().findFragmentById(R.id.fragment2);
+        fragment = (SalutDeviceFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_bullshit);
+        fragment.adapter.callback = this;
 
-        fragment = new BullshitFragment();
-
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transa = manager.beginTransaction();
-        transa.replace(R.id.frameLayout, fragment);
-        transa.commit();
+        DiscoveryCallback.callback = this;
+        DataCallback.callback = this;
 
         setupDiscovery();
     }
@@ -88,43 +81,51 @@ public class GroupList extends AppCompatActivity implements SalutCallback {
     }
 
     private void startDiscovery() {
-        network.discoverNetworkServices(this, true);
+        network.discoverNetworkServices(new DiscoveryCallback(), true);
     }
+
+
+    public Runnable refreshRunnable;
+    private Handler refreshHandler;
 
     @Override
     public void call() {
-        Log.d("CALL", "found " + network.foundDevices.size());
-        fragment.adapter.fill();
-//        swipeRefreshLayout.setRefreshing(false);
+        fragment.adapter.setDevices(network.foundDevices);
 
-        Log.d("CALL", "RECEIVED " + network.foundDevices.size());
-//
-//        if (refreshHandler != null) {
-//            refreshHandler.removeCallbacks(refreshRunnable);
-//        }
+        swipeRefreshLayout.setRefreshing(false);
+        if (refreshHandler != null) {
+            refreshHandler.removeCallbacks(refreshRunnable);
+        }
     }
 
-//    private Runnable refreshRunnable;
-//    private Handler refreshHandler;
-//
-//    @Override
-//    public void onRefresh() {
-//        setupDiscovery();
-//        fragment.adapter.clear();
-//
-//        refreshRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                Snackbar.make(getWindow().getDecorView().getRootView(), getString(R.string.text_no_new_lobbies_found), Snackbar.LENGTH_LONG).show();
-//                swipeRefreshLayout.setRefreshing(false);
-//            }
-//        };
-//
-//        refreshHandler = new Handler();
-//        refreshHandler.postDelayed(refreshRunnable, 10000);
-//    }
-//
-//    swipeContainer = (SwipeRefreshLayout) view;
-//            swipeContainer.setOnRefreshListener(this);
-//            swipeContainer.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+    @Override
+    public void onRefresh() {
+        setupDiscovery();
+        fragment.adapter.setDevices(new ArrayList<SalutDevice>());
+        setRefreshing();
+    }
+
+    private void setRefreshing() {
+        refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(getWindow().getDecorView().getRootView(), getString(R.string.text_no_new_lobbies_found), Snackbar.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        };
+
+        refreshHandler = new Handler();
+        refreshHandler.postDelayed(refreshRunnable, 10000);
+    }
+
+    @Override
+    public void onDataReceived(Object data) {
+        Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onConnect() {
+        Intent i = new Intent(getApplicationContext(), GroupOverview.class);
+        startActivity(i);
+    }
 }

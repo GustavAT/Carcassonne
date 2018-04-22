@@ -55,4 +55,8 @@
     <string name="text_no_group_created">No group created yet!</string>
     <string name="text_group_name">Group Name</string>
     <string name="error_player_name">Player name cannot be empty!</string>
+    <string name="text_cleanup">CleanUp</string>
+    <string name="text_leave_group">Leave Group</string>
+    <string name="text_close_group">Close Group</string>
+    <string name="text_send">Send</string>
 </resources>

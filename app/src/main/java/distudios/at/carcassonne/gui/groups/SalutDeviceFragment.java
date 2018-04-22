@@ -3,6 +3,8 @@ package distudios.at.carcassonne.gui.groups;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,31 +14,31 @@ import android.view.ViewGroup;
 
 import com.peak.salut.SalutDevice;
 
+import java.util.ArrayList;
+
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.networking.lobby.DeviceListFragment;
 
-import java.util.List;
-
-public class BullshitFragment extends Fragment {
+public class SalutDeviceFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    MyBullshitRecyclerViewAdapter adapter;
+    public MySalutDeviceRecyclerViewAdapter adapter;
+    public SwipeRefreshLayout swipeContainer;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public BullshitFragment() {
+    public SalutDeviceFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static BullshitFragment newInstance(int columnCount) {
-        BullshitFragment fragment = new BullshitFragment();
+    public static SalutDeviceFragment newInstance(int columnCount) {
+        SalutDeviceFragment fragment = new SalutDeviceFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -55,22 +57,30 @@ public class BullshitFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bullshit_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_salutdevice_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
+        if(view instanceof RecyclerView) {
+
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+
+            adapter = new MySalutDeviceRecyclerViewAdapter(new ArrayList<SalutDevice>());
+            recyclerView.setAdapter(adapter);
+
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            adapter = new MyBullshitRecyclerViewAdapter();
-            recyclerView.setAdapter(adapter);
+
+            LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), manager.getOrientation());
+            recyclerView.addItemDecoration(divider);
         }
+
         return view;
     }
+
 
     @Override
     public void onAttach(Context context) {

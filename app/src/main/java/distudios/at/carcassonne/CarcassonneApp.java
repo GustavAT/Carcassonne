@@ -1,10 +1,12 @@
 package distudios.at.carcassonne;
 
+import android.app.Activity;
 import android.app.Application;
 
 import distudios.at.carcassonne.engine.graphics.IGraphicsController;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.gui.ILobbyController;
+import distudios.at.carcassonne.gui.groups.GroupList;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.NetworkController;
 

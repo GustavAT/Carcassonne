@@ -16,7 +16,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".gui.lobby.SalutDeviceFragment"
+    tools:context=".gui.groups.SalutDeviceFragment"
     tools:listitem="@layout/fragment_salutdevice" />
 
 
