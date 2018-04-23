@@ -10,7 +10,7 @@ public class CardDataBase {
 
 
 
-    public ArrayList<ExtendedCard> cardDB;
+    public ArrayList<ExtendedCard> cardDB=new ArrayList<>();
     private final int STACK_SIZE=50;
 
     private static CardDataBase INSTANCE = new CardDataBase();

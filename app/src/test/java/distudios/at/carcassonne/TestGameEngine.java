@@ -38,7 +38,6 @@ public class TestGameEngine {
 
     @Test
     public void shuffleWorks(){
-
         ArrayList<Integer> al=gs.getStack();
         for(int i=0;i<al.size();i++){
             System.out.println("Listelement "+i+" : "+al.get(i));
@@ -46,27 +45,17 @@ public class TestGameEngine {
     }
 
     @Test
-    public void placeInitialCard(){
-        printCards(ge.getGamestate());
-
-    }
-
-    @Test
-    public void placeCard(){
-        Card card=new Card(20,0,1,Orientation.NORTH);
-        Assert.assertTrue(ge.checkPlaceable(card));
-        ge.placeCard(card);
-        printCards(ge.getGamestate());
-        Assert.assertFalse(ge.checkPlaceable(card));
-    }
-
-    @Test
     public void checkPlaceableMethod(){
-        Card card=new Card(21,1,0,Orientation.NORTH);
-        Assert.assertTrue(ge.checkPlaceable(card));
+        System.out.println("\nPlatziere 3 Karten und überprüfe auf Platzierbarkeit");
+        Card card=new Card(20,0,1,Orientation.NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));     //Test Placeable
+        ge.placeCard(card);
+        Assert.assertFalse(ge.checkPlaceable(card));    //Test reflexive Placeable false
+        card=new Card(21,1,0,Orientation.NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));     //Test placeable
         ge.placeCard(card);
         card=new Card(22,1,1,Orientation.NORTH);
-        Assert.assertTrue(ge.checkPlaceable(card));
+        Assert.assertTrue(ge.checkPlaceable(card));     //Test placeable with 2 Connection
         ge.placeCard(card);
         printCards(gs);
 
