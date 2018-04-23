@@ -17,6 +17,7 @@ public class CardDataBase {
 
 
     private CardDataBase(){
+        cardDB.add(new extendedCard(1, CardSide.CASTLE, CardSide.STREET, CardSide.GRASS, CardSide.RIVER));
         for(int i=0;i<STACK_SIZE;i++){
             cardDB.add(generateRandomCard(i+2));
             // Card Stack IDs go from 2 to 51. ID 1 is always start card
@@ -35,6 +36,27 @@ public class CardDataBase {
         return card;
     }
 
+    //method orientation + id returns CardSide
+
+    private CardSide getOrientation (int id, Orientation orientation){
+        switch (orientation){
+            case NORTH:
+                return cardDB.get(id-1).getTop();
+
+            case WEST:
+                return cardDB.get(id-1).getLeft();
+
+            case EAST:
+                return cardDB.get(id-1).getRight();
+
+            case SOUTH:
+                return cardDB.get(id-1).getDown();
+
+            default:
+                return null;
+
+        }
+    }
 
 }
 
