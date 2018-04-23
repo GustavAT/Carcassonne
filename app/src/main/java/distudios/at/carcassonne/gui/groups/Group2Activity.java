@@ -16,6 +16,7 @@ import java.nio.charset.IllegalCharsetNameException;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.gui.field.GameActivity;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.DataCallback;
 
@@ -26,6 +27,7 @@ public class Group2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group2);
 
+        final Button testField = findViewById(R.id.button_testField);
         final Button create = findViewById(R.id.button_createGroup);
         final Button join = findViewById(R.id.button_joinGroup);
         final Button clear = findViewById(R.id.button_clear);
@@ -62,6 +64,13 @@ public class Group2Activity extends AppCompatActivity {
             }
         });
 
+        testField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), GameActivity.class);
+                startActivity(i);
+            }
+        });
 
         clear.setOnClickListener(new View.OnClickListener() {
             @Override

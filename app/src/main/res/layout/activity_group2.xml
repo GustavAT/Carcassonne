@@ -57,6 +57,12 @@
                 android:text="@string/text_join" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/button_testField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_test_field" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
