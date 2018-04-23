@@ -50,6 +50,39 @@ public class Card {
     public String toString(){
         return "Id: "+ id + " Coordinates: " + xCoordinate + " | " + yCoordinate;
     }
+     public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
+        int rotation=0;
+        if(offset==Orientation.NORTH){
+            rotation=0;
+        }
+        else if(offset==Orientation.EAST){
+            rotation=1;
+        }
+        else if(offset==Orientation.SOUTH){
+            rotation=2;
+        }
+        else{
+            rotation=3;
+        }
+
+
+        for(int i=0;i<rotation;i++){
+            if(card==Orientation.NORTH){
+                card=Orientation.WEST;
+            }
+            else if(card==Orientation.EAST){
+                card=Orientation.NORTH;
+            }
+            else if(card==Orientation.SOUTH){
+                card=Orientation.EAST;
+            }
+            else{
+                card=Orientation.SOUTH;
+            }
+        }
+
+        return card;
+     }
 }
 
 
