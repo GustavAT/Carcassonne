@@ -30,7 +30,7 @@ public class GameEngine implements IGameEngine {
     }
 
     private void setInitialCard() {
-        currentState.addCard(new Card(1, orientation, 0,0 ));
+        currentState.addCard(new Card(1, orientation, 0,0, CardSide.CASTLE, CardSide.GRASS, CardSide.RIVER, CardSide.STREET ));
     }
 
     public GameState getGamestate(){

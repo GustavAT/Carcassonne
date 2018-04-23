@@ -7,12 +7,16 @@ public class Card {
     private int xCoordinate;
     private int yCoordinate;
 
-    public Card(int id, Orientation orientation, int xCoordinate, int yCoordinate) {
+
+
+    public Card(int id, Orientation orientation, int xCoordinate, int yCoordinate, CardSide top, CardSide left, CardSide right, CardSide down) {
         this.id = id;
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+
     }
+
 
     public int getId() {
         return id;
@@ -45,6 +49,8 @@ public class Card {
     public void setyCoordinate(int yCoordinate) {
         this.yCoordinate = yCoordinate;
     }
+
+
 
     @Override
     public String toString(){
