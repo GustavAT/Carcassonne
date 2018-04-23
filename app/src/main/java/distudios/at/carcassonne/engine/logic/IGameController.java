@@ -6,7 +6,7 @@ public interface IGameController {
 
     void action();
 
-    void actionCardplacement(Card card);
+    boolean actionCardPlacement(Card card);
 
     void dataReceived(Object data, int type);
 

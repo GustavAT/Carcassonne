@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import distudios.at.carcassonne.engine.logic.Card;
+import distudios.at.carcassonne.engine.logic.CardDataBase;
+import distudios.at.carcassonne.engine.logic.CardSide;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.Orientation;
@@ -17,12 +19,21 @@ import distudios.at.carcassonne.engine.logic.Orientation;
 public class TestGameEngine {
     GameEngine ge;
     GameState gs;
+    CardDataBase cdb=CardDataBase.getInstance();
 
     @Before
     public void setUp(){
         ge=new GameEngine();
         ge.init(Orientation.NORTH);
         gs=ge.getGamestate();
+        cdb.cardDB.get(19).setDown(CardSide.CASTLE);    //Anpassung Startkarte
+        cdb.cardDB.get(20).setLeft(CardSide.GRASS);
+
+        cdb.cardDB.get(19).setRight(CardSide.CASTLE);   //Anpassung Neue Karte Check
+        cdb.cardDB.get(20).setTop(CardSide.RIVER);
+
+        cdb.cardDB.get(21).setDown(CardSide.RIVER);     //Anpassung Neue Karte Check
+        cdb.cardDB.get(21).setLeft(CardSide.CASTLE);
     }
 
     @Test
@@ -43,10 +54,22 @@ public class TestGameEngine {
     @Test
     public void placeCard(){
         Card card=new Card(20,0,1,Orientation.NORTH);
-        ge.checkPlaceable(card);
+        Assert.assertTrue(ge.checkPlaceable(card));
         ge.placeCard(card);
         printCards(ge.getGamestate());
         Assert.assertFalse(ge.checkPlaceable(card));
+    }
+
+    @Test
+    public void checkPlaceableMethod(){
+        Card card=new Card(21,1,0,Orientation.NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));
+        ge.placeCard(card);
+        card=new Card(22,1,1,Orientation.NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));
+        ge.placeCard(card);
+        printCards(gs);
+
     }
 
     @Test
@@ -55,6 +78,10 @@ public class TestGameEngine {
         Orientation compare=Card.getAbsoluteOrientation(Orientation.WEST, Orientation.NORTH);
         Assert.assertTrue(result==compare);
     }
+
+
+
+
     private void printCards(GameState pgs){
         ArrayList<Card> cardList = pgs.getCards();
 

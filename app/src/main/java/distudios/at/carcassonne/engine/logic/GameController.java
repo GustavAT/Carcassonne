@@ -19,7 +19,7 @@ public class GameController implements IGameController {
         //choose card
 
         Card nextCard=null;
-        actionCardplacement(nextCard);
+        actionCardPlacement(nextCard);
 
         //Überprüfe Peep
 
@@ -33,13 +33,15 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public void actionCardplacement(Card nextCard) {
+    public boolean actionCardPlacement(Card nextCard) {
         if(gameEngine.checkPlaceable(nextCard)){
             gameEngine.placeCard(nextCard);
+            return true;
         }
         else{
             //Melde "Nicht platzierbare Karte"
             System.out.println("Nicht platzierbare Karte");
+            return false;
         }
     }
 
