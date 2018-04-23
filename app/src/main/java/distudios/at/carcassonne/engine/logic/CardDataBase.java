@@ -32,8 +32,7 @@ public class CardDataBase {
     public static CardDataBase cardDataBase = CardDataBase.getInstance();
 
     private ExtendedCard generateRandomCard(int id){
-        ExtendedCard card  = new ExtendedCard(id, CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide());
-        return card;
+        return new ExtendedCard(id, CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide());
     }
 
     //method orientation + id returns CardSide

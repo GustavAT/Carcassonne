@@ -29,8 +29,12 @@ public class GameController implements IGameController {
 
         //Setze Punkte
 
+        //Entferne Peep
+
         update();
     }
+
+    //todo: Nachdem Connection auf ExtendedCard gecoded wurden-->implementiere einen Situationellen Punktezähler anhand einer Id oder Koordinate
 
     @Override
     public boolean actionCardPlacement(Card nextCard) {
