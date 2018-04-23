@@ -77,6 +77,14 @@ public class GameFragment extends Fragment {
             }
         });
 
+        Button buttonCenter = view.findViewById(R.id.button_centerField);
+        buttonCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pfView.centerCard(null);
+            }
+        });
+
         return view;
     }
 
@@ -86,6 +94,7 @@ public class GameFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
 
     @Override
     public void onAttach(Context context) {
