@@ -29,6 +29,7 @@ before_script:
 
 script:
     - ./gradlew test
+    - ./gradlew jacocoTestReport
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -38,6 +39,8 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 # benachrichtigungen per email auszuschalten
 #notifications:
 #  email: false
