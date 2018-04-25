@@ -3,9 +3,11 @@
     <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
-    <color name="colorAvailable">#3F51B5</color>
+    <color name="colorAvailable">#d9bd00</color>
     <color name="colorInvited">#FF4081</color>
     <color name="colorConnected">#125c0e</color>
     <color name="colorFailed">#a11f42</color>
     <color name="colorUnavailable">#747474</color>
+    <color name="sw_yellow">#d9bd00</color>
+    <color name="black">#000000</color>
 </resources>
