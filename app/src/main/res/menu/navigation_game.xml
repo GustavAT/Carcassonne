@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_game"
+        android:icon="@drawable/icon_gamepad"
+        android:title="@string/text_overview" />
+
+    <item
+        android:id="@+id/navigation_score"
+        android:icon="@drawable/icon_trophy"
+        android:title="@string/text_score" />
+
+</menu>

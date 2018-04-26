@@ -1,11 +1,23 @@
 package distudios.at.carcassonne.networking;
 
+import android.app.Activity;
+import android.net.wifi.p2p.WifiP2pDevice;
+
+import com.peak.salut.Callbacks.SalutDataCallback;
+import com.peak.salut.Salut;
+
+import java.util.List;
+
+import distudios.at.carcassonne.networking.connection.DataCallback;
+
 public interface INetworkController {
 
-    void createConnection(boolean isGroupOwner);
-    void sendDate(Object data, int type);
-    Object receiveData(int type);
+    void init(Activity activity);
+    Salut getNetwork();
+    void sendToAllDevices(Object data);
+    void sendToHost(Object data);
 
-    boolean isGroupOwner();
+    boolean isHost();
+    boolean isClient();
 
 }

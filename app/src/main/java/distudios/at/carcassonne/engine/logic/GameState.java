@@ -6,9 +6,9 @@ import java.util.List;
 
 public class GameState implements Serializable {
 
-    private List<Object> cards;
+    private ArrayList<Card> cards;
     private List<Object> peeps;
-    private List<Object> stack;
+    private ArrayList<Integer> stack;
     private List<Integer> points;
 
     public GameState() {
@@ -19,17 +19,19 @@ public class GameState implements Serializable {
     }
 
 
-    public void setStack(List<Object> stack) {
+    public void setStack(ArrayList<Integer> stack) {
         this.stack = stack;
     }
 
-    public List<Object> getStack() {
+    public ArrayList<Integer> getStack() {
         return stack;
     }
 
-    public void addCard(Object card) {
+    public void addCard(Card card) {
         cards.add(card);
     }
+
+    public ArrayList<Card> getCards() { return cards; }
 
     public void addPeep(Object peep) {
         peeps.add(peep);
