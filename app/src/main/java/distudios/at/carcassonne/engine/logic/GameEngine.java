@@ -44,6 +44,7 @@ public class GameEngine implements IGameEngine {
         Orientation hnext=null,hit=null;
         int x=nextCard.getxCoordinate();
         int y=nextCard.getyCoordinate();
+        boolean isconnected=false;
 
         // check on Connectivity
         for(int i=0;i<cards.size();i++){
@@ -56,6 +57,8 @@ public class GameEngine implements IGameEngine {
 
                     if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
                         return false;
+                    }else{
+                        isconnected=true;
                     }
 
 
@@ -67,6 +70,9 @@ public class GameEngine implements IGameEngine {
 
                     if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
                         return false;
+                    }
+                    else{
+                        isconnected=true;
                     }
                 }
                 else if(itcard.getyCoordinate()==y){
@@ -83,8 +89,10 @@ public class GameEngine implements IGameEngine {
                     hnext=Card.getAbsoluteOrientation(Orientation.EAST,nextCard.getOrientation()); //Rechnet North mit next.orientation um
                     hit=Card.getAbsoluteOrientation(Orientation.WEST,itcard.getOrientation()); //Rechnet South mit it.orientation um
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
+                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)) {
                         return false;
+                    }else{
+                        isconnected=true;
                     }
                 }
                 else if(itcard.getxCoordinate()==x-1){
@@ -94,6 +102,8 @@ public class GameEngine implements IGameEngine {
 
                     if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
                         return false;
+                    }else{
+                        isconnected=true;
                     }
                 }
                 else{
@@ -107,7 +117,7 @@ public class GameEngine implements IGameEngine {
 
 
 
-        return true;
+        return isconnected;
     }
 
     public GameState getGamestate(){
