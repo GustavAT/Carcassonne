@@ -107,20 +107,28 @@ public class GameEngine implements IGameEngine {
                     }
                 }
                 else{
+
                     //next loop
                 }
             }
-
-
         }
-
-
-
-
         return isconnected;
     }
 
+    public void placePeep(Peep peep){
+        currentState.addPeep(peep);
+        //todo: reduce placeable Peeps of the player
+    }
+
+    public boolean checkPeepPlaceable(Peep peep){
+        //todo: check if placeable peeps of current player >0
+        //todo: check if current "building" isn't already occupied
+        return true;
+        //todo}
+    }
+
     public GameState getGamestate(){
+
         return currentState;
     }
 }

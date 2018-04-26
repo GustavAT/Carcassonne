@@ -24,6 +24,8 @@ public class GameController implements IGameController {
         //Überprüfe Peep
 
         //Platziere Peep
+        Peep nextPeep = null; //How are nextCard and nextPeep initialized? nextPeep MUST contain nextCard (doesn't need to be checked later on)
+        actionPeepPlacement(nextPeep);
 
         //Überprüfe Punkte
 
@@ -33,6 +35,7 @@ public class GameController implements IGameController {
 
         update();
     }
+
 
     //todo: Nachdem Connection auf ExtendedCard gecoded wurden-->implementiere einen Situationellen Punktezähler anhand einer Id oder Koordinate
 
@@ -45,6 +48,17 @@ public class GameController implements IGameController {
         else{
             //Melde "Nicht platzierbare Karte"
             System.out.println("Nicht platzierbare Karte");
+            return false;
+        }
+    }
+
+    public boolean actionPeepPlacement(Peep nextPeep){
+        if(gameEngine.checkPeepPlaceable(nextPeep)){
+            gameEngine.placePeep(nextPeep);
+            return true;
+        }
+        else {
+            System.out.println("Nicht platzierbare Figur");
             return false;
         }
     }

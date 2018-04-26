@@ -33,7 +33,7 @@ public class GameState implements Serializable {
 
     public ArrayList<Card> getCards() { return cards; }
 
-    public void addPeep(Object peep) {
+    public void addPeep(Peep peep) {
         peeps.add(peep);
     }
 

@@ -7,4 +7,9 @@ public interface IGameEngine {
     void placeCard(Card card);
 
     boolean checkPlaceable(Card card);
+
+    void placePeep(Peep peep);
+
+    boolean checkPeepPlaceable(Peep peep);
+
 }
