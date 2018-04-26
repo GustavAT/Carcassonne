@@ -2,32 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/textView_instanceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/text_player_name"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="@color/sw_yellow"/>
 
         <TextView
             android:id="@+id/textView_deviceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_device_name" />
+            android:text="@string/text_device_name"
+            android:textColor="@color/sw_yellow"/>
 
         <TextView
             android:id="@+id/textView_macAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_mac_address" />
+            android:text="@string/text_mac_address"
+            android:textColor="@color/sw_yellow" />
 
     </LinearLayout>
 
@@ -36,7 +40,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <Button
             android:id="@+id/button_service_action"
@@ -44,7 +49,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/text_join" />
+            android:background="@color/sw_yellow"
+            android:text="@string/text_join"
+            android:textColor="@color/black" />
     </LinearLayout>
 
 </LinearLayout>

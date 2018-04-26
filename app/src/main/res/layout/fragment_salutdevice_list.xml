@@ -17,7 +17,9 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".gui.groups.SalutDeviceFragment"
-    tools:listitem="@layout/fragment_salutdevice" />
+    tools:listitem="@layout/fragment_salutdevice"
+    android:background="@drawable/menu_background"
+    />
 
 
 <!--</android.support.v4.widget.SwipeRefreshLayout>-->
