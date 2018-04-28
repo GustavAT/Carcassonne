@@ -12,6 +12,7 @@ public class ExtendedCard {
     private CardSide bottomRightCorner;
     private boolean cathedral;
     private boolean wappen;
+    private boolean splitStop;
 
 
         /*todo: Add new Variable for Connections on own Card, z.B. weise jeder Seite einen boolean für Connection bzw no-Connection zu.
@@ -41,6 +42,8 @@ public class ExtendedCard {
         this.bottomLeftCorner = bottomLeftCorner;
         this.bottomRightCorner = bottomRightCorner;
         this.cathedral = false;
+        this.wappen = false;
+        this.splitStop = false;
     }
 
     public int getId() {
@@ -111,11 +114,27 @@ public class ExtendedCard {
         this.bottomRightCorner = bottomRightCorner;
     }
 
-    public Boolean getCathedral() {
+    public boolean isCathedral() {
         return cathedral;
     }
 
-    public void setCathedral(Boolean cathedral) {
+    public void setCathedral(boolean cathedral) {
         this.cathedral = cathedral;
+    }
+
+    public boolean isWappen() {
+        return wappen;
+    }
+
+    public void setWappen(boolean wappen) {
+        this.wappen = wappen;
+    }
+
+    public boolean isSplitStop() {
+        return splitStop;
+    }
+
+    public void setSplitStop(boolean splitStop) {
+        this.splitStop = splitStop;
     }
 }
