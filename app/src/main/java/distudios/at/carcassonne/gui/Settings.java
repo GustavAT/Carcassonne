@@ -11,36 +11,38 @@ import android.widget.TextView;
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.MainActivity;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.gui.ISoundController;
 
 public class Settings extends AppCompatActivity {
-    Switch music_switch;
-    Switch sound_switch;
-    TextView close;
-    protected CarcassonneApp app;
+    private Switch music_switch;
+    private Switch sound_switch;
+    private TextView close;
+    ISoundController soundController;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        registerComponentCallbacks(app);
-
         close = (TextView) findViewById(R.id.txtclose);
         music_switch = (Switch) findViewById(R.id.switchmusic);
         sound_switch = (Switch) findViewById(R.id.switchsound);
-        app = (CarcassonneApp) getApplication();
+
+
+
 
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.this, MainActivity.class));
-                app.soundPool.play(1,1,1,0,0,1);
+                soundController.playSound();
             }
         });
 
+        soundController=CarcassonneApp.getSoundController();
 
         //Background music switch
-        if (app.getBackground_music_state()) {
+        if (soundController.getBackground_music_state()) {
             music_switch.setChecked(true);
         } else {
             music_switch.setChecked(false);
@@ -49,20 +51,21 @@ public class Settings extends AppCompatActivity {
         music_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked) {
-                    app.setBackground_music_state(true);
-                    app.startBackground_music();
 
+                if(isChecked) {
+                    soundController.setBackground_music_state(true);
+                    soundController.startBackground_music();
                 }else{
-                    app.setBackground_music_state(false);
-                    app.stopBackground_music();
+                    soundController.setBackground_music_state(false);
+                    soundController.stopBackground_music();
                 }
             }
         });
 
+
         //Sounds switch
 
-        if (app.getSound_state()) {
+       if (soundController.getSound_state()) {
             sound_switch.setChecked(true);
         } else {
             sound_switch.setChecked(false);
@@ -72,14 +75,14 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if(isChecked){
-                    app.setSound_state(true);
-                    app.bildSound();
-                    app.loadSound();
-                    app.soundPool.play(1,1,1,0,0,1);
+                    soundController.setSound_state(true);
+                    soundController.bildSound();
+                    soundController.loadSound();
+                    soundController.playSound();
 
                 }else{
-                    app.setSound_state(false);
-                    app.soundPool.release();
+                    soundController.setSound_state(false);
+                    soundController.stopSound();
                 }
             }
         });

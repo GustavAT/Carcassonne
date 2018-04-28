@@ -5,14 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import distudios.at.carcassonne.gui.ISoundController;
 import distudios.at.carcassonne.gui.Rules;
 import distudios.at.carcassonne.gui.Settings;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnSettings;
-    Button btnRules;
-    CarcassonneApp app;
+    private Button btnSettings;
+    private Button btnRules;
+    ISoundController soundController;
 
 
     @Override
@@ -21,14 +23,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btnSettings = findViewById(R.id.btnSettings);
         btnRules = findViewById(R.id.btnShowRules);
-        app = (CarcassonneApp)getApplication();
+        soundController= CarcassonneApp.getSoundController();
+
 
 
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Settings.class));
-                app.soundPool.play(1,1,1,0,0,1);
+                soundController.playSound();
             }
         });
 
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Rules.class));
-                app.soundPool.play(1,1,1,0,0,1);
+                soundController.playSound();
             }
         });
 

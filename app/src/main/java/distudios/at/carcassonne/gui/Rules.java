@@ -18,20 +18,22 @@ public class Rules extends AppCompatActivity {
     String text_rules;
     TextView show_rules;
     TextView close;
-    protected CarcassonneApp app;
+    ISoundController soundController;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rules);
-        app = (CarcassonneApp)getApplication();
+
+        soundController= CarcassonneApp.getSoundController();
+
         close = (TextView) findViewById(R.id.txtclose);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Rules.this, MainActivity.class));
-                app.soundPool.play(1,1,1,0,0,1);
+                soundController.playSound();
 
             }
         });

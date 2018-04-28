@@ -18,14 +18,14 @@ public class StartGameActivity extends AppCompatActivity {
 
     private SectionsPageAdapter sectionsPageAdapter;
     private ViewPager viewPager;
-    CarcassonneApp app;
+    ISoundController soundController;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_game);
-        app = (CarcassonneApp)getApplication();
+        soundController = CarcassonneApp.getSoundController();
 
 
         sectionsPageAdapter=new SectionsPageAdapter(getSupportFragmentManager());
@@ -38,7 +38,7 @@ public class StartGameActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                app.soundPool.play(1,1,1,0,0,1);
+                soundController.playSound();
             }
 
             @Override
@@ -47,7 +47,7 @@ public class StartGameActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                app.soundPool.play(1,1,1,0,0,1);
+                soundController.playSound();
             }
         });
     }
