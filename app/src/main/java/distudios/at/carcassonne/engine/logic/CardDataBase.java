@@ -11,17 +11,28 @@ public class CardDataBase {
 
 
     public ArrayList<ExtendedCard> cardDB=new ArrayList<>();
-    private final int STACK_SIZE=50;
+    // 72 Cards including start card leads to STACK SIZE of 71;
+    private final int STACK_SIZE=71;
 
     private static CardDataBase INSTANCE = new CardDataBase();
 
 
     private CardDataBase(){
-        cardDB.add(new ExtendedCard(1, CardSide.CASTLE, CardSide.STREET, CardSide.GRASS, CardSide.RIVER));
-        for(int i=0;i<STACK_SIZE;i++){
-            cardDB.add(generateRandomCard(i+2));
-            // Card Stack IDs go from 2 to 51. ID 1 is always start card
-        }
+        //START CARD
+        cardDB.add(new ExtendedCard(1, CardSide.CASTLE, CardSide.STREET, CardSide.GRASS, CardSide.STREET, CardSide.CLOSED, CardSide.CLOSED, CardSide.OPEN, CardSide.OPEN ));
+        //CARD A CATHEDRAL w. Street- 2x
+        cardDB.add(new ExtendedCard(2, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
+        getCardById(2).setCathedral(true);
+        cardDB.add(new ExtendedCard(3, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
+        // CARD B CATHEDRAL - 4x
+        cardDB.add(new ExtendedCard(4, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
+        cardDB.add(new ExtendedCard(5, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
+        cardDB.add(new ExtendedCard(6, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
+        cardDB.add(new ExtendedCard(7, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
+        // CARD C CASTLE 4 SIDED - 1x
+
+
+
     }
 
     public static CardDataBase getInstance(){
@@ -31,10 +42,19 @@ public class CardDataBase {
 
     public static CardDataBase cardDataBase = CardDataBase.getInstance();
 
+    public static ExtendedCard getCardById (int id){
+        if (id>0) {
+            return cardDataBase.cardDB.get(id - 1);
+        } else {
+            return null;
+        }
+    }
+
+    /*
     private ExtendedCard generateRandomCard(int id){
         return new ExtendedCard(id, CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide());
     }
-
+*/
     //method orientation + id returns CardSide
 
     public CardSide getOrientation (int id, Orientation orientation){

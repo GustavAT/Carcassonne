@@ -6,7 +6,8 @@ import java.util.Collections;
 public class GameEngine implements IGameEngine {
 
     private GameState currentState;
-    private final int STACK_SIZE=50;
+    // 72 Cards including start card leads to STACK SIZE of 71;
+    private final int STACK_SIZE=71;
 
     @Override
     public void init(Orientation start) {
