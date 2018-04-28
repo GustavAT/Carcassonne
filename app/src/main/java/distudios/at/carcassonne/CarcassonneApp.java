@@ -41,6 +41,7 @@ public class CarcassonneApp extends Application{
         networkController = controller;
     }
 
+
     public static INetworkController getNetworkController() {
         return networkController;
     }
