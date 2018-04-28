@@ -68,9 +68,6 @@ public class TestGameEngine {
         Assert.assertTrue(result==compare);
     }
 
-
-
-
     private void printCards(GameState pgs){
         ArrayList<Card> cardList = pgs.getCards();
 

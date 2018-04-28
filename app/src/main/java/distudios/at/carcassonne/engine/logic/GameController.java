@@ -1,5 +1,7 @@
 package distudios.at.carcassonne.engine.logic;
 
+import java.util.ArrayList;
+
 import distudios.at.carcassonne.CarcassonneApp;
 
 public class GameController implements IGameController {
@@ -56,6 +58,21 @@ public class GameController implements IGameController {
     @Override
     public void dataReceived(Object data, int type) {
 
+    }
+
+    @Override
+    public void setPoints(ArrayList<Integer> points) {
+        for(int i=0;i<points.size();i++){
+            gameEngine.addScore(points.get(i),i);
+        }
+    }
+
+    @Override
+    public void checkPoints(Card card) {
+        ArrayList<Integer> cardscore= gameEngine.getScoreChanges(card);
+        //todo: Weise scores den Objekten zu
+        //todo: Weise objektscores den Peeps zu
+        //setPoints(pointchanges);
     }
 
 }

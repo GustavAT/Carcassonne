@@ -1,5 +1,7 @@
 package distudios.at.carcassonne.engine.logic;
 
+import java.util.ArrayList;
+
 public interface IGameController {
 
     void init();
@@ -9,5 +11,9 @@ public interface IGameController {
     boolean actionCardPlacement(Card card);
 
     void dataReceived(Object data, int type);
+
+    void setPoints(ArrayList<Integer> points);
+
+    void checkPoints(Card card);
 
 }
