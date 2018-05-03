@@ -5,7 +5,6 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/menu_background"
     tools:context=".gui.field.GameActivity">
 
     <android.support.design.widget.BottomNavigationView

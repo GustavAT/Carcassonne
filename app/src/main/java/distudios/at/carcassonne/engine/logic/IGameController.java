@@ -21,5 +21,7 @@ public interface IGameController {
 
     void startGame();
     void updateGameState();
+    boolean isMyTurn();
+    void endTurn();
 
 }

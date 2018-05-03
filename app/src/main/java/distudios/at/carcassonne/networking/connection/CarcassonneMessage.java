@@ -42,7 +42,7 @@ public class CarcassonneMessage {
     public final static int UNSPECIFIED = -1;
     public final static int DUMMY_MESSAGE = 0;
     public final static int GAME_STATE_UPDATE = 1;
-    public final static int PLAYER_CHANGE = 2;
+    public final static int END_TURN = 2;
     public final static int PLAYER_CHEAT = 3;
 
     // some random number lol

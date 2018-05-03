@@ -1,5 +1,7 @@
 package distudios.at.carcassonne.engine.logic;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import distudios.at.carcassonne.CarcassonneApp;
@@ -102,7 +104,10 @@ public class GameController implements IGameController {
         CarcassonneMessage message = new CarcassonneMessage();
         message.type = CarcassonneMessage.HOST_START_GAME;
         message.playerMappings = controller.getPlayerMappings();
-        message.state = getGameState();
+        GameState state = getGameState();
+        state.currentPlayer = 0;
+        state.maxPlayerCount = controller.getDeviceCount();
+        message.state = state;
         controller.sendToAllDevices(message);
     }
 
@@ -112,6 +117,32 @@ public class GameController implements IGameController {
         CarcassonneMessage message = new CarcassonneMessage();
         message.type = CarcassonneMessage.GAME_STATE_UPDATE;
         message.state = getGameState();
+        if (controller.isHost()) {
+            controller.sendToAllDevices(message);
+        } else if (controller.isClient()) {
+            controller.sendToHost(message);
+        }
+    }
+
+    @Override
+    public boolean isMyTurn() {
+        return getGameState().myTurn(CarcassonneApp.getNetworkController().getDevicePlayerNumber());
+    }
+
+    @Override
+    public void endTurn() {
+        Log.d("END TURN", getGameState().currentPlayer + "");
+        if (!isMyTurn()) return;
+
+        INetworkController controller = CarcassonneApp.getNetworkController();
+        CarcassonneMessage message = new CarcassonneMessage();
+        message.type = CarcassonneMessage.END_TURN;
+        GameState state = getGameState();
+        Log.d("PLAYER_NUMBER", state.currentPlayer + "");
+        state.currentPlayer = state.getNextPlayer();
+        Log.d("PLAYER_NUMBER", state.currentPlayer + "");
+        message.state = state;
+
         if (controller.isHost()) {
             controller.sendToAllDevices(message);
         } else if (controller.isClient()) {

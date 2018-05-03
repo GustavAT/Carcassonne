@@ -26,5 +26,7 @@ public interface INetworkController {
     void createPlayerMappings();
     Map<String, Integer> getPlayerMappings();
     void setPlayerMappings(Map<String, Integer> mappings);
+    int getDevicePlayerNumber();
+    int getDeviceCount();
 
 }

@@ -68,6 +68,7 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
         Log.d("Carcassonne", "Message from inner fragment");
     }
 
+    // central entry point for all incomming messages
     @Override
     public void onDataReceived(CarcassonneMessage message) {
         INetworkController controller = CarcassonneApp.getNetworkController();
@@ -82,6 +83,23 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
                 if (controller.isHost()) {
                     controller.sendToAllDevices(message);
                 }
+
+                Toast.makeText(getApplicationContext(), "Game state update received", Toast.LENGTH_SHORT).show();
+                break;
+            case CarcassonneMessage.END_TURN:
+                CarcassonneApp.getGameController().setState(message.state);
+
+                if (currentFragment instanceof GameFragment) {
+                    ((GameFragment)currentFragment).updatePlayField();
+                }
+
+                if (controller.isHost()) {
+                    controller.sendToAllDevices(message);
+                }
+
+
+                String msg = "Its " + message.state.currentPlayer + "'s turn";
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 break;
 
         }

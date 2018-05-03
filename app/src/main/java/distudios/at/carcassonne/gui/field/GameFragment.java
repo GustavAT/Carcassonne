@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.logic.GameState;
+import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
@@ -99,16 +101,10 @@ public class GameFragment extends Fragment {
         endTurn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CarcassonneMessage message = new CarcassonneMessage();
-                message.type = CarcassonneMessage.PLAYER_CHANGE;
-                message.state = CarcassonneApp.getGameController().getGameState();
-
-                INetworkController controller = CarcassonneApp.getNetworkController();
-                if (controller.isHost()) {
-                    controller.sendToAllDevices(message);
-                } else if (controller.isClient()) {
-                    controller.sendToHost(message);
-                }
+                IGameController controller = CarcassonneApp.getGameController();
+                Log.d("TURN", controller.getGameState().currentPlayer + "" );
+                controller.endTurn();
+                Log.d("TURN", controller.getGameState().currentPlayer + "");
             }
         });
 

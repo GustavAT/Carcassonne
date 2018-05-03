@@ -103,4 +103,17 @@ public class NetworkController implements INetworkController {
     public void setPlayerMappings(Map<String, Integer> mappings) {
         playerMappings = mappings;
     }
+
+    @Override
+    public int getDevicePlayerNumber() {
+        String thisDevice = network.thisDevice.instanceName;
+        return playerMappings.containsKey(thisDevice) ? playerMappings.get(thisDevice) : -1;
+    }
+
+    @Override
+    public int getDeviceCount() {
+        if (!isHost()) return -1;
+
+        return 1 + network.registeredClients.size();
+    }
 }

@@ -67,7 +67,7 @@ public class GameState implements Serializable {
      * @return
      */
     public int getNextPlayer() {
-        return (currentPlayer++) % maxPlayerCount;
+        return (currentPlayer + 1) % maxPlayerCount;
     }
 
     /**
