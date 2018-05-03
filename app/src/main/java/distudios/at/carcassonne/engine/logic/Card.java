@@ -1,5 +1,7 @@
 package distudios.at.carcassonne.engine.logic;
 
+import java.util.List;
+
 public class Card {
 
     private int id;

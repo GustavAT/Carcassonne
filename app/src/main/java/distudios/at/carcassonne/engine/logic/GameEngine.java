@@ -55,7 +55,7 @@ public class GameEngine implements IGameEngine {
                     hnext=Card.getAbsoluteOrientation(Orientation.NORTH,nextCard.getOrientation()); //Rechnet North mit next.orientation um
                     hit=Card.getAbsoluteOrientation(Orientation.SOUTH,itcard.getOrientation()); //Rechnet South mit it.orientation um
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
+                    if(cdb.getCardSide(nextCard.getId(),hnext)!=cdb.getCardSide(itcard.getId(),hit)){
                         return false;
                     }else{
                         isconnected=true;
@@ -68,7 +68,7 @@ public class GameEngine implements IGameEngine {
                     hnext=Card.getAbsoluteOrientation(Orientation.SOUTH,nextCard.getOrientation()); //Rechnet North mit next.orientation um
                     hit=Card.getAbsoluteOrientation(Orientation.NORTH,itcard.getOrientation()); //Rechnet South mit it.orientation um
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
+                    if(cdb.getCardSide(nextCard.getId(),hnext)!=cdb.getCardSide(itcard.getId(),hit)){
                         return false;
                     }
                     else{
@@ -89,7 +89,7 @@ public class GameEngine implements IGameEngine {
                     hnext=Card.getAbsoluteOrientation(Orientation.EAST,nextCard.getOrientation()); //Rechnet North mit next.orientation um
                     hit=Card.getAbsoluteOrientation(Orientation.WEST,itcard.getOrientation()); //Rechnet South mit it.orientation um
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)) {
+                    if(cdb.getCardSide(nextCard.getId(),hnext)!=cdb.getCardSide(itcard.getId(),hit)) {
                         return false;
                     }else{
                         isconnected=true;
@@ -100,7 +100,7 @@ public class GameEngine implements IGameEngine {
                     hnext=Card.getAbsoluteOrientation(Orientation.WEST,nextCard.getOrientation()); //Rechnet North mit next.orientation um
                     hit=Card.getAbsoluteOrientation(Orientation.EAST,itcard.getOrientation()); //Rechnet South mit it.orientation um
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
+                    if(cdb.getCardSide(nextCard.getId(),hnext)!=cdb.getCardSide(itcard.getId(),hit)){
                         return false;
                     }else{
                         isconnected=true;
@@ -118,6 +118,52 @@ public class GameEngine implements IGameEngine {
 
 
         return isconnected;
+    }
+
+    /*
+    Returns an Array with possible Positions of a given card on the cardboard
+    todo: Rework checkPlaceable
+     */
+    public ArrayList getPossibilities(Card card){
+        ArrayList positions = new ArrayList();
+        ArrayList<Card> cards = currentState.getCards();
+
+
+        for (Card thisCard:cards) {
+            card.setxCoordinate(thisCard.getxCoordinate()+1);
+            card.setyCoordinate(thisCard.getyCoordinate());
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+ card.getyCoordinate());
+            }
+
+            card.setxCoordinate(thisCard.getxCoordinate());
+            card.setyCoordinate(thisCard.getyCoordinate()+1);
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
+            }
+
+            card.setxCoordinate(thisCard.getxCoordinate()-1);
+            card.setyCoordinate(thisCard.getyCoordinate());
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
+            }
+
+            card.setxCoordinate(thisCard.getxCoordinate());
+            card.setyCoordinate(thisCard.getyCoordinate()-1);
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
+            }
+        }
+
+        for (Object x:positions) {
+            System.out.println(x);
+        }
+
+        return positions;
     }
 
     public GameState getGamestate(){

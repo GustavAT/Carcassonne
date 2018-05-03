@@ -45,9 +45,9 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        frameContainer = findViewById(R.id.frame_container);
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //frameContainer = findViewById(R.id.frame_container);
+       // BottomNavigationView navigation = findViewById(R.id.navigation);
+        //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         currentFragment = GameFragment.newInstance("", "");
         replaceCurrentFragment();
@@ -55,7 +55,7 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
 
     private void replaceCurrentFragment() {
         FragmentTransaction transa = getSupportFragmentManager().beginTransaction();
-        transa.replace(R.id.frame_container, currentFragment);
+        //transa.replace(R.id.frame_container, currentFragment);
         transa.commit();
     }
 

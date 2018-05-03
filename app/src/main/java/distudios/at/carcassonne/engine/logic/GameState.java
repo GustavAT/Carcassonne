@@ -7,7 +7,7 @@ import java.util.List;
 public class GameState implements Serializable {
 
     private ArrayList<Card> cards;
-    private List<Object> peeps;
+    private ArrayList<Object> peeps;
     private ArrayList<Integer> stack;
     private List<Integer> points;
 
@@ -37,6 +37,8 @@ public class GameState implements Serializable {
         peeps.add(peep);
     }
 
+    public ArrayList<Object> getPeeps() { return peeps; }
+
     public void removePeep(Object peep) {
         peeps.remove(peep);
     }
@@ -48,5 +50,7 @@ public class GameState implements Serializable {
     public void setPoints(int player, int newPoints) {
         points.set(player, newPoints);
     }
+
+    //public ArrayList getPossiblePositions(Card card){return getPossibilities(card);}
 
 }
