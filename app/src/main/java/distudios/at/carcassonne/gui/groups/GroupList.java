@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.DataCallback;
 import distudios.at.carcassonne.networking.connection.DiscoveryCallback;
 
@@ -119,7 +120,7 @@ public class GroupList extends AppCompatActivity implements DiscoveryCallback.ID
     }
 
     @Override
-    public void onDataReceived(Object data) {
+    public void onDataReceived(CarcassonneMessage data) {
         Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_LONG).show();
     }
 

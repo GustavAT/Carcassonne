@@ -64,4 +64,5 @@
     <string name="text_score">Score</string>
     <string name="text_center">Center</string>
     <string name="text_test_field">Test field</string>
+    <string name="text_end_turn">End turn</string>
 </resources>

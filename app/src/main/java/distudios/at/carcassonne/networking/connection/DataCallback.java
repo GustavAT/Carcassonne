@@ -1,5 +1,6 @@
 package distudios.at.carcassonne.networking.connection;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.peak.salut.Callbacks.SalutDataCallback;
 
 public class DataCallback implements SalutDataCallback {
@@ -9,11 +10,18 @@ public class DataCallback implements SalutDataCallback {
     @Override
     public void onDataReceived(Object o) {
         if (callback != null) {
-            callback.onDataReceived(o);
+            try {
+                CarcassonneMessage message = LoganSquare.parse(String.valueOf(o), CarcassonneMessage.class);
+                callback.onDataReceived(message);
+            } catch(Exception e) {
+
+            }
+
+
         }
     }
 
     public interface IDataCallback{
-        void onDataReceived(Object data);
+        void onDataReceived(CarcassonneMessage message);
     }
 }

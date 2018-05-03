@@ -3,16 +3,22 @@ package distudios.at.carcassonne.engine.logic;
 import java.util.ArrayList;
 
 import distudios.at.carcassonne.CarcassonneApp;
+import distudios.at.carcassonne.networking.INetworkController;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
 public class GameController implements IGameController {
 
     private IGameEngine gameEngine;
 
+    public GameController() {
+        this.init();
+    }
+
     @Override
     public void init() {
-        // init game engine
-       Orientation defaultOrient = Orientation.NORTH;
-        gameEngine.init(defaultOrient);
+        // init game engine;
+        gameEngine = new GameEngine();
+        gameEngine.init(Orientation.NORTH);
     }
 
     @Override
@@ -73,6 +79,44 @@ public class GameController implements IGameController {
         //todo: Weise scores den Objekten zu
         //todo: Weise objektscores den Peeps zu
         //setPoints(pointchanges);
+    }
+
+    @Override
+    public GameState getGameState() {
+        return gameEngine.getState();
+    }
+
+    @Override
+    public void setState(GameState s) {
+        gameEngine.setState(s);
+    }
+
+    /**
+     * Start the actual game.
+     * This method should be called from the host owner
+     */
+    @Override
+    public void startGame() {
+        INetworkController controller = CarcassonneApp.getNetworkController();
+        controller.createPlayerMappings();
+        CarcassonneMessage message = new CarcassonneMessage();
+        message.type = CarcassonneMessage.HOST_START_GAME;
+        message.playerMappings = controller.getPlayerMappings();
+        message.state = getGameState();
+        controller.sendToAllDevices(message);
+    }
+
+    @Override
+    public void updateGameState() {
+        INetworkController controller = CarcassonneApp.getNetworkController();
+        CarcassonneMessage message = new CarcassonneMessage();
+        message.type = CarcassonneMessage.GAME_STATE_UPDATE;
+        message.state = getGameState();
+        if (controller.isHost()) {
+            controller.sendToAllDevices(message);
+        } else if (controller.isClient()) {
+            controller.sendToHost(message);
+        }
     }
 
 }

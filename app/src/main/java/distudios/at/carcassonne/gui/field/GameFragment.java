@@ -9,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.engine.logic.GameState;
+import distudios.at.carcassonne.networking.INetworkController;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +57,8 @@ public class GameFragment extends Fragment {
         return fragment;
     }
 
+    public PlayfieldView playfieldView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,17 +69,17 @@ public class GameFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_game, container, false);
 
-        final PlayfieldView pfView = view.findViewById(R.id.view_playfield);
+        playfieldView = view.findViewById(R.id.view_playfield);
         Button buttonAction = view.findViewById(R.id.button_doSomething);
         buttonAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pfView.initField();
+                playfieldView.initFieldFromGameState();
             }
         });
 
@@ -81,7 +87,28 @@ public class GameFragment extends Fragment {
         buttonCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pfView.centerCard(null);
+                playfieldView.centerCard(null);
+
+
+                // test method -> just send new gamestate to other device
+                CarcassonneApp.getGameController().updateGameState();
+            }
+        });
+
+        Button endTurn = view.findViewById(R.id.button_endTurn);
+        endTurn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CarcassonneMessage message = new CarcassonneMessage();
+                message.type = CarcassonneMessage.PLAYER_CHANGE;
+                message.state = CarcassonneApp.getGameController().getGameState();
+
+                INetworkController controller = CarcassonneApp.getNetworkController();
+                if (controller.isHost()) {
+                    controller.sendToAllDevices(message);
+                } else if (controller.isClient()) {
+                    controller.sendToHost(message);
+                }
             }
         });
 
@@ -111,5 +138,9 @@ public class GameFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void updatePlayField() {
+        playfieldView.initFieldFromGameState();
     }
 }

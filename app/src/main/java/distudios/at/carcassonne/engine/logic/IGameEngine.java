@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public interface IGameEngine {
 
+    GameState getState();
+    void setState(GameState s);
+
     void init(Orientation orientation);
 
     void placeCard(Card card);

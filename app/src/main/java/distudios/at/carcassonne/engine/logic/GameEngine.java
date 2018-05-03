@@ -11,6 +11,16 @@ public class GameEngine implements IGameEngine {
     private boolean closed=true;
 
     @Override
+    public GameState getState() {
+        return currentState;
+    }
+
+    @Override
+    public void setState(GameState s) {
+        currentState = s;
+    }
+
+    @Override
     public void init(Orientation start) {
         currentState = new GameState();
         ArrayList<Integer> stack=new ArrayList<>();

@@ -16,4 +16,10 @@ public interface IGameController {
 
     void checkPoints(Card card);
 
+    GameState getGameState();
+    void setState(GameState s);
+
+    void startGame();
+    void updateGameState();
+
 }

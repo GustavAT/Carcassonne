@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import distudios.at.carcassonne.engine.graphics.IGraphicsController;
+import distudios.at.carcassonne.engine.logic.GameController;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.gui.ILobbyController;
 import distudios.at.carcassonne.gui.groups.GroupList;
@@ -25,7 +26,7 @@ public class CarcassonneApp extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-
+        gameController = new GameController();
         networkController = new NetworkController();
     }
 
