@@ -25,7 +25,7 @@ public class GameController implements IGameController {
 
         //Platziere Peep
         Peep nextPeep = null; //How are nextCard and nextPeep initialized? nextPeep MUST contain nextCard (doesn't need to be checked later on)
-        actionPeepPlacement(nextPeep);
+        actionPeepPlacement(nextPeep, nextCard);
 
         //Überprüfe Punkte
 
@@ -52,8 +52,8 @@ public class GameController implements IGameController {
         }
     }
 
-    public boolean actionPeepPlacement(Peep nextPeep){
-        if(gameEngine.checkPeepPlaceable(nextPeep)){
+    public boolean actionPeepPlacement(Peep nextPeep, Card nextCard){
+        if(gameEngine.checkPeepPlaceable(nextPeep, nextCard)){
             gameEngine.placePeep(nextPeep);
             return true;
         }

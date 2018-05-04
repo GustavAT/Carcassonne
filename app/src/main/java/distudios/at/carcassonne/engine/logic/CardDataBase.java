@@ -37,7 +37,7 @@ public class CardDataBase {
 
     //method orientation + id returns CardSide
 
-    public CardSide getOrientation (int id, Orientation orientation){
+    public CardSide getCardSide(int id, Orientation orientation){
         switch (orientation){
             case NORTH:
                 return cardDB.get(id-1).getTop();

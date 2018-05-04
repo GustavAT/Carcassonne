@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.CardDataBase;
 import distudios.at.carcassonne.engine.logic.CardSide;
+import distudios.at.carcassonne.engine.logic.Color;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.Orientation;
+import distudios.at.carcassonne.engine.logic.Peep;
+import distudios.at.carcassonne.engine.logic.PeepPosition;
 
 import static distudios.at.carcassonne.engine.logic.Orientation.EAST;
 import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
@@ -121,13 +124,42 @@ public class TestGameEngine {
     }
 
     @Test
+    public void checkGetStreet(){
+        //Settings...
+        Card card;
+        ge.placeCard(card = new Card(23, -1, 0, NORTH));
+        ge.placeCard(card = new Card(24, -1, -1, NORTH));
+        ge.placeCard(card = new Card(25, 0, -1, NORTH));
+        ge.placeCard(card = new Card(26, 1, -1, NORTH));
+        Card testCard = new Card(25,0,-1,NORTH);
+        ArrayList<Card> testArray = new ArrayList<Card>();
+
+        ArrayList<Card> street = ge.getStreet(testCard,testArray);
+        Assert.assertTrue(street.size() == 5);
+    }
+
+    @Test
+    public void checkPlacePeep(){
+        Card card = new Card(25,0,-1,NORTH);
+        Peep nextPeep = new Peep(card, PeepPosition.RightMid, Color.YELLOW);
+
+        Assert.assertTrue(ge.checkPeepPlaceable(nextPeep,card));
+        ge.placePeep(nextPeep);
+        Assert.assertTrue(gs.getPeeps().size()==1);
+        ArrayList<Peep> peeps = gs.getPeeps();
+        for (Peep peep:peeps) {
+            System.out.println("Color: "+peep.getColor());
+            System.out.println("Position: "+peep.getPeepPosition());
+            System.out.println("Card: "+peep.getCard());
+        }
+    }
+
+    @Test
     public void switchOrientation(){
         Orientation result=Card.getAbsoluteOrientation(Orientation.EAST, Orientation.SOUTH);
         Orientation compare=Card.getAbsoluteOrientation(Orientation.WEST, Orientation.NORTH);
         Assert.assertTrue(result==compare);
     }
-
-
 
 
     private void printCards(GameState pgs){
