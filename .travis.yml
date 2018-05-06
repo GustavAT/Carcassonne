@@ -30,13 +30,13 @@ before_script:
 script:
     - ./gradlew test
     - ./gradlew jacocoTestReport
-    - sonar-scanner
+    - ./gradlew sonarqube
 
 addons:
     sonarcloud:
       organization: "gustavat-github"
       token:
-        secure: $SONAR_TOKEN
+        secure: "ccb2fd2b5efbc63231e26f0a4042de2aa499ae0f"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -46,6 +46,7 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
+    - $HOME/.sonar/cache
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 # benachrichtigungen per email auszuschalten
