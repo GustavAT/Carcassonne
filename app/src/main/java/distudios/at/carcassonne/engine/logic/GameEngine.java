@@ -28,6 +28,8 @@ public class GameEngine implements IGameEngine {
             stack.add(i+2);
             // Card Stack IDs go from 2 to 51. ID 1 is always start card
         }
+
+        // useless: reference vs value
         currentState.setStack(stack);
         shuffle();
         setInitialCard(start);
@@ -36,6 +38,7 @@ public class GameEngine implements IGameEngine {
     private void shuffle() {
         ArrayList<Integer> stack=currentState.getStack();
         Collections.shuffle(stack);
+        // useless: reference vs value
         currentState.setStack(stack);
     }
 
@@ -46,7 +49,9 @@ public class GameEngine implements IGameEngine {
     public void placeCard(Card card){
         currentState.addCard(card);
         ArrayList stack=currentState.getStack();
+        // what is removed from stack??? please check
         stack.remove(stack.size()-1);
+        // useless: reference vs value
         currentState.setStack(stack);
     }
 
@@ -88,7 +93,7 @@ public class GameEngine implements IGameEngine {
         ArrayList<Card> field=currentState.getCards();
         ArrayList<Integer> scores=new ArrayList<>(4);
         for(int i=0;i<4;i++){
-            scores.add(getConnectedCards(card,Orientation.getIdOrientation(i)).size());
+            scores.add(getConnectedCards(card,Orientation.valueOf(i)).size());
         }
         return scores;
     }
@@ -114,8 +119,8 @@ public class GameEngine implements IGameEngine {
         //Iteriere über alle Connections
         for(int i=0;i<checkside.size();i++){
             if(checkside.get(i)){
-                if(checkBorder(card,currentState.getCards(),Orientation.getIdOrientation(i))){
-                    Card fcard=getFollowedCard(card,currentState.getCards(),Orientation.getIdOrientation(i));
+                if(checkBorder(card,currentState.getCards(),Orientation.valueOf(i))){
+                    Card fcard=getFollowedCard(card,currentState.getCards(),Orientation.valueOf(i));
                     if(fcard!=null) {
                         itcards.set(i, fcard);
                     }else{
@@ -158,7 +163,7 @@ public class GameEngine implements IGameEngine {
                     if(it!=null && !checkIfExists(it,finalcards)){
                         finalcards.add(concards.get(i));
                         itcards.add(concards.get(i));
-                        oitcard.add(Orientation.getIdOrientation(i));
+                        oitcard.add(Orientation.valueOf(i));
                     }
                 }
             }
@@ -190,7 +195,7 @@ public class GameEngine implements IGameEngine {
 
     private boolean checkBorder(Card a, ArrayList<Card> field, Orientation oa){
 
-        CardDataBase cdb=CardDataBase.cardDataBase;
+        CardDataBase cdb = CardDataBase.getInstance();
         Orientation ob=Card.getAbsoluteOrientation(oa,Orientation.SOUTH);
         int xb,xa=a.getxCoordinate();
         int yb,ya=a.getyCoordinate();
@@ -242,7 +247,7 @@ public class GameEngine implements IGameEngine {
     }
 
     private Card getFollowedCard(Card a, ArrayList<Card> field, Orientation oa){
-        CardDataBase cdb=CardDataBase.cardDataBase;
+        CardDataBase cdb = CardDataBase.getInstance();
         int xb,xa=a.getxCoordinate();
         int yb,ya=a.getyCoordinate();
         Card nextCard;

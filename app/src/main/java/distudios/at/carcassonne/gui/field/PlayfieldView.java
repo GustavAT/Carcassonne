@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -21,6 +22,7 @@ import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.GameController;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
+import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
 
 public class PlayfieldView extends View {
@@ -132,29 +134,33 @@ public class PlayfieldView extends View {
                 invalidate();
 
             } else {
-                for (String key : possibleLocations.keySet()) {
-                    CardContainer c = possibleLocations.get(key);
+                IGameController controller = CarcassonneApp.getGameController();
+                if (!controller.hasPlacedCard()) {
+                    for (String key : possibleLocations.keySet()) {
+                        CardContainer c = possibleLocations.get(key);
 
-                    if (x >= c.pixelX && x <= (c.pixelX + c.size) && y >= c.pixelY && y <= (c.pixelY + c.size)) {
-                        Toast.makeText(getContext(), "Clicked: x: " + c.fieldX + " y: " + c.fieldY, Toast.LENGTH_SHORT).show();
+                        if (x >= c.pixelX && x <= (c.pixelX + c.size) && y >= c.pixelY && y <= (c.pixelY + c.size)) {
+                            Toast.makeText(getContext(), "Clicked: x: " + c.fieldX + " y: " + c.fieldY, Toast.LENGTH_SHORT).show();
 
-                        CardContainer c2 = placedCards.get(c.key());
+                            CardContainer c2 = placedCards.get(c.key());
 
-                        if (c2 == null) {
-                            c2 = c.copy();
-                            placedCards.put(c2.key(), c2);
+                            if (c2 == null) {
+                                c2 = c.copy();
+                                c2.card = controller.getCurrentCard();
+                                placedCards.put(c2.key(), c2);
 
+                                Card card = controller.getCurrentCard();
+                                card.setxCoordinate(c2.fieldX);
+                                card.setyCoordinate(c2.fieldY);
+                                controller.actionCardPlacement(card);
 
-                            gameState.addCard(new Card(0, c2.fieldX, c2.fieldY, Orientation.SOUTH));
+                                invalidate();
+                            } else {
+                                centerCard(c2);
+                            }
 
-                            addSurroundingFields(c);
-
-                            invalidate();
-                        } else {
-                            centerCard(c2);
+                            break;
                         }
-
-                        break;
                     }
                 }
             }
@@ -200,6 +206,8 @@ public class PlayfieldView extends View {
         for (String key : placedCards.keySet()) {
             CardContainer c = placedCards.get(key);
             drawCardContainer(c, canvas, cardPaint);
+            canvas.drawText("" + c.card.getId(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 25), rasterPaint);
+            canvas.drawText("" + c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 50), rasterPaint);
         }
 
         for (String key: possibleLocations.keySet()) {
@@ -295,14 +303,48 @@ public class PlayfieldView extends View {
             ctn.pixelX = ctn.fieldX * cardSize - cardSize / 2;
             ctn.pixelY = ctn.fieldY * cardSize - cardSize / 2;
             ctn.size = getCardSize();
+            ctn.card = c;
             placedCards.put(ctn.key(), ctn);
             lastCard = ctn;
         }
 
         if (lastCard != null) {
-            addSurroundingFields(lastCard);
             centerCard(lastCard);
         }
+        invalidate();
+    }
+
+    public void addPossibleLocations() {
+        possibleLocations.clear();
+
+        IGameController controller = CarcassonneApp.getGameController();
+        Card currentCard = controller.getCurrentCard();
+
+        // user has not drawn a card yet
+        if (currentCard == null) {
+            invalidate();
+            return;
+        };
+
+        List<Pair<Integer, Integer>> locations = controller.getPossibleLocations(currentCard);
+
+        // get initial card
+        CardContainer initialCard = placedCards.get("0_0");
+
+        double size = initialCard.size;
+
+        for (Pair<Integer, Integer> position : locations) {
+            CardContainer c = new CardContainer();
+            c.fieldX = position.first;
+            c.fieldY = position.second;
+            c.offsetX = initialCard.offsetY;
+            c.offsetY = initialCard.offsetY;
+            c.size = initialCard.size;
+            c.pixelX = initialCard.pixelX + c.fieldX * size;
+            c.pixelY = initialCard.pixelY + c.fieldY * size;
+            possibleLocations.put(c.key(), c);
+        }
+
         invalidate();
     }
 
@@ -326,6 +368,8 @@ public class PlayfieldView extends View {
         public int fieldX;
         public int fieldY;
 
+        public Card card;
+
         public String key() {
             return fieldX + "_" + fieldY;
         }
@@ -339,6 +383,7 @@ public class PlayfieldView extends View {
             c.offsetY = offsetY;
             c.fieldX = fieldX;
             c.fieldY = fieldY;
+            c.card = card;
             return c;
         }
     }

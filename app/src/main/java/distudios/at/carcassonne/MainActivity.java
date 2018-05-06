@@ -17,31 +17,31 @@ public class MainActivity extends AppCompatActivity {
     ISoundController soundController;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        btnSettings = findViewById(R.id.btnSettings);
-        btnRules = findViewById(R.id.btnShowRules);
-        soundController= CarcassonneApp.getSoundController();
-
-
-
-        btnSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, Settings.class));
-                soundController.playSound();
-            }
-        });
-
-        btnRules.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, Rules.class));
-                soundController.playSound();
-            }
-        });
-
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//        btnSettings = findViewById(R.id.btnSettings);
+//        btnRules = findViewById(R.id.btnShowRules);
+//        soundController= CarcassonneApp.getSoundController();
+//
+//
+//
+//        btnSettings.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(MainActivity.this, Settings.class));
+//                soundController.playSound();
+//            }
+//        });
+//
+//        btnRules.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(MainActivity.this, Rules.class));
+//                soundController.playSound();
+//            }
+//        });
+//
+//    }
 }

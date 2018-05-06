@@ -1,19 +1,29 @@
 package distudios.at.carcassonne.engine.logic;
 
-public enum Orientation {
-    NORTH, SOUTH, EAST, WEST;
+import java.util.HashMap;
+import java.util.Map;
 
-    public static Orientation getIdOrientation(int id){
-        if(id==0){
-            return Orientation.NORTH;
-        }else if(id==1) {
-            return Orientation.EAST;
-        }else if(id==2){
-            return Orientation.SOUTH;
-        }else if(id==3){
-            return Orientation.WEST;
-        }else{
-            return null;
+public enum Orientation {
+    NORTH(0), EAST(1), SOUTH(2), WEST(3);
+
+    private int value;
+    private static Map map = new HashMap<>();
+
+    Orientation(int value) {
+        this.value = value;
+    }
+
+    static {
+        for (Orientation pageType : Orientation.values()) {
+            map.put(pageType.value, pageType);
         }
+    }
+
+    public static Orientation valueOf(int oType) {
+        return (Orientation) map.get(oType);
+    }
+
+    public int getValue() {
+        return value;
     }
 }

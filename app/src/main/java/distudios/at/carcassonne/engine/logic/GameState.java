@@ -79,4 +79,31 @@ public class GameState implements Serializable {
         return currentPlayer == playerNumber;
     }
 
+    /**
+     * Draw card from stack without removing it
+     * @return
+     */
+    public Card drawCard() {
+        if (stack.size() > 0) {
+            return new Card(stack.get(0), -1, -1, Orientation.NORTH);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Draw cards from stack without removing it
+     * @return
+     */
+    public List<Card> drawCards() {
+        return null;
+    }
+
+    /**
+     * Remove given card from stack
+     */
+    public void removeFromStack(Card c) {
+        stack.remove((Integer)c.getId());
+    }
+
 }

@@ -1,8 +1,10 @@
 package distudios.at.carcassonne.engine.logic;
 
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.INetworkController;
@@ -11,6 +13,13 @@ import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 public class GameController implements IGameController {
 
     private IGameEngine gameEngine;
+
+    /**
+     * True if the player has placed his card in this turn
+     */
+    private boolean cardPlaced = false;
+
+    private Card currentCard;
 
     public GameController() {
         this.init();
@@ -50,6 +59,8 @@ public class GameController implements IGameController {
     public boolean actionCardPlacement(Card nextCard) {
         if(gameEngine.checkPlaceable(nextCard)){
             gameEngine.placeCard(nextCard);
+            cardPlaced = true;
+            currentCard = null;
             return true;
         }
         else{
@@ -57,6 +68,85 @@ public class GameController implements IGameController {
             System.out.println("Nicht platzierbare Karte");
             return false;
         }
+    }
+
+    /**
+     * Get possible locations for given card
+     * @param c
+     */
+    public List<Pair<Integer, Integer>> getPossibleLocations(Card c) {
+        List<Pair<Integer, Integer>> locations = new ArrayList<>();
+        
+        List<Card> cards = getGameState().cards;
+
+        int originalX = c.getxCoordinate();
+        int originalY = c.getyCoordinate();
+
+        for (Card temp : cards) {
+            int x = temp.getxCoordinate();
+            int y = temp.getyCoordinate();
+
+            c.setxCoordinate(x + 1);
+            c.setyCoordinate(y);
+            if (checkPosition(cards, c) && gameEngine.checkPlaceable(c)) {
+                locations.add(new Pair<>(x + 1, y));
+            }
+            c.setxCoordinate(x - 1);
+            c.setyCoordinate(y);
+            if (checkPosition(cards, c) && gameEngine.checkPlaceable(c)) {
+                locations.add(new Pair<>(x - 1, y));
+            }
+            c.setxCoordinate(x);
+            c.setyCoordinate(y + 1);
+            if (checkPosition(cards, c) && gameEngine.checkPlaceable(c)) {
+                locations.add(new Pair<>(x, y + 1));
+            }
+            c.setxCoordinate(x);
+            c.setyCoordinate(y - 1);
+            if (checkPosition(cards, c) && gameEngine.checkPlaceable(c)) {
+                locations.add(new Pair<>(x, y - 1));
+            }
+        }
+
+        c.setxCoordinate(originalX);
+        c.setyCoordinate(originalY);
+
+        return locations;
+    }
+
+    @Override
+    public Card drawCard() {
+        currentCard = getGameState().drawCard();
+        return currentCard;
+    }
+
+    @Override
+    public void removeFromStack(Card c) {
+        getGameState().removeFromStack(c);
+    }
+
+    @Override
+    public Card getCurrentCard() {
+        return currentCard;
+    }
+
+    /**
+     * Check the position of given card is already set
+     * @param cards
+     * @param c
+     */
+    private boolean checkPosition(List<Card> cards, Card c) {
+        boolean free = true;
+        for (Card temp :
+                cards) {
+            if (temp.getxCoordinate() == c.getxCoordinate() &&
+                    temp.getyCoordinate() == c.getyCoordinate()) {
+                free = false;
+                break;
+            }
+        }
+
+        return free;
     }
 
     private void update() {
@@ -143,11 +233,24 @@ public class GameController implements IGameController {
         Log.d("PLAYER_NUMBER", state.currentPlayer + "");
         message.state = state;
 
+        currentCard = null;
+        cardPlaced = false;
+
         if (controller.isHost()) {
             controller.sendToAllDevices(message);
         } else if (controller.isClient()) {
             controller.sendToHost(message);
         }
+    }
+
+    @Override
+    public boolean hasPlacedCard() {
+        return cardPlaced;
+    }
+
+    @Override
+    public void placeCard(Card c) {
+        // todo: implement
     }
 
 }

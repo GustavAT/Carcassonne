@@ -87,6 +87,9 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
                 Toast.makeText(getApplicationContext(), "Game state update received", Toast.LENGTH_SHORT).show();
                 break;
             case CarcassonneMessage.END_TURN:
+
+                // end turn
+
                 CarcassonneApp.getGameController().setState(message.state);
 
                 if (currentFragment instanceof GameFragment) {

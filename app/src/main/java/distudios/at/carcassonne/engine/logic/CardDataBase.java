@@ -13,14 +13,18 @@ public class CardDataBase {
 
 
 
-    public ArrayList<ExtendedCard> cardDB=new ArrayList<>();
+    public ArrayList<ExtendedCard> cardDB;
     // 72 Cards including start card leads to STACK SIZE of 71;
     private final int STACK_SIZE=71;
 
-    private static CardDataBase INSTANCE = new CardDataBase();
+    private static CardDataBase INSTANCE;
 
 
     private CardDataBase(){
+        cardDB = new ArrayList<>();
+    }
+
+    private void init() {
         //CARD A CATHEDRAL w. Street- 2x
         cardDB.add(new ExtendedCard(2, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(2).setCathedral(true);
@@ -103,7 +107,7 @@ public class CardDataBase {
         cardDB.add(new ExtendedCard(44, CardSide.CASTLE, CardSide.CASTLE, CardSide.STREET, CardSide.STREET, CardSide.OPEN, CardSide.CLOSED, CardSide.CLOSED, CardSide.OPEN));
         // CARD Q - 1x + WAPPEN
         cardDB.add(new ExtendedCard(45, CardSide.CASTLE, CardSide.CASTLE, CardSide.CASTLE, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.CLOSED, CardSide.CLOSED));
-        getCardById(46).setWappen(true);
+        getCardById(45).setWappen(true);
         // CARD R - 3x
         cardDB.add(new ExtendedCard(46, CardSide.CASTLE, CardSide.CASTLE, CardSide.CASTLE, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.CLOSED, CardSide.CLOSED));
         cardDB.add(new ExtendedCard(47, CardSide.CASTLE, CardSide.CASTLE, CardSide.CASTLE, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.CLOSED, CardSide.CLOSED));
@@ -147,19 +151,26 @@ public class CardDataBase {
         // CARD X
         cardDB.add(new ExtendedCard(29, CardSide.STREET, CardSide.STREET, CardSide.STREET, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(29).setSplitStop(true);
-
     }
 
     public static CardDataBase getInstance(){
-        return (INSTANCE);
+        if (INSTANCE == null) {
+            INSTANCE = new CardDataBase();
+            INSTANCE.init();
+        }
+        return INSTANCE;
     }
 
 
-    public static CardDataBase cardDataBase = CardDataBase.getInstance();
-
     public static ExtendedCard getCardById (int id){
         if (id>0) {
-            return cardDataBase.cardDB.get(id - 1);
+            for (ExtendedCard ec :
+                    getInstance().cardDB) {
+                if (ec.getId() == id) {
+                    return ec;
+                }
+            }
+            return null;
         } else {
             return null;
         }

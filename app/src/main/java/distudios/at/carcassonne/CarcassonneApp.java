@@ -101,7 +101,7 @@ public class CarcassonneApp extends Application implements Application.ActivityL
     public void onActivityResumed(Activity activity) {
         count.cancel();
         if(soundController.getBackground_music_state()){
-            soundController.resumeMusic();
+//            soundController.resumeMusic();
         }
     }
 

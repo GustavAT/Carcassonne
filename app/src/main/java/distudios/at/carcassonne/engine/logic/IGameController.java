@@ -1,6 +1,9 @@
 package distudios.at.carcassonne.engine.logic;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IGameController {
 
@@ -23,5 +26,12 @@ public interface IGameController {
     void updateGameState();
     boolean isMyTurn();
     void endTurn();
+    boolean hasPlacedCard();
+    void placeCard(Card c);
+    List<Pair<Integer, Integer>> getPossibleLocations(Card c);
+
+    Card drawCard();
+    Card getCurrentCard();
+    void removeFromStack(Card c);
 
 }

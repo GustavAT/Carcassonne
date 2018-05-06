@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.IGameController;
+import distudios.at.carcassonne.engine.logic.Orientation;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
@@ -36,6 +39,8 @@ public class GameFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private Button buttonEndTurn;
 
     public GameFragment() {
         // Required empty public constructor
@@ -81,7 +86,10 @@ public class GameFragment extends Fragment {
         buttonAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playfieldView.initFieldFromGameState();
+                IGameController controller = CarcassonneApp.getGameController();
+                controller.drawCard();
+                controller.removeFromStack(controller.getCurrentCard());
+                playfieldView.addPossibleLocations();
             }
         });
 
@@ -89,16 +97,26 @@ public class GameFragment extends Fragment {
         buttonCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playfieldView.centerCard(null);
+//                playfieldView.centerCard(null);
+//
+//
+//                // test method -> just send new gamestate to other device
+//                CarcassonneApp.getGameController().updateGameState();
 
-
-                // test method -> just send new gamestate to other device
-                CarcassonneApp.getGameController().updateGameState();
+                IGameController controller = CarcassonneApp.getGameController();
+                Card current = controller.getCurrentCard();
+                if (current != null && !controller.hasPlacedCard()) {
+                    Orientation o =current.getOrientation();
+                    int next = (o.getValue() + 1) % 4;
+                    Toast.makeText(getContext(), "Orientation " + current.getOrientation() + " " + Orientation.valueOf(next), Toast.LENGTH_SHORT).show();
+                    current.setOrientation(Orientation.valueOf(next));
+                    playfieldView.addPossibleLocations();
+                }
             }
         });
 
-        Button endTurn = view.findViewById(R.id.button_endTurn);
-        endTurn.setOnClickListener(new View.OnClickListener() {
+        buttonEndTurn = view.findViewById(R.id.button_endTurn);
+        buttonEndTurn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 IGameController controller = CarcassonneApp.getGameController();
@@ -138,5 +156,16 @@ public class GameFragment extends Fragment {
 
     public void updatePlayField() {
         playfieldView.initFieldFromGameState();
+//        IGameController controller = CarcassonneApp.getGameController();
+//        if (!controller.isMyTurn()) {
+//            buttonEndTurn.setEnabled(false);
+//        } else {
+//            if (controller.hasPlacedCard()) {
+//                buttonEndTurn.setEnabled(true);
+//            } else {
+//                buttonEndTurn.setEnabled(false);
+//            }
+//        }
+
     }
 }
