@@ -36,7 +36,10 @@ addons:
     sonarcloud:
       organization: "gustavat-github"
       token:
-        secure: "ccb2fd2b5efbc63231e26f0a4042de2aa499ae0f"
+        secure: $SONAR_TOKEN
+        
+before_install:
+  - chmod +x gradlew
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
