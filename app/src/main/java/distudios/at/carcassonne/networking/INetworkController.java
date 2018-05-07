@@ -12,6 +12,7 @@ import java.util.Map;
 
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.DataCallback;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public interface INetworkController {
 
@@ -19,14 +20,16 @@ public interface INetworkController {
     Salut getNetwork();
     void sendToAllDevices(CarcassonneMessage data);
     void sendToHost(CarcassonneMessage data);
+    void sendMessage(CarcassonneMessage message);
 
     boolean isHost();
     boolean isClient();
 
-    void createPlayerMappings();
-    Map<String, Integer> getPlayerMappings();
-    void setPlayerMappings(Map<String, Integer> mappings);
+    Map<String, PlayerInfo> createPlayerMappings();
+    Map<String, PlayerInfo> getPlayerMappings();
+    void setPlayerMappings(Map<String, PlayerInfo> mappings);
     int getDevicePlayerNumber();
+    PlayerInfo getPlayerInfo(int id);
     int getDeviceCount();
 
 }

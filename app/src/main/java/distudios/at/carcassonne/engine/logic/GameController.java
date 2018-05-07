@@ -19,55 +19,105 @@ public class GameController implements IGameController {
      */
     private boolean cardPlaced = false;
 
+    /**
+     * Game state
+     *
+     * If its not this players turn: WAITING (do nothing)
+     * else:
+     * - DRAW_CARD (waiting for card drawing)
+     * - PLACE_CARD (waiting for card placement)
+     * - PLACE_FIGURE (waiting for figure placement)
+     * - END_TURN (waiting for player to end turn)
+     */
+    private CState cState;
     private Card currentCard;
+    private boolean isCheating = false;
 
     public GameController() {
         this.init();
     }
 
-    @Override
-    public void init() {
+    private void init() {
         // init game engine;
         gameEngine = new GameEngine();
         gameEngine.init(Orientation.NORTH);
+        cState = CState.WAITING;
     }
 
     @Override
-    public void action() {
+    public void removeFromStack(Card c) {
+        getGameState().removeFromStack(c);
+    }
 
-        //choose card
+    @Override
+    public Card drawCard() {
+        if (cState == CState.DRAW_CARD) {
+            cState = CState.PLACE_CARD;
+            return getGameState().drawCard();
+        }
+        return null;
+    }
 
-        Card nextCard=null;
-        actionCardPlacement(nextCard);
-
-        //Überprüfe Peep
-
-        //Platziere Peep
-
-        //Überprüfe Punkte
-
-        //Setze Punkte
-
-        //Entferne Peep
-
-        update();
+    @Override
+    public List<Card> drawCards() {
+        if (cState == CState.DRAW_CARD) {
+            cState = CState.PLACE_CARD;
+            isCheating = true;
+            return getGameState().drawCards();
+        }
+        return null;
     }
 
     //todo: Nachdem Connection auf ExtendedCard gecoded wurden-->implementiere einen Situationellen Punktezähler anhand einer Id oder Koordinate
 
     @Override
-    public boolean actionCardPlacement(Card nextCard) {
-        if(gameEngine.checkPlaceable(nextCard)){
-            gameEngine.placeCard(nextCard);
-            cardPlaced = true;
-            currentCard = null;
+    public boolean placeCard(Card card) {
+        if (cState != CState.PLACE_CARD) return false;
+
+        if(gameEngine.checkPlaceable(card)){
+            gameEngine.placeCard(card);
+            removeFromStack(card);
+            // todo change to PLACE_FIGURE
+            cState = CState.END_TURN;
             return true;
         }
-        else{
-            //Melde "Nicht platzierbare Karte"
-            System.out.println("Nicht platzierbare Karte");
-            return false;
-        }
+        return false;
+    }
+
+    @Override
+    public boolean placeFigure(Object figure) {
+        if (cState != CState.PLACE_FIGURE) return false;
+
+        cState = CState.END_TURN;
+
+        // todo implement
+        return true;
+    }
+
+
+    @Override
+    public void endTurn() {
+        if (cState != CState.END_TURN || !isMyTurn()) return;
+
+        CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
+        GameState state = getGameState();
+        state.currentPlayer = state.getNextPlayer();
+        message.state = state;
+        Log.d("CARDS", "send: " + state.cards.size());
+
+        cState = CState.WAITING;
+        isCheating = false;
+        currentCard = null;
+        CarcassonneApp.getNetworkController().sendMessage(message);
+    }
+
+    @Override
+    public void initMyTurn() {
+        if (cState != CState.WAITING) return;
+
+        cState = CState.DRAW_CARD;
+        isCheating = false;
+        currentCard = null;
     }
 
     /**
@@ -115,19 +165,18 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public Card drawCard() {
-        currentCard = getGameState().drawCard();
-        return currentCard;
-    }
-
-    @Override
-    public void removeFromStack(Card c) {
-        getGameState().removeFromStack(c);
+    public CState getCState() {
+        return cState;
     }
 
     @Override
     public Card getCurrentCard() {
         return currentCard;
+    }
+
+    @Override
+    public void setCurrentCard(Card c) {
+        currentCard = c;
     }
 
     /**
@@ -147,15 +196,6 @@ public class GameController implements IGameController {
         }
 
         return free;
-    }
-
-    private void update() {
-        CarcassonneApp.getGraphicsController().drawField(null);
-    }
-
-    @Override
-    public void dataReceived(Object data, int type) {
-
     }
 
     @Override
@@ -184,20 +224,26 @@ public class GameController implements IGameController {
     }
 
     /**
-     * Start the actual game.
-     * This method should be called from the host owner
+     * Start the game.
+     * Host owner must call this method
      */
     @Override
     public void startGame() {
+
+        gameEngine = new GameEngine();
+        gameEngine.init(Orientation.NORTH);
+        cState = CState.WAITING;
+
         INetworkController controller = CarcassonneApp.getNetworkController();
-        controller.createPlayerMappings();
-        CarcassonneMessage message = new CarcassonneMessage();
-        message.type = CarcassonneMessage.HOST_START_GAME;
-        message.playerMappings = controller.getPlayerMappings();
+
+        CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.HOST_START_GAME);
+        message.playerMappings = controller.createPlayerMappings();
         GameState state = getGameState();
         state.currentPlayer = 0;
         state.maxPlayerCount = controller.getDeviceCount();
         message.state = state;
+
+        cState = CState.DRAW_CARD;
         controller.sendToAllDevices(message);
     }
 
@@ -219,38 +265,10 @@ public class GameController implements IGameController {
         return getGameState().myTurn(CarcassonneApp.getNetworkController().getDevicePlayerNumber());
     }
 
-    @Override
-    public void endTurn() {
-        Log.d("END TURN", getGameState().currentPlayer + "");
-        if (!isMyTurn()) return;
 
-        INetworkController controller = CarcassonneApp.getNetworkController();
-        CarcassonneMessage message = new CarcassonneMessage();
-        message.type = CarcassonneMessage.END_TURN;
-        GameState state = getGameState();
-        Log.d("PLAYER_NUMBER", state.currentPlayer + "");
-        state.currentPlayer = state.getNextPlayer();
-        Log.d("PLAYER_NUMBER", state.currentPlayer + "");
-        message.state = state;
-
-        currentCard = null;
-        cardPlaced = false;
-
-        if (controller.isHost()) {
-            controller.sendToAllDevices(message);
-        } else if (controller.isClient()) {
-            controller.sendToHost(message);
-        }
-    }
 
     @Override
     public boolean hasPlacedCard() {
         return cardPlaced;
     }
-
-    @Override
-    public void placeCard(Card c) {
-        // todo: implement
-    }
-
 }

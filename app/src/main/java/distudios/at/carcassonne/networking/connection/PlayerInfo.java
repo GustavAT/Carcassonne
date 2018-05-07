@@ -13,7 +13,9 @@ public class PlayerInfo {
     @JsonField
     public int playerNumber;
     @JsonField
-    public String color;
+    public int color;
+    @JsonField
+    public String deviceName;
 
     public PlayerInfo() {
     }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.DataCallback;
@@ -36,7 +37,10 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
                 case R.id.navigation_score:
                     currentFragment = ScoreFragment.newInstance("", "");
                     replaceCurrentFragment();
-//                    mTextMessage.setText(R.string.title_dashboard);
+                    return true;
+                case R.id.navigation_settings:
+                    currentFragment = SettingsFragment.newInstance("", "");
+                    replaceCurrentFragment();
                     return true;
             }
             return false;
@@ -57,6 +61,11 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
         DataCallback.callback = this;
     }
 
+    @Override
+    public void onBackPressed() {
+        // do nothing on back pressed
+    }
+
     private void replaceCurrentFragment() {
         FragmentTransaction transa = getSupportFragmentManager().beginTransaction();
         transa.replace(R.id.frame_container, currentFragment);
@@ -71,7 +80,9 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
     // central entry point for all incomming messages
     @Override
     public void onDataReceived(CarcassonneMessage message) {
-        INetworkController controller = CarcassonneApp.getNetworkController();
+        INetworkController networkController = CarcassonneApp.getNetworkController();
+
+
         switch (message.type) {
             case CarcassonneMessage.GAME_STATE_UPDATE:
                 // new gamestate received, update my gamestate
@@ -80,31 +91,38 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
                     ((GameFragment)currentFragment).updatePlayField();
                 }
 
-                if (controller.isHost()) {
-                    controller.sendToAllDevices(message);
+                if (networkController.isHost()) {
+                    networkController.sendToAllDevices(message);
                 }
 
                 Toast.makeText(getApplicationContext(), "Game state update received", Toast.LENGTH_SHORT).show();
                 break;
             case CarcassonneMessage.END_TURN:
 
-                // end turn
+                Log.d("CARDS", "Received: " + message.state.cards.size());
 
-                CarcassonneApp.getGameController().setState(message.state);
-
-                if (currentFragment instanceof GameFragment) {
-                    ((GameFragment)currentFragment).updatePlayField();
+                // send to other players
+                if (networkController.isHost()) {
+                    networkController.sendToAllDevices(message);
                 }
-
-                if (controller.isHost()) {
-                    controller.sendToAllDevices(message);
-                }
-
-
-                String msg = "Its " + message.state.currentPlayer + "'s turn";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                endTurnTriggered(message);
                 break;
 
+        }
+    }
+
+    private void endTurnTriggered(CarcassonneMessage message) {
+        IGameController gameController = CarcassonneApp.getGameController();
+        gameController.setState(message.state);
+        if (gameController.isMyTurn()) {
+            gameController.initMyTurn();
+        }
+        updateGameFragment();
+    }
+
+    private void updateGameFragment() {
+        if (currentFragment instanceof GameFragment) {
+            ((GameFragment) currentFragment).updateFromGameState();
         }
     }
 }

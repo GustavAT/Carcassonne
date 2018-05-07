@@ -76,4 +76,17 @@
     <string name="text_center">Center</string>
     <string name="text_test_field">Test field</string>
     <string name="text_end_turn">End turn</string>
+    <string name="text_settings">Settings</string>
+    <string name="text_sound_effects">Effects</string>
+    <string name="text_music">Music</string>
+
+    <!-- States -->
+    <string name="text_state_waiting">Waiting for player</string>
+    <string name="text_state_draw_card">Draw card</string>
+    <string name="text_state_place_card">Place card</string>
+    <string name="text_state_place_peep">Place peep</string>
+    <string name="text_state_end_turn">End turn</string>
+    <string name="text_main_menu">Return to main menu</string>
+    <string name="text_rules">Rules</string>
+
 </resources>

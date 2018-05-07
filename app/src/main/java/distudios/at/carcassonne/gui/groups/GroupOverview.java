@@ -2,11 +2,9 @@ package distudios.at.carcassonne.gui.groups;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.telecom.ConnectionService;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,14 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bluelinelabs.logansquare.typeconverters.IntBasedTypeConverter;
-import com.peak.salut.Callbacks.SalutCallback;
-import com.peak.salut.Callbacks.SalutDataCallback;
-import com.peak.salut.Callbacks.SalutDeviceCallback;
 import com.peak.salut.Salut;
 import com.peak.salut.SalutDevice;
 
-import java.nio.charset.IllegalCharsetNameException;
+import java.util.Map;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
@@ -30,6 +24,7 @@ import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.DataCallback;
 import distudios.at.carcassonne.networking.connection.DeviceCallback;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public class GroupOverview extends AppCompatActivity implements DeviceCallback.IDeviceCallback, DataCallback.IDataCallback {
 
@@ -52,8 +47,6 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
                 @Override
                 public void onClick(View view) {
                     controller.getNetwork().unregisterClient(false);
-                    Log.d("Carcassonne", "Device unregistered!");
-
                     Intent i = new Intent(getApplicationContext(), Group2Activity.class);
                     startActivity(i);
                 }
@@ -66,6 +59,7 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
             // code for host
 
             DeviceCallback.callback = this;
+
             setupService();
             buttonAction.setText(R.string.text_cleanup);
 
@@ -101,15 +95,9 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
             @Override
             public void onClick(View view) {
 
-                CarcassonneMessage message = new CarcassonneMessage();
-                message.type = CarcassonneMessage.DUMMY_MESSAGE;
+                CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.DUMMY_MESSAGE);
                 message.other = testMessage.getText().toString();
-
-                if (controller.isHost()) {
-                    controller.sendToAllDevices(message);
-                } else if (controller.isClient()) {
-                    controller.sendToHost(message);
-                }
+                controller.sendMessage(message);
             }
         });
     }
@@ -150,14 +138,11 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
 
     @Override
     public void call(SalutDevice salutDevice) {
-        Salut network = CarcassonneApp.getNetworkController().getNetwork();
-        String text = "";
-        for (SalutDevice d : network.registeredClients) {
-            text += d.readableName + System.getProperty("line.separator");
-        }
-
-        text += network.thisDevice.readableName;
-        ((TextView)findViewById(R.id.textView_deviceList)).setText(text);
+        INetworkController controller = CarcassonneApp.getNetworkController();
+        CarcassonneMessage message =new CarcassonneMessage(CarcassonneMessage.PLAYER_JOIN);
+        message.playerMappings = controller.createPlayerMappings();
+        controller.sendToAllDevices(message);
+        showPlayers();
     }
 
     @Override
@@ -183,6 +168,25 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
                 startActivity(i);
 
                 break;
+            case CarcassonneMessage.PLAYER_JOIN:
+                controller.setPlayerMappings(data.playerMappings);
+                Toast.makeText(getApplicationContext(), "Players changed", Toast.LENGTH_SHORT).show();
+
+                showPlayers();
+
+                break;
         }
+    }
+
+    private void showPlayers() {
+        INetworkController controller = CarcassonneApp.getNetworkController();
+        Map<String, PlayerInfo> mappings = controller.getPlayerMappings();
+
+        String text = "";
+        for (PlayerInfo info : mappings.values()) {
+            text += info.deviceName + System.getProperty("line.separator");
+        }
+
+        ((TextView)findViewById(R.id.textView_deviceList)).setText(text);
     }
 }

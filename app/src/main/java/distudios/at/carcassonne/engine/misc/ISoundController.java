@@ -1,4 +1,4 @@
-package distudios.at.carcassonne.gui;
+package distudios.at.carcassonne.engine.misc;
 
 import android.os.CountDownTimer;
 

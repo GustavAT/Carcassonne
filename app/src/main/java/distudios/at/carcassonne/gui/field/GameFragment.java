@@ -9,16 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.engine.logic.CState;
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +32,7 @@ import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
  * Use the {@link GameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GameFragment extends Fragment {
+public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -41,6 +45,9 @@ public class GameFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private Button buttonEndTurn;
+    private Button buttonToDo;
+    private ImageButton buttonDrawCard;
+    private TextView textViewStatus;
 
     public GameFragment() {
         // Required empty public constructor
@@ -82,60 +89,68 @@ public class GameFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_game, container, false);
 
         playfieldView = view.findViewById(R.id.view_playfield);
-        Button buttonAction = view.findViewById(R.id.button_doSomething);
-        buttonAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                IGameController controller = CarcassonneApp.getGameController();
-                controller.drawCard();
-                controller.removeFromStack(controller.getCurrentCard());
-                playfieldView.addPossibleLocations();
-            }
-        });
+        playfieldView.callbackCardPlaced = this;
 
-        Button buttonCenter = view.findViewById(R.id.button_centerField);
-        buttonCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                playfieldView.centerCard(null);
+//        Button buttonAction = view.findViewById(R.id.button_doSomething);
+//        buttonAction.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                IGameController controller = CarcassonneApp.getGameController();
+//                controller.drawCard();
+//                controller.removeFromStack(controller.getCurrentCard());
+//                playfieldView.addPossibleLocations();
+//            }
+//        });
 //
+//        Button buttonCenter = view.findViewById(R.id.button_centerField);
+//        buttonCenter.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
 //
-//                // test method -> just send new gamestate to other device
-//                CarcassonneApp.getGameController().updateGameState();
+//                IGameController controller = CarcassonneApp.getGameController();
+//                Card current = controller.getCurrentCard();
+//                if (current != null && !controller.hasPlacedCard()) {
+//                    Orientation o =current.getOrientation();
+//                    int next = (o.getValue() + 1) % 4;
+//                    Toast.makeText(getContext(), "Orientation " + current.getOrientation() + " " + Orientation.valueOf(next), Toast.LENGTH_SHORT).show();
+//                    current.setOrientation(Orientation.valueOf(next));
+//                    playfieldView.addPossibleLocations();
+//                }
+//            }
+//        });
 
-                IGameController controller = CarcassonneApp.getGameController();
-                Card current = controller.getCurrentCard();
-                if (current != null && !controller.hasPlacedCard()) {
-                    Orientation o =current.getOrientation();
-                    int next = (o.getValue() + 1) % 4;
-                    Toast.makeText(getContext(), "Orientation " + current.getOrientation() + " " + Orientation.valueOf(next), Toast.LENGTH_SHORT).show();
-                    current.setOrientation(Orientation.valueOf(next));
-                    playfieldView.addPossibleLocations();
-                }
-            }
-        });
-
+        final IGameController controller = CarcassonneApp.getGameController();
         buttonEndTurn = view.findViewById(R.id.button_endTurn);
         buttonEndTurn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                IGameController controller = CarcassonneApp.getGameController();
-                Log.d("TURN", controller.getGameState().currentPlayer + "" );
                 controller.endTurn();
-                Log.d("TURN", controller.getGameState().currentPlayer + "");
+                updateFromGameState();
             }
         });
 
+        buttonDrawCard = view.findViewById(R.id.button_drawCard);
+        buttonDrawCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (controller.getCState() != CState.DRAW_CARD) return;
+
+                // open dialog for card drawing
+                Card c = controller.drawCard();
+                controller.setCurrentCard(c);
+
+                playfieldView.addPossibleLocations();
+                updateFromGameState();
+            }
+        });
+
+        buttonToDo = view.findViewById(R.id.button_otherOptions);
+        textViewStatus = view.findViewById(R.id.text_status);
+
+        updateFromGameState();
+
         return view;
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
 
     @Override
     public void onAttach(Context context) {
@@ -156,16 +171,75 @@ public class GameFragment extends Fragment {
 
     public void updatePlayField() {
         playfieldView.initFieldFromGameState();
-//        IGameController controller = CarcassonneApp.getGameController();
-//        if (!controller.isMyTurn()) {
-//            buttonEndTurn.setEnabled(false);
-//        } else {
-//            if (controller.hasPlacedCard()) {
-//                buttonEndTurn.setEnabled(true);
-//            } else {
-//                buttonEndTurn.setEnabled(false);
-//            }
-//        }
+    }
 
+    public void updateStatusText() {
+        IGameController controller = CarcassonneApp.getGameController();
+        CState state = controller.getCState();
+        String text = getString(R.string.text_state_waiting);
+
+        switch (state) {
+            case DRAW_CARD:
+                text  = getString(R.string.text_state_draw_card);
+                break;
+            case PLACE_CARD:
+                text = getString(R.string.text_state_place_card);
+                break;
+            case PLACE_FIGURE:
+                text = getString(R.string.text_state_place_peep);
+                break;
+            case END_TURN:
+                text = getString(R.string.text_end_turn);
+                break;
+            default:
+                int number = controller.getGameState().currentPlayer;
+                PlayerInfo info = CarcassonneApp.getNetworkController().getPlayerInfo(number);
+                if (info != null) {
+                    text += " " + info.deviceName;
+                }
+        }
+
+        textViewStatus.setText(text);
+
+    }
+
+    public void updateFromGameState() {
+        IGameController controller = CarcassonneApp.getGameController();
+
+        switch (controller.getCState()) {
+            case WAITING:
+                buttonEndTurn.setEnabled(false);
+                buttonToDo.setEnabled(false);
+                break;
+            case DRAW_CARD:
+                buttonEndTurn.setEnabled(false);
+                buttonToDo.setEnabled(false);
+                break;
+            case PLACE_CARD:
+                buttonEndTurn.setEnabled(false);
+                buttonToDo.setEnabled(false);
+                break;
+            case PLACE_FIGURE:
+                buttonEndTurn.setEnabled(false);
+                buttonToDo.setEnabled(false);
+                break;
+            case END_TURN:
+                buttonEndTurn.setEnabled(true);
+                buttonToDo.setEnabled(false);
+                break;
+        }
+
+        updateStatusText();
+        playfieldView.initFieldFromGameState();
+    }
+
+    @Override
+    public void cardPlaced(int x, int y) {
+        IGameController controller = CarcassonneApp.getGameController();
+        Card c = controller.getCurrentCard();
+        c.setxCoordinate(x);
+        c.setyCoordinate(y);
+        controller.placeCard(c);
+        updateFromGameState();
     }
 }

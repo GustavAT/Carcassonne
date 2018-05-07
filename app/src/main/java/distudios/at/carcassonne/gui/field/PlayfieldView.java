@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaExtractor;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +20,11 @@ import java.util.Map;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.engine.logic.CState;
 import distudios.at.carcassonne.engine.logic.Card;
+import distudios.at.carcassonne.engine.logic.CardDataBase;
+import distudios.at.carcassonne.engine.logic.CardSide;
+import distudios.at.carcassonne.engine.logic.ExtendedCard;
 import distudios.at.carcassonne.engine.logic.GameController;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
@@ -27,9 +33,20 @@ import distudios.at.carcassonne.engine.logic.Orientation;
 
 public class PlayfieldView extends View {
 
+    public ICardPlaced callbackCardPlaced;
+    public IPeepPlaced callbackPeepPlaced;
+
     public static int CARDS_COUNT_HORIZONTAL = 6;
+
     private Paint rasterPaint;
+    private Paint debugPaint;
     private Paint cardPaint;
+
+    // todo remove after graphics for cards are set up
+    private Paint paintStreet;
+    private Paint paintGrass;
+    private Paint paintCastle;
+    private Paint paintSpecial;
 
     private boolean dragging = false;
     private double lastX;
@@ -60,12 +77,35 @@ public class PlayfieldView extends View {
         rasterPaint = new Paint();
         rasterPaint.setStyle(Paint.Style.STROKE);
         rasterPaint.setStrokeWidth(3);
-        rasterPaint.setColor(Color.BLUE);
+        rasterPaint.setColor(Color.YELLOW);
         rasterPaint.setTextSize(25);
+
+        debugPaint = new Paint();
+        debugPaint.setStyle(Paint.Style.STROKE);
+        debugPaint.setStrokeWidth(3);
+        debugPaint.setColor(Color.RED);
+        debugPaint.setTextSize(25);
 
         cardPaint = new Paint();
         cardPaint.setStyle(Paint.Style.FILL);
-        cardPaint.setColor(getResources().getColor(R.color.colorAccent));
+        cardPaint.setColor(getResources().getColor(R.color.white));
+
+        paintCastle = new Paint();
+        paintCastle.setStyle(Paint.Style.FILL);
+        paintCastle.setColor(getResources().getColor(R.color.white));
+
+        paintStreet = new Paint();
+        paintStreet.setStyle(Paint.Style.FILL);
+        paintStreet.setColor(getResources().getColor(R.color.black));
+
+        paintGrass = new Paint();
+        paintGrass.setStyle(Paint.Style.FILL);
+        paintGrass.setColor(getResources().getColor(R.color.colorPrimary));
+
+
+        paintSpecial = new Paint();
+        paintSpecial.setStyle(Paint.Style.FILL);
+        paintSpecial.setColor(getResources().getColor(R.color.yellow));
     }
 
     /**
@@ -135,28 +175,24 @@ public class PlayfieldView extends View {
 
             } else {
                 IGameController controller = CarcassonneApp.getGameController();
-                if (!controller.hasPlacedCard()) {
+                if (controller.getCState() == CState.PLACE_CARD && callbackCardPlaced != null) {
                     for (String key : possibleLocations.keySet()) {
                         CardContainer c = possibleLocations.get(key);
 
                         if (x >= c.pixelX && x <= (c.pixelX + c.size) && y >= c.pixelY && y <= (c.pixelY + c.size)) {
-                            Toast.makeText(getContext(), "Clicked: x: " + c.fieldX + " y: " + c.fieldY, Toast.LENGTH_SHORT).show();
 
                             CardContainer c2 = placedCards.get(c.key());
 
                             if (c2 == null) {
                                 c2 = c.copy();
+
                                 c2.card = controller.getCurrentCard();
                                 placedCards.put(c2.key(), c2);
 
-                                Card card = controller.getCurrentCard();
-                                card.setxCoordinate(c2.fieldX);
-                                card.setyCoordinate(c2.fieldY);
-                                controller.actionCardPlacement(card);
+                                clearPossibleLocations();
+                                callbackCardPlaced.cardPlaced(c2.fieldX, c2.fieldY);
 
                                 invalidate();
-                            } else {
-                                centerCard(c2);
                             }
 
                             break;
@@ -171,49 +207,20 @@ public class PlayfieldView extends View {
         return true;
     }
 
-    private void addSurroundingFields(CardContainer center) {
-//        addSurroundingField(center, -1, 1);
-        addSurroundingField(center, 0, 1);
-//        addSurroundingField(center, 1, 1);
-        addSurroundingField(center, -1, 0);
-        addSurroundingField(center, 1, 0);
-//        addSurroundingField(center, -1, -1);
-        addSurroundingField(center, 0, -1);
-//        addSurroundingField(center, 1, -1);
-    }
-
-    private void addSurroundingField(CardContainer center, int dirX, int dirY) {
-        int targetX = center.fieldX + dirX;
-        int targetY = center.fieldY + dirY;
-
-        String key = targetX + "_" + targetY;
-
-        if (possibleLocations.containsKey(key)) return;
-
-        CardContainer c = new CardContainer();
-        c.fieldX = targetX;
-        c.fieldY = targetY;
-        c.size = center.size;
-        c.pixelX = center.pixelX + dirX * center.size;
-        c.pixelY = center.pixelY + dirY * center.size;
-
-        possibleLocations.put(key, c);
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
 
         for (String key : placedCards.keySet()) {
             CardContainer c = placedCards.get(key);
-            drawCardContainer(c, canvas, cardPaint);
-            canvas.drawText("" + c.card.getId(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 25), rasterPaint);
-            canvas.drawText("" + c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 50), rasterPaint);
+            drawCardContainer(c, canvas);
+            canvas.drawText("" + c.card.getId(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 25), debugPaint);
+            canvas.drawText("" + c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 50), debugPaint);
         }
 
         for (String key: possibleLocations.keySet()) {
             CardContainer c = possibleLocations.get(key);
             drawCardContainer(c, canvas, rasterPaint);
-            canvas.drawText("X: " + c.fieldX  + ", Y " + c.fieldY, (int) (c.pixelX + c.offsetX + c.size / 4), (int)(c.pixelY + c.offsetY + c.size / 2), rasterPaint);
+            canvas.drawText("X: " + c.fieldX  + ", Y " + c.fieldY, (int) (c.pixelX + c.offsetX + c.size / 4), (int)(c.pixelY + c.offsetY + c.size / 2), debugPaint);
         }
     }
 
@@ -257,41 +264,16 @@ public class PlayfieldView extends View {
 
     }
 
-//    public void initField() {
-//        int height = getHeight() - getPaddingBottom() - getPaddingTop();
-//        int width = getWidth() - getPaddingLeft() - getPaddingRight();
-//
-//        int centerX = width / 2;
-//        int centerY = height / 2;
-//        double cardSize = width / CARDS_COUNT_HORIZONTAL;
-//
-//        possibleLocations.clear();
-//        placedCards.clear();
-//
-//        CardContainer initialCard = new CardContainer();
-//        initialCard.fieldY = initialCard.fieldX = 0;
-//        initialCard.pixelX = centerX - cardSize / 2;
-//        initialCard.pixelY = centerY - cardSize / 2;
-//        initialCard.size = cardSize;
-//        placedCards.put(initialCard.key(), initialCard);
-//
-//        addSurroundingFields(initialCard);
-//        invalidate();
-//
-//    }
-
     public void initFieldFromGameState() {
-        gameState = CarcassonneApp.getGameController().getGameState();
+        IGameController controller = CarcassonneApp.getGameController();
+        gameState = controller.getGameState();
         List<Card> cards = gameState.getCards();
 
         possibleLocations.clear();
         placedCards.clear();
 
-        int height = getHeight() - getPaddingBottom() - getPaddingTop();
         int width = getWidth() - getPaddingLeft() - getPaddingRight();
 
-        int centerX = width / 2;
-        int centerY = height / 2;
         double cardSize = width / CARDS_COUNT_HORIZONTAL;
 
         CardContainer lastCard = null;
@@ -311,6 +293,11 @@ public class PlayfieldView extends View {
         if (lastCard != null) {
             centerCard(lastCard);
         }
+
+        if (controller.getCState() == CState.PLACE_CARD) {
+            addPossibleLocations();
+        }
+
         invalidate();
     }
 
@@ -324,7 +311,7 @@ public class PlayfieldView extends View {
         if (currentCard == null) {
             invalidate();
             return;
-        };
+        }
 
         List<Pair<Integer, Integer>> locations = controller.getPossibleLocations(currentCard);
 
@@ -337,7 +324,7 @@ public class PlayfieldView extends View {
             CardContainer c = new CardContainer();
             c.fieldX = position.first;
             c.fieldY = position.second;
-            c.offsetX = initialCard.offsetY;
+            c.offsetX = initialCard.offsetX;
             c.offsetY = initialCard.offsetY;
             c.size = initialCard.size;
             c.pixelX = initialCard.pixelX + c.fieldX * size;
@@ -345,6 +332,11 @@ public class PlayfieldView extends View {
             possibleLocations.put(c.key(), c);
         }
 
+        invalidate();
+    }
+
+    public void clearPossibleLocations() {
+        possibleLocations.clear();
         invalidate();
     }
 
@@ -388,5 +380,60 @@ public class PlayfieldView extends View {
         }
     }
 
+    private void drawCardContainer(CardContainer c, Canvas canvas) {
+        ExtendedCard ec = CardDataBase.getCardById(c.card.getId());
+        if (ec == null) return;
 
+        Log.d("CARD", " " + ec.getId());
+
+        float left = (float)(c.pixelX + c.offsetX);
+        float top = (float)(c.pixelY + c.offsetY);
+        float right = (float)(c.pixelX + c.offsetX + c.size);
+        float bottom = (float)(c.pixelY + c.offsetY + c.size);
+        canvas.drawRect(left, top, right, bottom, paintGrass);
+
+        float offset = (float) c.size / 5;
+        float half = (float) c.size / 2;
+
+        if (ec.isCathedral()) {
+            canvas.drawCircle(left + half, top + half, offset, paintSpecial);
+        } else if (ec.isWappen()) {
+            canvas.drawCircle(left + half + 10, top + half + 10, offset, cardPaint);
+        }
+
+        
+        if (ec.getTop() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE) {
+            canvas.drawRect(left + offset, top, right - half, top + offset, paintCastle);
+        } else if (ec.getTop() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET) {
+            canvas.drawRect(left + half, top, right - offset, top + offset, paintStreet);
+        }
+
+        if (ec.getRight() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
+            canvas.drawRect(right - offset, top + offset, right, top + half, paintCastle);
+        } else if (ec.getRight() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET) {
+            canvas.drawRect(right - offset, bottom - half, right, bottom - offset, paintStreet);
+        }
+
+        if (ec.getDown() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE) {
+             canvas.drawRect(left + offset, bottom, right - half, bottom - offset, paintCastle);
+        } else if (ec.getDown() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET) {
+            canvas.drawRect(left + half, bottom, right - offset, bottom - offset, paintStreet);
+            Log.d("CARD", "Street down");
+        }
+
+        if (ec.getLeft() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE) {
+            canvas.drawRect(left, top + offset, left + offset, top + half , paintCastle);
+        } else if (ec.getLeft() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET) {
+            canvas.drawRect(left, bottom - half, left + offset, bottom - offset , paintStreet);
+        }
+    }
+
+
+    public interface ICardPlaced {
+        void cardPlaced(int x, int y);
+    }
+
+    public interface IPeepPlaced {
+        void peepPlaced();
+    }
 }
