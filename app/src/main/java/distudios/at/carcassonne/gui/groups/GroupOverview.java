@@ -26,6 +26,7 @@ import java.util.Map;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.gui.StartGameActivity;
 import distudios.at.carcassonne.gui.field.GameActivity;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;

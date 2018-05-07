@@ -13,7 +13,7 @@ public class SectionsPageAdapter extends FragmentStatePagerAdapter {
     private final List<Fragment> mFragmentList= new ArrayList<>();
     private final List <String> mFragmentTitleList= new ArrayList<>();
 
-    public void addFragment(Fragment fragment,String title){
+    public void addFragment(Fragment fragment, String title){
         mFragmentTitleList.add(title);
         mFragmentList.add(fragment);
     }

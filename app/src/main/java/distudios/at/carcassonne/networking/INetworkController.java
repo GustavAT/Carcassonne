@@ -29,6 +29,7 @@ public interface INetworkController {
     Map<String, PlayerInfo> getPlayerMappings();
     void setPlayerMappings(Map<String, PlayerInfo> mappings);
     int getDevicePlayerNumber();
+    PlayerInfo getPlayerInfo(int id);
     int getDeviceCount();
 
 }

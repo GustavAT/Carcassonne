@@ -11,4 +11,9 @@
         android:icon="@drawable/icon_trophy"
         android:title="@string/text_score" />
 
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/icon_cog"
+        android:title="@string/text_settings" />
+
 </menu>

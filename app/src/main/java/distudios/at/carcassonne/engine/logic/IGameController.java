@@ -49,6 +49,11 @@ public interface IGameController {
      */
     void endTurn();
 
+    /**
+     * init new turn for this player
+     */
+    void initMyTurn();
+
     // card operations
 
     Card getCurrentCard();

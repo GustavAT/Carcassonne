@@ -1,4 +1,4 @@
-package distudios.at.carcassonne.gui.Fragments;
+package distudios.at.carcassonne.gui.game;
 
 
 import android.os.Bundle;
@@ -20,7 +20,7 @@ public class ScoreFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_score,container,false);
         String[] players ={"Player 1","Player 2", "Player 3","Player 4","Player 5"};
-        listView= view.findViewById(R.id.score_list);
+//        listView= view.findViewById(R.id.score_list);
 
 
         ScoreViewAdapter arrayAdapter = new ScoreViewAdapter(getActivity().getApplicationContext(),players);

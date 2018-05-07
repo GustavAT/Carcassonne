@@ -71,12 +71,14 @@ public class GameController implements IGameController {
     //todo: Nachdem Connection auf ExtendedCard gecoded wurden-->implementiere einen Situationellen Punktezähler anhand einer Id oder Koordinate
 
     @Override
-    public boolean placeCard(Card nextCard) {
+    public boolean placeCard(Card card) {
         if (cState != CState.PLACE_CARD) return false;
 
-        if(gameEngine.checkPlaceable(nextCard)){
-            gameEngine.placeCard(nextCard);
-            cState = CState.PLACE_FIGURE;
+        if(gameEngine.checkPlaceable(card)){
+            gameEngine.placeCard(card);
+            removeFromStack(card);
+            // todo change to PLACE_FIGURE
+            cState = CState.END_TURN;
             return true;
         }
         return false;
@@ -101,11 +103,21 @@ public class GameController implements IGameController {
         GameState state = getGameState();
         state.currentPlayer = state.getNextPlayer();
         message.state = state;
+        Log.d("CARDS", "send: " + state.cards.size());
 
         cState = CState.WAITING;
         isCheating = false;
         currentCard = null;
         CarcassonneApp.getNetworkController().sendMessage(message);
+    }
+
+    @Override
+    public void initMyTurn() {
+        if (cState != CState.WAITING) return;
+
+        cState = CState.DRAW_CARD;
+        isCheating = false;
+        currentCard = null;
     }
 
     /**
@@ -217,6 +229,11 @@ public class GameController implements IGameController {
      */
     @Override
     public void startGame() {
+
+        gameEngine = new GameEngine();
+        gameEngine.init(Orientation.NORTH);
+        cState = CState.WAITING;
+
         INetworkController controller = CarcassonneApp.getNetworkController();
 
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.HOST_START_GAME);

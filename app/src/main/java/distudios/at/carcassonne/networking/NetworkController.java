@@ -32,7 +32,7 @@ public class NetworkController implements INetworkController {
 
     @Override
     public void init(Activity activity) {
-        serviceData = new SalutServiceData("CarcassonneService", 60000, CarcassonneApp.playerName);
+        serviceData = new SalutServiceData("CarcassonneService", 60000, CarcassonneApp.getPlayerName());
         dataReceiver = new SalutDataReceiver(activity, new DataCallback());
         network = new Salut(dataReceiver, serviceData, null);
         playerMappings = new HashMap<>();
@@ -84,7 +84,7 @@ public class NetworkController implements INetworkController {
 
     @Override
     public boolean isClient() {
-        return network != null && network.isConnectedToAnotherDevice;
+        return network != null && network.isConnectedToAnotherDevice && !network.isRunningAsHost;
     }
 
     /***
@@ -95,11 +95,11 @@ public class NetworkController implements INetworkController {
     public Map<String, PlayerInfo> createPlayerMappings() {
         Map<String, PlayerInfo> mappings = new HashMap<>();
 
-        mappings.put(network.thisDevice.instanceName, createPlayerInfo(network.thisDevice, 0));
+        mappings.put(network.thisDevice.readableName + "_" + network.thisDevice.instanceName, createPlayerInfo(network.thisDevice, 0));
 
         int playerNumber = 1;
         for (SalutDevice sd : network.registeredClients) {
-            mappings.put(sd.instanceName, createPlayerInfo(sd, playerNumber));
+            mappings.put(sd.readableName + "_" + sd.instanceName, createPlayerInfo(sd, playerNumber));
             playerNumber++;
         }
 
@@ -109,7 +109,7 @@ public class NetworkController implements INetworkController {
 
     private PlayerInfo createPlayerInfo(SalutDevice device, int number) {
         PlayerInfo info = new PlayerInfo();
-        info.deviceName = device.deviceName;
+        info.deviceName = device.readableName;
         info.playerNumber = number;
         info.instanceName = device.instanceName;
         info.color = Color.RED;
@@ -128,8 +128,20 @@ public class NetworkController implements INetworkController {
 
     @Override
     public int getDevicePlayerNumber() {
-        String thisDevice = network.thisDevice.instanceName;
+        String thisDevice = network.thisDevice.readableName + "_" + network.thisDevice.instanceName;
         return playerMappings.containsKey(thisDevice) ? playerMappings.get(thisDevice).playerNumber : -1;
+    }
+
+    @Override
+    public PlayerInfo getPlayerInfo(int id) {
+        PlayerInfo info = null;
+        for (PlayerInfo pi : playerMappings.values()) {
+            if (pi.playerNumber == id) {
+                info = pi;
+                break;
+            }
+        }
+        return info;
     }
 
     @Override
