@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telecom.ConnectionService;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bluelinelabs.logansquare.typeconverters.IntBasedTypeConverter;
 import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Callbacks.SalutDataCallback;
 import com.peak.salut.Callbacks.SalutDeviceCallback;
@@ -23,6 +25,7 @@ import java.nio.charset.IllegalCharsetNameException;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.gui.field.GameActivity;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.DataCallback;
@@ -37,6 +40,7 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Button buttonStartGame = findViewById(R.id.button_startGame);
         Button buttonAction = findViewById(R.id.button_cleanup_group);
 
         final INetworkController controller = CarcassonneApp.getNetworkController();
@@ -55,6 +59,8 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
                 }
             });
             buttonAction.setText(R.string.text_leave_group);
+
+            buttonStartGame.setVisibility(View.GONE);
         } else {
 
             // code for host
@@ -71,6 +77,17 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
                     NavUtils.navigateUpFromSameTask(thisActivity);
                 }
             });
+
+            buttonStartGame.setVisibility(View.VISIBLE);
+            buttonStartGame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // tell other devices to start the game and start the game activity
+                    CarcassonneApp.getGameController().startGame();
+                    Intent i = new Intent(getApplicationContext(), GameActivity.class);
+                    startActivity(i);
+                }
+            });
         }
 
 
@@ -83,10 +100,15 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                CarcassonneMessage message = new CarcassonneMessage();
+                message.type = CarcassonneMessage.DUMMY_MESSAGE;
+                message.other = testMessage.getText().toString();
+
                 if (controller.isHost()) {
-                    controller.sendToAllDevices(testMessage.getText().toString());
+                    controller.sendToAllDevices(message);
                 } else if (controller.isClient()) {
-                    controller.sendToHost(testMessage.getText().toString());
+                    controller.sendToHost(message);
                 }
             }
         });
@@ -139,11 +161,28 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
     }
 
     @Override
-    public void onDataReceived(Object data) {
-        Toast.makeText(getApplicationContext(), data.toString(), Toast.LENGTH_LONG).show();
+    public void onDataReceived(CarcassonneMessage data) {
+
         INetworkController controller = CarcassonneApp.getNetworkController();
-        if (controller.isHost()) {
-            controller.sendToAllDevices(data);
+
+        switch (data.type) {
+            case CarcassonneMessage.DUMMY_MESSAGE:
+                // dummy message received. if this device is host, broadcast to all devices
+                Toast.makeText(getApplicationContext(), data.other, Toast.LENGTH_SHORT).show();
+                if (controller.isHost()) {
+                    controller.sendToAllDevices(data);
+                }
+                break;
+            case CarcassonneMessage.HOST_START_GAME:
+                controller.setPlayerMappings(data.playerMappings);
+                CarcassonneApp.getGameController().setState(data.state);
+                Toast.makeText(getApplicationContext(), "Player mappings received", Toast.LENGTH_SHORT).show();
+
+                // initial state received from host, start game and wait
+                Intent i = new Intent(getApplicationContext(), GameActivity.class);
+                startActivity(i);
+
+                break;
         }
     }
 }

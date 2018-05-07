@@ -30,9 +30,9 @@ public class TestGameEngine {
         cdb.cardDB.get(20).setLeft(CardSide.GRASS);
 
         cdb.cardDB.get(19).setRight(CardSide.CASTLE);   //Anpassung Neue Karte Check
-        cdb.cardDB.get(20).setTop(CardSide.RIVER);
+//        cdb.cardDB.get(20).setTop(CardSide.RIVER);
 
-        cdb.cardDB.get(21).setDown(CardSide.RIVER);     //Anpassung Neue Karte Check
+//        cdb.cardDB.get(21).setDown(CardSide.RIVER);     //Anpassung Neue Karte Check
         cdb.cardDB.get(21).setLeft(CardSide.CASTLE);
     }
 
@@ -67,9 +67,6 @@ public class TestGameEngine {
         Orientation compare=Card.getAbsoluteOrientation(Orientation.WEST, Orientation.NORTH);
         Assert.assertTrue(result==compare);
     }
-
-
-
 
     private void printCards(GameState pgs){
         ArrayList<Card> cardList = pgs.getCards();

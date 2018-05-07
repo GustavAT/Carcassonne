@@ -10,7 +10,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/menu_background">
+        >
 
         <distudios.at.carcassonne.gui.field.PlayfieldView
             android:id="@+id/view_playfield"
@@ -22,7 +22,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -44,8 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/text_center"
-                android:background="@color/sw_yellow"/>
+                android:text="@string/text_center"/>
 
             <Button
                 android:id="@+id/button_doSomething"
@@ -60,8 +59,14 @@
                 android:text="@string/text_cleanup"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:background="@color/sw_yellow"/>
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <Button
+                android:id="@+id/button_endTurn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/text_end_turn" />
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>

@@ -4,12 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.engine.logic.Card;
+import distudios.at.carcassonne.engine.logic.GameState;
+import distudios.at.carcassonne.engine.logic.IGameController;
+import distudios.at.carcassonne.engine.logic.Orientation;
+import distudios.at.carcassonne.networking.INetworkController;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +39,8 @@ public class GameFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private Button buttonEndTurn;
 
     public GameFragment() {
         // Required empty public constructor
@@ -53,6 +64,8 @@ public class GameFragment extends Fragment {
         return fragment;
     }
 
+    public PlayfieldView playfieldView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,17 +76,20 @@ public class GameFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_game, container, false);
 
-        final PlayfieldView pfView = view.findViewById(R.id.view_playfield);
+        playfieldView = view.findViewById(R.id.view_playfield);
         Button buttonAction = view.findViewById(R.id.button_doSomething);
         buttonAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pfView.initField();
+                IGameController controller = CarcassonneApp.getGameController();
+                controller.drawCard();
+                controller.removeFromStack(controller.getCurrentCard());
+                playfieldView.addPossibleLocations();
             }
         });
 
@@ -81,7 +97,32 @@ public class GameFragment extends Fragment {
         buttonCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pfView.centerCard(null);
+//                playfieldView.centerCard(null);
+//
+//
+//                // test method -> just send new gamestate to other device
+//                CarcassonneApp.getGameController().updateGameState();
+
+                IGameController controller = CarcassonneApp.getGameController();
+                Card current = controller.getCurrentCard();
+                if (current != null && !controller.hasPlacedCard()) {
+                    Orientation o =current.getOrientation();
+                    int next = (o.getValue() + 1) % 4;
+                    Toast.makeText(getContext(), "Orientation " + current.getOrientation() + " " + Orientation.valueOf(next), Toast.LENGTH_SHORT).show();
+                    current.setOrientation(Orientation.valueOf(next));
+                    playfieldView.addPossibleLocations();
+                }
+            }
+        });
+
+        buttonEndTurn = view.findViewById(R.id.button_endTurn);
+        buttonEndTurn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IGameController controller = CarcassonneApp.getGameController();
+                Log.d("TURN", controller.getGameState().currentPlayer + "" );
+                controller.endTurn();
+                Log.d("TURN", controller.getGameState().currentPlayer + "");
             }
         });
 
@@ -111,5 +152,20 @@ public class GameFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void updatePlayField() {
+        playfieldView.initFieldFromGameState();
+//        IGameController controller = CarcassonneApp.getGameController();
+//        if (!controller.isMyTurn()) {
+//            buttonEndTurn.setEnabled(false);
+//        } else {
+//            if (controller.hasPlacedCard()) {
+//                buttonEndTurn.setEnabled(true);
+//            } else {
+//                buttonEndTurn.setEnabled(false);
+//            }
+//        }
+
     }
 }

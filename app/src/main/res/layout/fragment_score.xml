@@ -3,15 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".gui.field.ScoreFragment"
-    android:background="@drawable/menu_background">
+    tools:context=".gui.field.ScoreFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/score_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/text_score"
-        android:textColorHint="@color/sw_yellow"
-        android:textColor="@color/sw_yellow"/>
+        android:text="@string/text_score"/>
 
 </FrameLayout>

@@ -6,7 +6,19 @@ import java.util.Collections;
 public class GameEngine implements IGameEngine {
 
     private GameState currentState;
-    private final int STACK_SIZE=50;
+    // 72 Cards including start card leads to STACK SIZE of 71;
+    private final int STACK_SIZE=71;
+    private boolean closed=true;
+
+    @Override
+    public GameState getState() {
+        return currentState;
+    }
+
+    @Override
+    public void setState(GameState s) {
+        currentState = s;
+    }
 
     @Override
     public void init(Orientation start) {
@@ -16,6 +28,8 @@ public class GameEngine implements IGameEngine {
             stack.add(i+2);
             // Card Stack IDs go from 2 to 51. ID 1 is always start card
         }
+
+        // useless: reference vs value
         currentState.setStack(stack);
         shuffle();
         setInitialCard(start);
@@ -24,6 +38,7 @@ public class GameEngine implements IGameEngine {
     private void shuffle() {
         ArrayList<Integer> stack=currentState.getStack();
         Collections.shuffle(stack);
+        // useless: reference vs value
         currentState.setStack(stack);
     }
 
@@ -34,93 +49,229 @@ public class GameEngine implements IGameEngine {
     public void placeCard(Card card){
         currentState.addCard(card);
         ArrayList stack=currentState.getStack();
+        // what is removed from stack??? please check
         stack.remove(stack.size()-1);
+        // useless: reference vs value
         currentState.setStack(stack);
     }
 
     public boolean checkPlaceable(Card nextCard){
-        CardDataBase cdb=CardDataBase.cardDataBase;
+        //Aktuelles Feld
         ArrayList<Card> cards=currentState.getCards();
-        Orientation hnext=null,hit=null;
-        int x=nextCard.getxCoordinate();
-        int y=nextCard.getyCoordinate();
+        //Überprüfung Verbunden
         boolean isconnected=false;
+        //Starte oben
+        Orientation current= Orientation.NORTH;
+        Card itcard;
 
-        // check on Connectivity
-        for(int i=0;i<cards.size();i++){
-            Card itcard = cards.get(i);
-            if(itcard.getxCoordinate()==x){
-                if(itcard.getyCoordinate()==y+1){
-                    //x+1 ... if Border nextCard.north!= Border card.south -->false
-                    hnext=Card.getAbsoluteOrientation(Orientation.NORTH,nextCard.getOrientation()); //Rechnet North mit next.orientation um
-                    hit=Card.getAbsoluteOrientation(Orientation.SOUTH,itcard.getOrientation()); //Rechnet South mit it.orientation um
+        //Überprüfe, ob bereits eine Karte an der Stelle liegt
+        if(checkIfExists(nextCard,cards))return false;
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
-                        return false;
+        //Iteriere über die Seiten
+        for(int i=0;i<4;i++){
+            //Überprüfe Boarder an der aktuellen Seite
+            if(!checkBorder(nextCard, cards, Orientation.NORTH)){
+                //Falls nicht Verbunden-->False
+                return false;
+            }else {
+                //Existiert eine Connection
+                isconnected=true;
+            }
+            //Nächste Seite
+            current=Card.getAbsoluteOrientation(current,Orientation.EAST);
+        }
+        return isconnected;
+    }
+
+    public void addScore(int point, int player){
+        int oldpoints=currentState.getPoints(player);
+        currentState.setPoints(player,point+oldpoints);
+    }
+
+    @Override
+    public ArrayList<Integer> getScoreChanges(Card card) {
+        ArrayList<Card> field=currentState.getCards();
+        ArrayList<Integer> scores=new ArrayList<>(4);
+        for(int i=0;i<4;i++){
+            scores.add(getConnectedCards(card,Orientation.valueOf(i)).size());
+        }
+        return scores;
+    }
+
+    private ArrayList<Card> checkBorderCards(Card card, Orientation sborder){
+        ArrayList<Boolean> checkside=new ArrayList<>(4);
+        ArrayList<Card> itcards=new ArrayList<>(4);
+
+        //todo: implement connections
+        //Füge Connections der aktuellen Karte zusammen
+        if(sborder==Orientation.NORTH){
+            checkside.set(0,true);
+        }else if(sborder==Orientation.EAST){
+            checkside.set(1,true);
+        }
+        else if(sborder==Orientation.EAST){
+            checkside.set(2,true);
+        }
+        else if(sborder==Orientation.EAST){
+            checkside.set(3,true);
+        }else;
+
+        //Iteriere über alle Connections
+        for(int i=0;i<checkside.size();i++){
+            if(checkside.get(i)){
+                if(checkBorder(card,currentState.getCards(),Orientation.valueOf(i))){
+                    Card fcard=getFollowedCard(card,currentState.getCards(),Orientation.valueOf(i));
+                    if(fcard!=null) {
+                        itcards.set(i, fcard);
                     }else{
-                        isconnected=true;
+                        closed=false;
                     }
-
-
-                }
-                else if(itcard.getyCoordinate()==y-1){
-                    //x-1 ... if Border nextCard.south!= Border card.north -->false
-                    hnext=Card.getAbsoluteOrientation(Orientation.SOUTH,nextCard.getOrientation()); //Rechnet North mit next.orientation um
-                    hit=Card.getAbsoluteOrientation(Orientation.NORTH,itcard.getOrientation()); //Rechnet South mit it.orientation um
-
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
-                        return false;
-                    }
-                    else{
-                        isconnected=true;
-                    }
-                }
-                else if(itcard.getyCoordinate()==y){
-                    //Kann nicht Platziert werden, da bereits eine Karte liegt.
-                    return false;
-                }
-                else{
-                    //next loop
+                }else{
+                    itcards.set(i,null);
                 }
             }
-            else if(itcard.getyCoordinate()==y){
-                if(itcard.getxCoordinate()==x+1){
-                    //y+1 ... if Border nextCard.east!= Border card.west -->false
-                    hnext=Card.getAbsoluteOrientation(Orientation.EAST,nextCard.getOrientation()); //Rechnet North mit next.orientation um
-                    hit=Card.getAbsoluteOrientation(Orientation.WEST,itcard.getOrientation()); //Rechnet South mit it.orientation um
+        }
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)) {
-                        return false;
-                    }else{
-                        isconnected=true;
-                    }
-                }
-                else if(itcard.getxCoordinate()==x-1){
-                    //y-1 ... if Border nextCard.west!= Border card.east -->false
-                    hnext=Card.getAbsoluteOrientation(Orientation.WEST,nextCard.getOrientation()); //Rechnet North mit next.orientation um
-                    hit=Card.getAbsoluteOrientation(Orientation.EAST,itcard.getOrientation()); //Rechnet South mit it.orientation um
+        return itcards;
+    }
 
-                    if(cdb.getOrientation(nextCard.getId(),hnext)!=cdb.getOrientation(itcard.getId(),hit)){
-                        return false;
-                    }else{
-                        isconnected=true;
+    private ArrayList<Card> getConnectedCards(Card card, Orientation border){
+        ArrayList<Card> itcards=new ArrayList<>();
+        ArrayList<Card> finalcards=new ArrayList<>();
+        ArrayList<Orientation> oitcard=new ArrayList<>();
+        itcards.add(card);
+        finalcards.add(card);
+        oitcard.add(border);
+        boolean finished=false;
+        boolean closed=true;
+
+        while(!finished){
+            //Schleifenabfrage
+            if(itcards.size()==0){
+                finished=true;
+            }else{
+                //Iterationsmenge vorbereiten
+                Card actCard=itcards.get(0);
+                itcards.remove(0);
+                Orientation actO=oitcard.get(0);
+                oitcard.remove(0);
+                //Methode überprüfe anliegende Karten
+                ArrayList<Card> concards=checkBorderCards(actCard,actO);
+                //Füge Cards mit Orientation hinzu
+                for(int i=0;i<concards.size();i++){
+                    Card it=concards.get(i);
+                    if(it!=null && !checkIfExists(it,finalcards)){
+                        finalcards.add(concards.get(i));
+                        itcards.add(concards.get(i));
+                        oitcard.add(Orientation.valueOf(i));
                     }
-                }
-                else{
-                    //next loop
                 }
             }
 
 
         }
+        if(!closed){
+            closed=true;
+            return new ArrayList<>();
+        }
+        return finalcards;
+    }
 
-
-
-
-        return isconnected;
+    private boolean checkIfExists(Card card, ArrayList<Card> field){
+        for(int i=0;i<field.size();i++){
+            Card itcard=field.get(i);
+            if(card.getxCoordinate()==itcard.getxCoordinate()){
+                if(card.getyCoordinate()==itcard.getyCoordinate()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public GameState getGamestate(){
         return currentState;
+    }
+
+    private boolean checkBorder(Card a, ArrayList<Card> field, Orientation oa){
+
+        CardDataBase cdb = CardDataBase.getInstance();
+        Orientation ob=Card.getAbsoluteOrientation(oa,Orientation.SOUTH);
+        int xb,xa=a.getxCoordinate();
+        int yb,ya=a.getyCoordinate();
+        Card nextCard;
+
+        for(int i=0;i<field.size();i++){
+            nextCard=field.get(i);
+            xb=nextCard.getxCoordinate();
+            yb=nextCard.getyCoordinate();
+            Orientation ha,hb;
+
+            if(oa==Orientation.NORTH && xa==xb &&  ya+1==yb){
+                ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
+                hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
+
+                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                    return false;
+                }
+                break;
+            }else if(oa==Orientation.EAST && xa+1==xb &&  ya+1==yb){
+                ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
+                hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
+
+                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                    return false;
+                }
+                break;
+            }else if(oa==Orientation.SOUTH && xa==xb &&  ya-1==yb){
+                ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
+                hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
+
+                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                    return false;
+                }
+                break;
+            }else if(oa==Orientation.WEST && xa-1==xb &&  ya==yb){
+                ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
+                hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
+
+                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                    return false;
+                }
+                break;
+            }else {
+
+            }
+        }
+        return true;
+    }
+
+    private Card getFollowedCard(Card a, ArrayList<Card> field, Orientation oa){
+        CardDataBase cdb = CardDataBase.getInstance();
+        int xb,xa=a.getxCoordinate();
+        int yb,ya=a.getyCoordinate();
+        Card nextCard;
+
+        //Iteriere über alle Karten
+        for(int i=0;i<field.size();i++) {
+            nextCard = field.get(i);
+            xb = nextCard.getxCoordinate();
+            yb = nextCard.getyCoordinate();
+
+            //Falls Seite und aktuelle Karte übereintreffen-->returne aktuelle Karte
+            if(oa==Orientation.NORTH && xa==xb &&  ya+1==yb){
+                return nextCard;
+            }else if(oa==Orientation.SOUTH && xa==xb &&  ya-1==yb){
+                return nextCard;
+            }else if(oa==Orientation.EAST && xa+1==xb &&  ya==yb){
+                return nextCard;
+            }else if(oa==Orientation.WEST && xa-1==xb &&  ya==yb){
+                return nextCard;
+            }else{
+
+            }
+        }
+        //Falls keine Karte gefunden wurde, returne null
+        return null;
     }
 }

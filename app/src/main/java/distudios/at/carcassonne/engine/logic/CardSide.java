@@ -8,7 +8,7 @@ import java.util.Random;
 
 
 public enum CardSide {
-    RIVER, CASTLE, GRASS, STREET;
+    CASTLE, GRASS, STREET, OPEN, CLOSED;
 
     private static final List<CardSide> VALUES =
             Collections.unmodifiableList(Arrays.asList(values()));
