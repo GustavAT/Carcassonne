@@ -22,10 +22,7 @@ public class CarcassonneMessage {
     public GameState state;
 
     @JsonField
-    public Map<String, Integer> playerMappings;
-
-    @JsonField
-    public PlayerInfo playerInfo;
+    public Map<String, PlayerInfo> playerMappings;
 
     @JsonField
     public String other;
@@ -36,7 +33,11 @@ public class CarcassonneMessage {
         state = null;
         playerMappings = new HashMap<>();
         other = null;
-        playerInfo = new PlayerInfo();
+    }
+
+    public CarcassonneMessage(int type) {
+        this();
+        this.type = type;
     }
 
     public final static int UNSPECIFIED = -1;
@@ -44,6 +45,7 @@ public class CarcassonneMessage {
     public final static int GAME_STATE_UPDATE = 1;
     public final static int END_TURN = 2;
     public final static int PLAYER_CHEAT = 3;
+    public final static int PLAYER_JOIN = 4;
 
     // some random number lol
     public final static int HOST_START_GAME = 12;

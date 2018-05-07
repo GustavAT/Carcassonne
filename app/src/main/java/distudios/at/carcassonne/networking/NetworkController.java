@@ -1,6 +1,7 @@
 package distudios.at.carcassonne.networking;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.util.Log;
 
@@ -20,13 +21,14 @@ import java.util.Map;
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.DataCallback;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public class NetworkController implements INetworkController {
 
     public Salut network;
     public SalutServiceData serviceData;
     public SalutDataReceiver dataReceiver;
-    public Map<String, Integer> playerMappings;
+    public Map<String, PlayerInfo> playerMappings;
 
     @Override
     public void init(Activity activity) {
@@ -67,13 +69,22 @@ public class NetworkController implements INetworkController {
     }
 
     @Override
+    public void sendMessage(CarcassonneMessage message) {
+        if (isHost()) {
+            sendToAllDevices(message);
+        } else if (isClient()) {
+            sendToHost(message);
+        }
+    }
+
+    @Override
     public boolean isHost() {
-        return network.isConnectedToAnotherDevice && network.isRunningAsHost;
+        return network != null && network.isConnectedToAnotherDevice && network.isRunningAsHost;
     }
 
     @Override
     public boolean isClient() {
-        return network.isConnectedToAnotherDevice;
+        return network != null && network.isConnectedToAnotherDevice;
     }
 
     /***
@@ -81,33 +92,44 @@ public class NetworkController implements INetworkController {
      * Important: call this method before initializing the game
      */
     @Override
-    public void createPlayerMappings() {
-        Map<String, Integer> mappings = new HashMap<>();
-        // todo check if instancename is correct
-        mappings.put(network.thisDevice.instanceName, 0);
+    public Map<String, PlayerInfo> createPlayerMappings() {
+        Map<String, PlayerInfo> mappings = new HashMap<>();
+
+        mappings.put(network.thisDevice.instanceName, createPlayerInfo(network.thisDevice, 0));
 
         int playerNumber = 1;
         for (SalutDevice sd : network.registeredClients) {
-            mappings.put(sd.instanceName, playerNumber++);
+            mappings.put(sd.instanceName, createPlayerInfo(sd, playerNumber));
+            playerNumber++;
         }
 
         playerMappings = mappings;
+        return mappings;
+    }
+
+    private PlayerInfo createPlayerInfo(SalutDevice device, int number) {
+        PlayerInfo info = new PlayerInfo();
+        info.deviceName = device.deviceName;
+        info.playerNumber = number;
+        info.instanceName = device.instanceName;
+        info.color = Color.RED;
+        return info;
     }
 
     @Override
-    public Map<String, Integer> getPlayerMappings() {
+    public Map<String, PlayerInfo> getPlayerMappings() {
         return playerMappings;
     }
 
     @Override
-    public void setPlayerMappings(Map<String, Integer> mappings) {
+    public void setPlayerMappings(Map<String, PlayerInfo> mappings) {
         playerMappings = mappings;
     }
 
     @Override
     public int getDevicePlayerNumber() {
         String thisDevice = network.thisDevice.instanceName;
-        return playerMappings.containsKey(thisDevice) ? playerMappings.get(thisDevice) : -1;
+        return playerMappings.containsKey(thisDevice) ? playerMappings.get(thisDevice).playerNumber : -1;
     }
 
     @Override

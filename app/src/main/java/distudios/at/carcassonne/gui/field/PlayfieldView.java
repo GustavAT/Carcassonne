@@ -152,7 +152,7 @@ public class PlayfieldView extends View {
                                 Card card = controller.getCurrentCard();
                                 card.setxCoordinate(c2.fieldX);
                                 card.setyCoordinate(c2.fieldY);
-                                controller.actionCardPlacement(card);
+                                controller.placeCard(card);
 
                                 invalidate();
                             } else {

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
-import distudios.at.carcassonne.engine.graphics.IGraphicsController;
 import distudios.at.carcassonne.engine.logic.GameController;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.gui.ILobbyController;
@@ -20,7 +19,6 @@ import distudios.at.carcassonne.networking.NetworkController;
  */
 public class CarcassonneApp extends Application implements Application.ActivityLifecycleCallbacks{
 
-    private static IGraphicsController graphicsController;
     private static INetworkController networkController;
     private static ILobbyController lobbyController;
     private static IGameController gameController;
@@ -56,14 +54,6 @@ public class CarcassonneApp extends Application implements Application.ActivityL
     }
 
     public static String playerName = "";
-
-    public static void setGraphicsController(IGraphicsController controller) {
-        graphicsController = controller;
-    }
-
-    public static IGraphicsController getGraphicsController() {
-        return graphicsController;
-    }
 
     public static void setNetworkController(INetworkController controller) {
         networkController = controller;
