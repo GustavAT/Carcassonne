@@ -14,7 +14,7 @@ import com.peak.salut.Salut;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.gui.ISoundController;
+import distudios.at.carcassonne.engine.misc.ISoundController;
 import distudios.at.carcassonne.gui.groups.Group2Activity;
 import distudios.at.carcassonne.networking.INetworkController;
 

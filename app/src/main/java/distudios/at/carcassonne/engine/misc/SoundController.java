@@ -1,18 +1,15 @@
-package distudios.at.carcassonne.gui;
+package distudios.at.carcassonne.engine.misc;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
-import android.os.CountDownTimer;
 
 import java.io.IOException;
 
-import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
 
 public class SoundController implements ISoundController {

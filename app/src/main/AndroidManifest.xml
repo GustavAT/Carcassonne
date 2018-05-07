@@ -65,8 +65,8 @@
                 android:value=".gui.groups.Group2Activity" />
 
         </activity>
-        <activity android:name=".gui.StartGameActivity"
-            android:label="@string/app_name">
+        <activity android:name=".gui.Rules"
+            android:label="@string/text_rules">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

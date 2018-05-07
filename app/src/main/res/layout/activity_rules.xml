@@ -4,61 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/menu_background"
     tools:context=".Rules">
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/txtclose"
+            android:id="@+id/textView_rules"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:padding="5dp"
-            android:text="X"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Regeln"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="111dp"
-            tools:layout_editor_absoluteY="27dp" />
+            android:gravity="fill_horizontal"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/yellow"
+            android:textSize="14sp"
+            android:typeface="serif"
+            app:fontFamily="sans-serif" />
 
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp">
-
-            <TextView
-                android:id="@+id/rulesView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:typeface="serif"
-                app:fontFamily="sans-serif" />
-
-        </ScrollView>
-    </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

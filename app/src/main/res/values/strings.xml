@@ -87,5 +87,6 @@
     <string name="text_state_place_peep">Place peep</string>
     <string name="text_state_end_turn">End turn</string>
     <string name="text_main_menu">Return to main menu</string>
+    <string name="text_rules">Rules</string>
 
 </resources>

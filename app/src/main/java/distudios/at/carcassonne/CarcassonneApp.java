@@ -8,8 +8,8 @@ import android.os.CountDownTimer;
 
 import distudios.at.carcassonne.engine.logic.GameController;
 import distudios.at.carcassonne.engine.logic.IGameController;
-import distudios.at.carcassonne.gui.ISoundController;
-import distudios.at.carcassonne.gui.SoundController;
+import distudios.at.carcassonne.engine.misc.ISoundController;
+import distudios.at.carcassonne.engine.misc.SoundController;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.NetworkController;
 

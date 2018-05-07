@@ -12,14 +12,11 @@ import android.widget.EditText;
 import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Salut;
 
-import java.nio.charset.IllegalCharsetNameException;
-
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
-import distudios.at.carcassonne.gui.StartGameActivity;
+import distudios.at.carcassonne.gui.Rules;
 import distudios.at.carcassonne.gui.field.GameActivity;
 import distudios.at.carcassonne.networking.INetworkController;
-import distudios.at.carcassonne.networking.connection.DataCallback;
 
 public class Group2Activity extends AppCompatActivity {
 
@@ -28,7 +25,7 @@ public class Group2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group2);
 
-        final Button testField = findViewById(R.id.button_testField);
+        final Button rules = findViewById(R.id.button_testField);
         final Button create = findViewById(R.id.button_createGroup);
         final Button join = findViewById(R.id.button_joinGroup);
         final Button clear = findViewById(R.id.button_clear);
@@ -36,7 +33,7 @@ public class Group2Activity extends AppCompatActivity {
 
         String playerName = CarcassonneApp.getPlayerName();
 
-        editText.setEnabled(!playerName.isEmpty() ? false : true);
+        editText.setEnabled(playerName.isEmpty());
 
         editText.setText(playerName);
         editText.clearFocus();
@@ -67,10 +64,10 @@ public class Group2Activity extends AppCompatActivity {
             }
         });
 
-        testField.setOnClickListener(new View.OnClickListener() {
+        rules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), GameActivity.class);
+                Intent i = new Intent(getApplicationContext(), Rules.class);
                 startActivity(i);
             }
         });
