@@ -402,7 +402,7 @@ public class PlayfieldView extends View {
         }
 
         
-        if (ec.getTop() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE) {
+        if (ec.getDown() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
             canvas.drawRect(left + offset, top, right - half, top + offset, paintCastle);
         } else if (ec.getTop() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET) {
             canvas.drawRect(left + half, top, right - offset, top + offset, paintStreet);
@@ -414,7 +414,7 @@ public class PlayfieldView extends View {
             canvas.drawRect(right - offset, bottom - half, right, bottom - offset, paintStreet);
         }
 
-        if (ec.getDown() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE) {
+        if (ec.getTop() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE) {
              canvas.drawRect(left + offset, bottom, right - half, bottom - offset, paintCastle);
         } else if (ec.getDown() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET) {
             canvas.drawRect(left + half, bottom, right - offset, bottom - offset, paintStreet);
