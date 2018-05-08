@@ -120,7 +120,7 @@ public class TestGameEngine {
 
         Card testCard = new Card(12,2,2,NORTH);
         ArrayList test = ge.getPossibilities(testCard);
-        //Assert.assertTrue(test.size()==7);
+        Assert.assertTrue(test.size()==3);
     }
 
     @Test
