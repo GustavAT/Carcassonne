@@ -23,6 +23,12 @@ import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
 import static distudios.at.carcassonne.engine.logic.Orientation.SOUTH;
 import static distudios.at.carcassonne.engine.logic.Orientation.WEST;
 
+import static distudios.at.carcassonne.engine.logic.Orientation.EAST;
+import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
+import static distudios.at.carcassonne.engine.logic.Orientation.SOUTH;
+import static distudios.at.carcassonne.engine.logic.Orientation.WEST;
+
+
 
 public class TestGameEngine {
     GameEngine ge;
@@ -80,15 +86,15 @@ public class TestGameEngine {
 
     @Test
     public void checkPlaceableMethod(){
-        System.out.println("\nPlatziere 7 Karten und überprüfe auf Platzierbarkeit");
-        Card card=new Card(20,0,1, NORTH);
+        System.out.println("\nPlatziere 3 Karten und überprüfe auf Platzierbarkeit");
+        Card card=new Card(20,0,1,Orientation.NORTH);
         Assert.assertTrue(ge.checkPlaceable(card));     //Test Placeable
         ge.placeCard(card);
         Assert.assertFalse(ge.checkPlaceable(card));    //Test reflexive Placeable false
-        card=new Card(21,1,0, NORTH);
+        card=new Card(21,1,0,Orientation.NORTH);
         Assert.assertTrue(ge.checkPlaceable(card));     //Test placeable
         ge.placeCard(card);
-        card=new Card(22,1,1, NORTH);
+        card=new Card(22,1,1,Orientation.NORTH);
         Assert.assertTrue(ge.checkPlaceable(card));     //Test placeable with 2 Connection
         ge.placeCard(card);
         card=new Card(23,-1,0, NORTH);
@@ -160,6 +166,8 @@ public class TestGameEngine {
         Orientation compare=Card.getAbsoluteOrientation(Orientation.WEST, Orientation.NORTH);
         Assert.assertTrue(result==compare);
     }
+
+
 
 
     private void printCards(GameState pgs){

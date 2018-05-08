@@ -46,7 +46,7 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
         setContentView(R.layout.activity_game);
 
         //frameContainer = findViewById(R.id.frame_container);
-        //BottomNavigationView navigation = findViewById(R.id.navigation);
+       // BottomNavigationView navigation = findViewById(R.id.navigation);
         //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         currentFragment = GameFragment.newInstance("", "");

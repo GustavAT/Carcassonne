@@ -307,6 +307,52 @@ public class GameEngine implements IGameEngine {
         return true;
     }
 
+    /*
+    Returns an Array with possible Positions of a given card on the cardboard
+    todo: Rework checkPlaceable
+     */
+    public ArrayList getPossibilities(Card card){
+        ArrayList positions = new ArrayList();
+        ArrayList<Card> cards = currentState.getCards();
+
+
+        for (Card thisCard:cards) {
+            card.setxCoordinate(thisCard.getxCoordinate()+1);
+            card.setyCoordinate(thisCard.getyCoordinate());
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+ card.getyCoordinate());
+            }
+
+            card.setxCoordinate(thisCard.getxCoordinate());
+            card.setyCoordinate(thisCard.getyCoordinate()+1);
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
+            }
+
+            card.setxCoordinate(thisCard.getxCoordinate()-1);
+            card.setyCoordinate(thisCard.getyCoordinate());
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
+            }
+
+            card.setxCoordinate(thisCard.getxCoordinate());
+            card.setyCoordinate(thisCard.getyCoordinate()-1);
+
+            if(checkPlaceable(card)){
+                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
+            }
+        }
+
+        for (Object x:positions) {
+            System.out.println(x);
+        }
+
+        return positions;
+    }
+
     public GameState getGamestate(){
 
         return currentState;
