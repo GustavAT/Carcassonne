@@ -13,7 +13,7 @@ public class GameState implements Serializable {
     @JsonField
     public ArrayList<Card> cards;
     @JsonField
-    public List<Object> peeps;
+    public ArrayList<Peep> peeps;
     @JsonField
     public ArrayList<Integer> stack;
     @JsonField

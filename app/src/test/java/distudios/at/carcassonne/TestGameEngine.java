@@ -44,10 +44,10 @@ public class TestGameEngine {
         cdb.cardDB.get(20).setLeft(CardSide.GRASS);
 
         cdb.cardDB.get(19).setRight(CardSide.CASTLE);   //Anpassung Neue Karte Check
-        cdb.cardDB.get(20).setTop(CardSide.RIVER);
+        cdb.cardDB.get(20).setTop(CardSide.GRASS);
         cdb.cardDB.get(20).setDown(CardSide.GRASS);
 
-        cdb.cardDB.get(21).setDown(CardSide.RIVER);     //Anpassung Neue Karte Check
+        cdb.cardDB.get(21).setDown(CardSide.GRASS);     //Anpassung Neue Karte Check
         cdb.cardDB.get(21).setLeft(CardSide.CASTLE);
 
         cdb.cardDB.get(22).setRight(CardSide.STREET);
@@ -63,7 +63,7 @@ public class TestGameEngine {
 
         cdb.cardDB.get(24).setRight(CardSide.STREET);
         cdb.cardDB.get(24).setLeft(CardSide.STREET);
-        cdb.cardDB.get(24).setTop(CardSide.RIVER);
+        cdb.cardDB.get(24).setTop(CardSide.GRASS);
         cdb.cardDB.get(24).setDown(CardSide.STREET);
 
         cdb.cardDB.get(25).setRight(CardSide.CASTLE);

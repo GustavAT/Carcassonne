@@ -217,7 +217,7 @@ public class GameEngine implements IGameEngine {
                 ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
-                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                if(cdb.getCardSide(a.getId(),ha)!=cdb.getCardSide(nextCard.getId(),hb)){
                     return false;
                 }
                 break;
@@ -225,7 +225,7 @@ public class GameEngine implements IGameEngine {
                 ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
-                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                if(cdb.getCardSide(a.getId(),ha)!=cdb.getCardSide(nextCard.getId(),hb)){
                     return false;
                 }
                 break;
@@ -233,7 +233,7 @@ public class GameEngine implements IGameEngine {
                 ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
-                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                if(cdb.getCardSide(a.getId(),ha)!=cdb.getCardSide(nextCard.getId(),hb)){
                     return false;
                 }
                 break;
@@ -241,7 +241,7 @@ public class GameEngine implements IGameEngine {
                 ha=Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb=Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
-                if(cdb.getOrientation(a.getId(),ha)!=cdb.getOrientation(nextCard.getId(),hb)){
+                if(cdb.getCardSide(a.getId(),ha)!=cdb.getCardSide(nextCard.getId(),hb)){
                     return false;
                 }
                 break;
@@ -258,25 +258,32 @@ public class GameEngine implements IGameEngine {
         int yb,ya=a.getyCoordinate();
         Card nextCard;
 
-                    if(cdb.getCardSide(nextCard.getId(),hnext)!=cdb.getCardSide(itcard.getId(),hit)){
-                        return false;
-                    }else{
-                        isconnected=true;
-                    }
-                }
-                else{
+        //Iteriere über alle Karten
+        for(int i=0;i<field.size();i++) {
+            nextCard = field.get(i);
+            xb = nextCard.getxCoordinate();
+            yb = nextCard.getyCoordinate();
 
-                    //next loop
-                }
+            //Falls Seite und aktuelle Karte übereintreffen-->returne aktuelle Karte
+            if(oa==Orientation.NORTH && xa==xb &&  ya+1==yb){
+                return nextCard;
+            }else if(oa==Orientation.SOUTH && xa==xb &&  ya-1==yb){
+                return nextCard;
+            }else if(oa==Orientation.EAST && xa+1==xb &&  ya==yb){
+                return nextCard;
+            }else if(oa==Orientation.WEST && xa-1==xb &&  ya==yb){
+                return nextCard;
+            }else{
+
             }
         }
-        return isconnected;
+        //Falls keine Karte gefunden wurde, returne null
+        return null;
     }
 
     /*
     Returns an Array with possible Positions of a given card on the cardboard
-    todo: Rework checkPlaceable
-     */
+    */
     public ArrayList getPossibilities(Card card){
         ArrayList positions = new ArrayList();
         ArrayList<Card> cards = currentState.getCards();
@@ -457,77 +464,5 @@ public class GameEngine implements IGameEngine {
         //todo: check if placeable peeps of current player >0
         //todo: check if current castle isn't already occupied
         return true;
-    }
-
-    /*
-    Returns an Array with possible Positions of a given card on the cardboard
-    todo: Rework checkPlaceable
-     */
-    public ArrayList getPossibilities(Card card){
-        ArrayList positions = new ArrayList();
-        ArrayList<Card> cards = currentState.getCards();
-
-
-        for (Card thisCard:cards) {
-            card.setxCoordinate(thisCard.getxCoordinate()+1);
-            card.setyCoordinate(thisCard.getyCoordinate());
-
-            if(checkPlaceable(card)){
-                positions.add(card.getxCoordinate()+"_"+ card.getyCoordinate());
-            }
-
-            card.setxCoordinate(thisCard.getxCoordinate());
-            card.setyCoordinate(thisCard.getyCoordinate()+1);
-
-            if(checkPlaceable(card)){
-                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
-            }
-
-            card.setxCoordinate(thisCard.getxCoordinate()-1);
-            card.setyCoordinate(thisCard.getyCoordinate());
-
-            if(checkPlaceable(card)){
-                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
-            }
-
-            card.setxCoordinate(thisCard.getxCoordinate());
-            card.setyCoordinate(thisCard.getyCoordinate()-1);
-
-            if(checkPlaceable(card)){
-                positions.add(card.getxCoordinate()+"_"+card.getyCoordinate());
-            }
-        }
-
-        for (Object x:positions) {
-            System.out.println(x);
-        }
-
-        return positions;
-    }
-
-    public GameState getGamestate(){
-
-        return currentState;
-        //Iteriere über alle Karten
-        for(int i=0;i<field.size();i++) {
-            nextCard = field.get(i);
-            xb = nextCard.getxCoordinate();
-            yb = nextCard.getyCoordinate();
-
-            //Falls Seite und aktuelle Karte übereintreffen-->returne aktuelle Karte
-            if(oa==Orientation.NORTH && xa==xb &&  ya+1==yb){
-                return nextCard;
-            }else if(oa==Orientation.SOUTH && xa==xb &&  ya-1==yb){
-                return nextCard;
-            }else if(oa==Orientation.EAST && xa+1==xb &&  ya==yb){
-                return nextCard;
-            }else if(oa==Orientation.WEST && xa-1==xb &&  ya==yb){
-                return nextCard;
-            }else{
-
-            }
-        }
-        //Falls keine Karte gefunden wurde, returne null
-        return null;
     }
 }
