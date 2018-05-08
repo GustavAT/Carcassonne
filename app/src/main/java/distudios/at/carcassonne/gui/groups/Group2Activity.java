@@ -12,13 +12,11 @@ import android.widget.EditText;
 import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Salut;
 
-import java.nio.charset.IllegalCharsetNameException;
-
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.gui.Rules;
 import distudios.at.carcassonne.gui.field.GameActivity;
 import distudios.at.carcassonne.networking.INetworkController;
-import distudios.at.carcassonne.networking.connection.DataCallback;
 
 public class Group2Activity extends AppCompatActivity {
 
@@ -27,18 +25,20 @@ public class Group2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group2);
 
-        final Button testField = findViewById(R.id.button_testField);
+        final Button rules = findViewById(R.id.button_testField);
         final Button create = findViewById(R.id.button_createGroup);
         final Button join = findViewById(R.id.button_joinGroup);
         final Button clear = findViewById(R.id.button_clear);
         final EditText editText = findViewById(R.id.editText_groupName);
 
-        editText.setEnabled(!CarcassonneApp.playerName.isEmpty() ? false : true);
+        String playerName = CarcassonneApp.getPlayerName();
 
-        editText.setText(CarcassonneApp.playerName);
+        editText.setEnabled(playerName.isEmpty());
+
+        editText.setText(playerName);
         editText.clearFocus();
-        create.setEnabled(!CarcassonneApp.playerName.isEmpty());
-        join.setEnabled(!CarcassonneApp.playerName.isEmpty());
+        create.setEnabled(!playerName.isEmpty());
+        join.setEnabled(!playerName.isEmpty());
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -64,10 +64,10 @@ public class Group2Activity extends AppCompatActivity {
             }
         });
 
-        testField.setOnClickListener(new View.OnClickListener() {
+        rules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), GameActivity.class);
+                Intent i = new Intent(getApplicationContext(), Rules.class);
                 startActivity(i);
             }
         });
@@ -83,7 +83,7 @@ public class Group2Activity extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CarcassonneApp.playerName = editText.getText().toString();
+                CarcassonneApp.setPlayerName(editText.getText().toString());
                 ensureNetwork();
                 Intent i = new Intent(getApplicationContext(), GroupOverview.class);
                 startActivity(i);
@@ -93,7 +93,7 @@ public class Group2Activity extends AppCompatActivity {
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CarcassonneApp.playerName = editText.getText().toString();
+                CarcassonneApp.setPlayerName(editText.getText().toString());
                 ensureNetwork();
                 Intent i = new Intent(getApplicationContext(), GroupList.class);
                 startActivity(i);

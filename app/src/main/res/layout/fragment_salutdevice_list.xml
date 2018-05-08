@@ -18,7 +18,6 @@
     app:layoutManager="LinearLayoutManager"
     tools:context=".gui.groups.SalutDeviceFragment"
     tools:listitem="@layout/fragment_salutdevice"
-    android:background="@drawable/menu_background"
     />
 
 

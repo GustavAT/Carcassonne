@@ -38,7 +38,7 @@ public class TestGameEngine {
     @Before
     public void setUp(){
         ge=new GameEngine();
-        ge.init(NORTH);
+        ge.init(Orientation.NORTH);
         gs=ge.getGamestate();
         cdb.cardDB.get(19).setDown(CardSide.CASTLE);    //Anpassung Startkarte
         cdb.cardDB.get(20).setLeft(CardSide.GRASS);
@@ -166,9 +166,6 @@ public class TestGameEngine {
         Orientation compare=Card.getAbsoluteOrientation(Orientation.WEST, Orientation.NORTH);
         Assert.assertTrue(result==compare);
     }
-
-
-
 
     private void printCards(GameState pgs){
         ArrayList<Card> cardList = pgs.getCards();

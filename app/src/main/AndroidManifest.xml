@@ -13,6 +13,12 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true"/>
+
+
+
     <application
         android:name=".CarcassonneApp"
         android:allowBackup="true"
@@ -20,6 +26,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
+        <!-- Lobby -->
+
         <activity android:name=".gui.groups.Group2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +53,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.groups.Group2Activity" />
         </activity>
+
+        <!-- Game -->
+
         <activity
             android:name=".gui.field.GameActivity"
             android:label="@string/title_activity_game">
@@ -51,6 +64,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.groups.Group2Activity" />
 
+        </activity>
+        <activity android:name=".gui.Rules"
+            android:label="@string/text_rules">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.groups.Group2Activity" />
         </activity>
     </application>
 

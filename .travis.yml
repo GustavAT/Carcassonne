@@ -30,6 +30,16 @@ before_script:
 script:
     - ./gradlew test
     - ./gradlew jacocoTestReport
+    - sonar-scanner
+
+addons:
+    sonarcloud:
+      organization: "gustavat-github"
+      token:
+        secure: $SONAR_TOKEN
+        
+before_install:
+  - chmod +x gradlew
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
