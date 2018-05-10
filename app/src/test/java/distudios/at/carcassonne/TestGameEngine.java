@@ -109,9 +109,6 @@ public class TestGameEngine {
         card=new Card(26,1,-1, NORTH);
         Assert.assertTrue(ge.checkPlaceable(card));
         ge.placeCard(card);
-        //card=new Card(12,-2,0, NORTH);
-        //Assert.assertTrue(ge.checkPlaceable(card));
-        //ge.placeCard(card);
         printCards(gs);
     }
 
@@ -130,6 +127,22 @@ public class TestGameEngine {
     }
 
     @Test
+    public void checkGetFollowedCard(){
+        Card card;
+        ge.placeCard(card = new Card(23, -1, 0, NORTH));
+        ge.placeCard(card = new Card(24, -1, -1, NORTH));
+        ArrayList<Card> field = gs.getCards();
+        Card testCard = new Card(23, -1, 0, NORTH);
+
+        Card result = ge.getFollowedCard(testCard, field, Orientation.WEST );
+        Assert.assertTrue(result==null);
+
+        Card exp = new Card(24, -1, -1, NORTH);
+        result = ge.getFollowedCard(testCard, field, Orientation.SOUTH);
+        Assert.assertTrue(result==exp);
+    }
+
+    @Test
     public void checkGetStreet(){
         //Settings...
         Card card;
@@ -137,11 +150,25 @@ public class TestGameEngine {
         ge.placeCard(card = new Card(24, -1, -1, NORTH));
         ge.placeCard(card = new Card(25, 0, -1, NORTH));
         ge.placeCard(card = new Card(26, 1, -1, NORTH));
-        Card testCard = new Card(25,0,-1,NORTH);
-        ArrayList<Card> testArray = new ArrayList<Card>();
+        Card testCard = new Card(23,-1,0,NORTH);
 
-        ArrayList<Card> street = ge.getStreet(testCard,testArray);
-        Assert.assertTrue(street.size() == 5);
+        ArrayList<Card> street = ge.getStreet(testCard, SOUTH);
+        Assert.assertTrue(street.size() == 3);
+    }
+
+    @Test
+    public void testCheckStreetComplete(){
+        //Settings...
+        Card card;
+        ge.placeCard(card = new Card(23, -1, 0, NORTH));
+        ge.placeCard(card = new Card(24, -1, -1, NORTH));
+        ge.placeCard(card = new Card(25, 0, -1, NORTH));
+        ge.placeCard(card = new Card(26, 1, -1, NORTH));
+        Card testCard = new Card(23,-1,0,NORTH);
+        ArrayList<Card> street = ge.getStreet(testCard, SOUTH);
+
+        Boolean complete = ge.checkStreetComplete(street);
+        Assert.assertFalse(complete);
     }
 
     @Test

@@ -137,4 +137,5 @@ public class ExtendedCard {
     public void setSplitStop(boolean splitStop) {
         this.splitStop = splitStop;
     }
+
 }

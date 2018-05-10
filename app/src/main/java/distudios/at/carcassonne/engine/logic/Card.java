@@ -67,7 +67,7 @@ public class Card {
 
 
 
-     public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
+    public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
         int rotation=0;
         if(offset==Orientation.NORTH){
             rotation=0;

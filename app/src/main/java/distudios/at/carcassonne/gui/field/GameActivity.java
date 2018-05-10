@@ -38,10 +38,10 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
                     currentFragment = ScoreFragment.newInstance("", "");
                     replaceCurrentFragment();
                     return true;
-                case R.id.navigation_settings:
+                /*case R.id.navigation_settings:
                     currentFragment = SettingsFragment.newInstance("", "");
                     replaceCurrentFragment();
-                    return true;
+                    return true;*/
             }
             return false;
         }

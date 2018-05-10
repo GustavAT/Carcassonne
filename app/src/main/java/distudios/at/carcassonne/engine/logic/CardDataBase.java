@@ -202,4 +202,14 @@ public class CardDataBase {
 
         }
     }
+
+    public ArrayList<Orientation> getStreetSides(int id){
+        ArrayList<Orientation> streetSides = new ArrayList<Orientation>();
+        if (this.getCardSide(id,Orientation.NORTH)==CardSide.STREET) streetSides.add(Orientation.NORTH);
+        if (this.getCardSide(id,Orientation.EAST)==CardSide.STREET) streetSides.add(Orientation.EAST);
+        if (this.getCardSide(id,Orientation.SOUTH)==CardSide.STREET) streetSides.add(Orientation.SOUTH);
+        if (this.getCardSide(id,Orientation.WEST)==CardSide.STREET) streetSides.add(Orientation.WEST);
+
+        return streetSides;
+    }
 }

@@ -3,6 +3,7 @@ package distudios.at.carcassonne.engine.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
 import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
 import static distudios.at.carcassonne.engine.logic.Orientation.EAST;
 import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
@@ -75,8 +76,8 @@ public class GameEngine implements IGameEngine {
 
         //Iteriere über die Seiten
         for(int i=0;i<4;i++){
-            //Überprüfe Boarder an der aktuellen Seite
-            if(!checkBorder(nextCard, cards, Orientation.NORTH)){
+            //Überprüfe Border an der aktuellen Seite
+            if(!checkBorder(nextCard, cards, Orientation.NORTH)){ // Muss nicht orientation = current sein??
                 //Falls nicht Verbunden-->False
                 return false;
             }else {
@@ -115,10 +116,10 @@ public class GameEngine implements IGameEngine {
         }else if(sborder==Orientation.EAST){
             checkside.set(1,true);
         }
-        else if(sborder==Orientation.EAST){
+        else if(sborder==Orientation.SOUTH){
             checkside.set(2,true);
         }
-        else if(sborder==Orientation.EAST){
+        else if(sborder==Orientation.WEST){
             checkside.set(3,true);
         }else;
 
@@ -199,6 +200,7 @@ public class GameEngine implements IGameEngine {
         return currentState;
     }
 
+
     private boolean checkBorder(Card a, ArrayList<Card> field, Orientation oa){
 
         CardDataBase cdb = CardDataBase.getInstance();
@@ -252,7 +254,7 @@ public class GameEngine implements IGameEngine {
         return true;
     }
 
-    private Card getFollowedCard(Card a, ArrayList<Card> field, Orientation oa){
+    public Card getFollowedCard(Card a, ArrayList<Card> field, Orientation oa){
         CardDataBase cdb = CardDataBase.getInstance();
         int xb,xa=a.getxCoordinate();
         int yb,ya=a.getyCoordinate();
@@ -333,125 +335,75 @@ public class GameEngine implements IGameEngine {
     @Param ArrayList street: function needs empty array to fill in the street
     todo: implement that crossroads end a street
      */
-    public ArrayList getStreet(Card card, ArrayList<Card> street){
+    public ArrayList<Card> getStreet(Card card, Orientation oc){
+        ArrayList<Card> street = new ArrayList<Card>();
+        ArrayList<Card> field = currentState.getCards();
         CardDataBase cdb=CardDataBase.getInstance();
-        Orientation thisOrient = card.getOrientation();
-        //ArrayList<Card> street = new ArrayList<Card>();
-        ArrayList<Card> cards = currentState.getCards();
-        ArrayList<Orientation> orientations = new ArrayList<Orientation>();
-        int thisID = card.getId();
-        int thisX = card.getxCoordinate();
-        int thisY = card.getyCoordinate();
+        int cardID = card.getId();
 
-        //If card got a street-CardSide it is added to the street
-        if(cdb.getCardSide(thisID,NORTH)==STREET || cdb.getCardSide(thisID,SOUTH)==STREET ||cdb.getCardSide(thisID,EAST)==STREET ||cdb.getCardSide(thisID,WEST)==STREET){
+        //falls überprüfte Orientierung gar keine Straße ist/hat
+        CardSide cs = cdb.getCardSide(cardID,oc);
+        if(cs != CardSide.STREET){
+            return null;
+        } else{
             street.add(card);
-        } else return street;
-
-        /*what (absolute) sides of card got a street-connection?
-        If orientations contains:
-        WEST = x-1|y
-        EAST = x+1|y
-        SOUTH = x|y-1
-        NORTH = x|y+1
-         */
-        if(cdb.getCardSide(thisID,NORTH)==STREET && thisOrient == NORTH){
-            orientations.add(NORTH);
-        } if(cdb.getCardSide(thisID,NORTH)==STREET && thisOrient == EAST){
-            orientations.add(WEST);
-        } if(cdb.getCardSide(thisID,NORTH)==STREET && thisOrient == SOUTH){
-            orientations.add(SOUTH);
-        } if(cdb.getCardSide(thisID,NORTH)==STREET && thisOrient == WEST){
-            orientations.add(EAST);
         }
 
-        if(cdb.getCardSide(thisID,SOUTH)==STREET && thisOrient == SOUTH){
-            orientations.add(NORTH);
-        } if(cdb.getCardSide(thisID,SOUTH)==STREET && thisOrient == EAST) {
-            orientations.add(EAST);
-        } if(cdb.getCardSide(thisID,SOUTH)==STREET && thisOrient == WEST) {
-            orientations.add(WEST);
-        } if(cdb.getCardSide(thisID,SOUTH)==STREET && thisOrient == NORTH) {
-            orientations.add(SOUTH);
-        }
-
-        if(cdb.getCardSide(thisID,EAST)==STREET && thisOrient == SOUTH){
-            orientations.add(WEST);
-        } if(cdb.getCardSide(thisID,EAST)==STREET && thisOrient == WEST){
-            orientations.add(SOUTH);
-        } if(cdb.getCardSide(thisID,EAST)==STREET && thisOrient == EAST){
-            orientations.add(NORTH);
-        } if(cdb.getCardSide(thisID,EAST)==STREET && thisOrient == NORTH){
-            orientations.add(EAST);
-        }
-
-        if(cdb.getCardSide(thisID,WEST)==STREET && thisOrient == SOUTH){
-            orientations.add(EAST);
-        } if(cdb.getCardSide(thisID,WEST)==STREET && thisOrient == WEST){
-            orientations.add(NORTH);
-        } if(cdb.getCardSide(thisID,WEST)==STREET && thisOrient == EAST){
-            orientations.add(SOUTH);
-        } if(cdb.getCardSide(thisID,WEST)==STREET && thisOrient == NORTH){
-            orientations.add(WEST);
-        }
-
-        /*Check if possible connenctions from orientations are valid and on the cardboard
-        If so: Recursion
-         */
-
-        while (!(orientations.isEmpty())){
-            for (Card thisCard:cards) {
-                if(orientations.contains(NORTH)) {
-                    if (thisCard.getxCoordinate() == thisX && thisCard.getyCoordinate() == thisY + 1) {
-                        if (checkPlaceable(thisCard) && !(street.contains(thisCard))) {
-                            orientations.remove(NORTH);
-                            getStreet(thisCard, street);
-                        }
-                    }
-                }
-
-                if(orientations.contains(EAST)) {
-                    if (thisCard.getxCoordinate() == thisX + 1 && thisCard.getyCoordinate() == thisY) {
-                        if (checkPlaceable(thisCard) && !(street.contains(thisCard))) {
-                            orientations.remove(EAST);
-                            getStreet(thisCard, street);
-                        }
-                    }
-                }
-
-                if(orientations.contains(WEST)) {
-                    if (thisCard.getxCoordinate() == thisX - 1 && thisCard.getyCoordinate() == thisY) {
-                        if (checkPlaceable(thisCard) && !(street.contains(thisCard))) {
-                            orientations.remove(WEST);
-                            getStreet(thisCard, street);
-                        }
-                    }
-                }
-
-                if(orientations.contains(SOUTH)) {
-                    if (thisCard.getxCoordinate() == thisX && thisCard.getyCoordinate() == thisY - 1) {
-                        if (checkPlaceable(thisCard) && !(street.contains(thisCard))) {
-                            orientations.remove(SOUTH);
-                            getStreet(thisCard, street);
-                        }
-                    }
-                }
+        while(getFollowedCard(card,field,oc) != null){
+            Card nextCard = getFollowedCard(card,field,oc);
+            if(!(street.contains(nextCard))) {
+                street.add(nextCard);
             }
+
+            int newCardID = nextCard.getId();
+            //Wenn Straße in Kreuzung oder Castle endet
+            if(cdb.getStreetSides(newCardID).size() > 2 || cdb.getStreetSides(newCardID).size() == 1){
+                break;
+            }
+
+            Orientation oa = cdb.getStreetSides(newCardID).get(0); //Erster Ausgang als Straße
+            Orientation ob = cdb.getStreetSides(newCardID).get(1); //Zweiter Ausgang als Straße
+
+            //Herkunftsseite herausfinden, auf der anderen Seite geht's weiter
+            Orientation vg=Card.getAbsoluteOrientation(oc,Orientation.SOUTH); //oc um 180° gedreht
+            if(oa == vg){
+                oc = ob;
+            } else if(ob == vg){
+                oc = oa;
+            }
+
+            card = nextCard;
         }
 
         return street;
     }
 
+    public boolean checkStreetComplete(ArrayList<Card> street){
+        CardDataBase cdb=CardDataBase.getInstance();
+        Card startCard = street.get(0);
+        int startID = startCard.getId();
+        boolean start = false;
+
+        //Prüfen, ob Startkarte eine Kreuzung ist
+        if(cdb.getStreetSides(startID).size() > 2 ||cdb.getStreetSides(startID).size() == 1){
+            start = true;
+        }
+
+        if(start == true){
+            return true;
+        } else return false;
+    }
 
     public void placePeep(Peep peep){
         currentState.addPeep(peep);
         //todo: reduce placeable Peeps of the player
     }
 
-    public boolean checkPeepPlaceable(Peep peep, Card nextCard){
+    public boolean checkPeepPlaceable(Peep peep, Card currentCard){
         ArrayList<Peep> peeps = currentState.getPeeps();
         ArrayList<Card> check = new ArrayList<Card>();
-        /*ArrayList<Card> street = getStreet(nextCard,check);
+        //todo: get cards of a street/castle
+        /*ArrayList<Card> street = getStreet(currentCard,check);
 
         for (Card card:street) {
             for (Peep thisPeep : peeps) {
@@ -462,7 +414,7 @@ public class GameEngine implements IGameEngine {
         }*/
 
         //todo: check if placeable peeps of current player >0
-        //todo: check if current castle isn't already occupied
+
         return true;
     }
 }

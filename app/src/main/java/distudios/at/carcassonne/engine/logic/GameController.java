@@ -86,13 +86,18 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public boolean placeFigure(Object figure) {
+    public boolean placeFigure(Peep nextPeep, Card currentCard) {
         if (cState != CState.PLACE_FIGURE) return false;
 
         cState = CState.END_TURN;
 
-        // todo implement
-        return true;
+        if(gameEngine.checkPeepPlaceable(nextPeep, currentCard)){
+            gameEngine.placePeep(nextPeep);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 
@@ -165,16 +170,6 @@ public class GameController implements IGameController {
         return locations;
     }
 
-    public boolean actionPeepPlacement(Peep nextPeep, Card nextCard){
-        if(gameEngine.checkPeepPlaceable(nextPeep, nextCard)){
-            gameEngine.placePeep(nextPeep);
-            return true;
-        }
-        else {
-            System.out.println("Nicht platzierbare Figur");
-            return false;
-        }
-    }
 
     @Override
     public CState getCState() {
