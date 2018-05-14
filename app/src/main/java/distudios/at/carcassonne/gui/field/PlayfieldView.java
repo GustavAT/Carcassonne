@@ -1,6 +1,7 @@
 package distudios.at.carcassonne.gui.field;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -72,6 +73,9 @@ public class PlayfieldView extends View {
             }
         });
     }
+
+
+//    private static HashMap<Integer, String>
 
     private void initPaint() {
         rasterPaint = new Paint();
