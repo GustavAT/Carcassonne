@@ -42,12 +42,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_dashboard_black_24dp" />
+            android:background="@drawable/border_transparent"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@android:drawable/ic_dialog_info" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             android:orientation="vertical">
 
             <LinearLayout
@@ -68,6 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/border"
                     android:text="@string/text_end_turn" />
 
             </LinearLayout>
