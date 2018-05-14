@@ -2,11 +2,16 @@ package distudios.at.carcassonne.gui.field;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.media.MediaExtractor;
 import android.support.annotation.Nullable;
+import android.support.constraint.solver.widgets.Rectangle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -64,6 +69,7 @@ public class PlayfieldView extends View {
         super(context, attrs);
 
         initPaint();
+        initResourceMappings();
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -75,7 +81,8 @@ public class PlayfieldView extends View {
     }
 
 
-//    private static HashMap<Integer, String>
+
+    public static HashMap<Integer, Bitmap> ResourceMappings = null;
 
     private void initPaint() {
         rasterPaint = new Paint();
@@ -110,6 +117,37 @@ public class PlayfieldView extends View {
         paintSpecial = new Paint();
         paintSpecial.setStyle(Paint.Style.FILL);
         paintSpecial.setColor(getResources().getColor(R.color.yellow));
+    }
+
+    private void initResourceMappings() {
+        if (ResourceMappings == null) {
+            ResourceMappings = new HashMap<>();
+
+            ResourceMappings.put(1, BitmapFactory.decodeResource(getResources(), R.drawable.a));
+            ResourceMappings.put(2, BitmapFactory.decodeResource(getResources(), R.drawable.b));
+            ResourceMappings.put(3, BitmapFactory.decodeResource(getResources(), R.drawable.c));
+            ResourceMappings.put(4, BitmapFactory.decodeResource(getResources(), R.drawable.d));
+            ResourceMappings.put(5, BitmapFactory.decodeResource(getResources(), R.drawable.e));
+            ResourceMappings.put(6, BitmapFactory.decodeResource(getResources(), R.drawable.f));
+            ResourceMappings.put(7, BitmapFactory.decodeResource(getResources(), R.drawable.g));
+            ResourceMappings.put(8, BitmapFactory.decodeResource(getResources(), R.drawable.h));
+            ResourceMappings.put(9, BitmapFactory.decodeResource(getResources(), R.drawable.i));
+            ResourceMappings.put(10, BitmapFactory.decodeResource(getResources(), R.drawable.j));
+            ResourceMappings.put(11, BitmapFactory.decodeResource(getResources(), R.drawable.k));
+            ResourceMappings.put(12, BitmapFactory.decodeResource(getResources(), R.drawable.l));
+            ResourceMappings.put(13, BitmapFactory.decodeResource(getResources(), R.drawable.m));
+            ResourceMappings.put(14, BitmapFactory.decodeResource(getResources(), R.drawable.n));
+            ResourceMappings.put(15, BitmapFactory.decodeResource(getResources(), R.drawable.o));
+            ResourceMappings.put(16, BitmapFactory.decodeResource(getResources(), R.drawable.p));
+            ResourceMappings.put(17, BitmapFactory.decodeResource(getResources(), R.drawable.q));
+            ResourceMappings.put(18, BitmapFactory.decodeResource(getResources(), R.drawable.r));
+            ResourceMappings.put(19, BitmapFactory.decodeResource(getResources(), R.drawable.s));
+            ResourceMappings.put(20, BitmapFactory.decodeResource(getResources(), R.drawable.t));
+            ResourceMappings.put(21, BitmapFactory.decodeResource(getResources(), R.drawable.u));
+            ResourceMappings.put(22, BitmapFactory.decodeResource(getResources(), R.drawable.v));
+            ResourceMappings.put(23, BitmapFactory.decodeResource(getResources(), R.drawable.w));
+            ResourceMappings.put(24, BitmapFactory.decodeResource(getResources(), R.drawable.x));
+        }
     }
 
     /**
@@ -217,14 +255,13 @@ public class PlayfieldView extends View {
         for (String key : placedCards.keySet()) {
             CardContainer c = placedCards.get(key);
             drawCardContainer(c, canvas);
-            canvas.drawText("" + c.card.getId(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 25), debugPaint);
-            canvas.drawText("" + c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 50), debugPaint);
+//            canvas.drawText(c.card.getId() + " " +  c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 25), rasterPaint);
         }
 
         for (String key: possibleLocations.keySet()) {
             CardContainer c = possibleLocations.get(key);
             drawCardContainer(c, canvas, rasterPaint);
-            canvas.drawText("X: " + c.fieldX  + ", Y " + c.fieldY, (int) (c.pixelX + c.offsetX + c.size / 4), (int)(c.pixelY + c.offsetY + c.size / 2), debugPaint);
+//            canvas.drawText("X: " + c.fieldX  + ", Y " + c.fieldY, (int) (c.pixelX + c.offsetX + c.size / 4), (int)(c.pixelY + c.offsetY + c.size / 2), debugPaint);
         }
     }
 
@@ -339,6 +376,68 @@ public class PlayfieldView extends View {
         invalidate();
     }
 
+    private static int cardIdToBitmapId(int cardId) {
+        if (cardId == 2 || cardId == 3) {
+            return 1;
+        } else if (cardId == 4 || cardId == 5 || cardId == 6 || cardId == 7) {
+            return 2;
+        } else if (cardId == 8) {
+            return 3;
+        } else if (cardId == 9 || cardId == 10 || cardId == 11 || cardId == 12) {
+            return 4;
+        } else if (cardId == 13 || cardId == 14 || cardId ==  15 || cardId == 16 || cardId ==  17) {
+            return 5;
+        } else if (cardId == 18 || cardId ==  19) {
+            return 6;
+        } else if (cardId == 20) {
+            return 7;
+        } else if (cardId == 21 || cardId == 22 || cardId ==  23) {
+            return 8;
+        } else if (cardId ==  24 || cardId == 25) {
+            return 9;
+        } else if (cardId ==  26 || cardId ==  27 || cardId ==  28) {
+            return 10;
+        } else if (cardId ==  1 || cardId == 30 || cardId == 31) {
+            return 11;
+        } else if (cardId == 32 || cardId ==  33 || cardId == 34) {
+            return 12;
+        } else if (cardId == 35 || cardId == 36) {
+            return 13;
+        } else if (cardId == 37 || cardId ==  38 || cardId ==  39) {
+            return 14;
+        } else if (cardId == 40 || cardId ==  41) {
+            return 15;
+        } else if (cardId ==  42 || cardId ==  43 || cardId == 44) {
+            return 16;
+        } else if (cardId ==  45) {
+            return 17;
+        } else if (cardId == 46 || cardId ==  47 || cardId ==  48) {
+            return 18;
+        } else if (cardId == 49 || cardId ==  50) {
+            return 19;
+        } else if (cardId == 51) {
+            return 20;
+        } else if (cardId == 52 || cardId == 53 || cardId == 54 || cardId == 55
+                || cardId == 56 || cardId == 57 || cardId == 58 || cardId == 59) {
+            return 21;
+        } else if (cardId == 60 || cardId == 61 || cardId == 62 || cardId == 63
+                || cardId == 64 || cardId == 65 || cardId == 66 || cardId == 67
+                || cardId == 68) {
+            return 22;
+        } else if (cardId == 69 || cardId == 70 || cardId == 71 || cardId == 72) {
+            return 23;
+        } else if (cardId == 29) {
+            return 24;
+        }
+        return -1;
+    }
+
+    public static Bitmap cardIdToBitmap(int cardId) {
+        int bitmapId = cardIdToBitmapId(cardId);
+        if (bitmapId == -1) return null;
+        return ResourceMappings.get(bitmapId);
+    }
+
     public void clearPossibleLocations() {
         possibleLocations.clear();
         invalidate();
@@ -388,47 +487,60 @@ public class PlayfieldView extends View {
         ExtendedCard ec = CardDataBase.getCardById(c.card.getId());
         if (ec == null) return;
 
-        Log.d("CARD", " " + ec.getId());
+
+        Bitmap bitmap = cardIdToBitmap(ec.getId());
+        if (bitmap == null) return;
+
+        // todo add rotation later
 
         float left = (float)(c.pixelX + c.offsetX);
         float top = (float)(c.pixelY + c.offsetY);
         float right = (float)(c.pixelX + c.offsetX + c.size);
         float bottom = (float)(c.pixelY + c.offsetY + c.size);
-        canvas.drawRect(left, top, right, bottom, paintGrass);
 
-        float offset = (float) c.size / 5;
-        float half = (float) c.size / 2;
+        canvas.drawBitmap(bitmap, null, new RectF(left, top, right, bottom), null);
 
-        if (ec.isCathedral()) {
-            canvas.drawCircle(left + half, top + half, offset, paintSpecial);
-        } else if (ec.isWappen()) {
-            canvas.drawCircle(left + half + 10, top + half + 10, offset, cardPaint);
-        }
+        if (bitmap == null) {
 
-        
-        if (ec.getDown() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
-            canvas.drawRect(left + offset, top, right - half, top + offset, paintCastle);
-        } else if (ec.getTop() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET) {
-            canvas.drawRect(left + half, top, right - offset, top + offset, paintStreet);
-        }
+            Log.d("CARD", " " + ec.getId());
 
-        if (ec.getRight() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
-            canvas.drawRect(right - offset, top + offset, right, top + half, paintCastle);
-        } else if (ec.getRight() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET) {
-            canvas.drawRect(right - offset, bottom - half, right, bottom - offset, paintStreet);
-        }
 
-        if (ec.getTop() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE) {
-             canvas.drawRect(left + offset, bottom, right - half, bottom - offset, paintCastle);
-        } else if (ec.getDown() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET) {
-            canvas.drawRect(left + half, bottom, right - offset, bottom - offset, paintStreet);
-            Log.d("CARD", "Street down");
-        }
+            canvas.drawRect(left, top, right, bottom, paintGrass);
 
-        if (ec.getLeft() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE) {
-            canvas.drawRect(left, top + offset, left + offset, top + half , paintCastle);
-        } else if (ec.getLeft() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET) {
-            canvas.drawRect(left, bottom - half, left + offset, bottom - offset , paintStreet);
+            float offset = (float) c.size / 5;
+            float half = (float) c.size / 2;
+
+            if (ec.isCathedral()) {
+                canvas.drawCircle(left + half, top + half, offset, paintSpecial);
+            } else if (ec.isWappen()) {
+                canvas.drawCircle(left + half + 10, top + half + 10, offset, cardPaint);
+            }
+
+
+            if (ec.getDown() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
+                canvas.drawRect(left + offset, top, right - half, top + offset, paintCastle);
+            } else if (ec.getTop() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET) {
+                canvas.drawRect(left + half, top, right - offset, top + offset, paintStreet);
+            }
+
+            if (ec.getRight() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
+                canvas.drawRect(right - offset, top + offset, right, top + half, paintCastle);
+            } else if (ec.getRight() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET) {
+                canvas.drawRect(right - offset, bottom - half, right, bottom - offset, paintStreet);
+            }
+
+            if (ec.getTop() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE) {
+                canvas.drawRect(left + offset, bottom, right - half, bottom - offset, paintCastle);
+            } else if (ec.getDown() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET) {
+                canvas.drawRect(left + half, bottom, right - offset, bottom - offset, paintStreet);
+                Log.d("CARD", "Street down");
+            }
+
+            if (ec.getLeft() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE) {
+                canvas.drawRect(left, top + offset, left + offset, top + half, paintCastle);
+            } else if (ec.getLeft() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET) {
+                canvas.drawRect(left, bottom - half, left + offset, bottom - offset, paintStreet);
+            }
         }
     }
 
