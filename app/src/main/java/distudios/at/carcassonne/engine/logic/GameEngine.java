@@ -456,12 +456,18 @@ public class GameEngine implements IGameEngine {
     }
 
 
+    /*
+    Prüft, ob ein Peep auf currentCard gesetzt werden kann
+     */
     public boolean checkPeepPlaceable(Card currentCard){
         if(!(getPeepPositions(currentCard).isEmpty())){
             return true;
         } else return false;
     }
 
+    /*
+    Gibt alle möglichen PeepPositions für currentCard in einem Array aus
+     */
     public ArrayList<PeepPosition> getPeepPositions(Card currentCard) {
         // todo: get cards of a castle
         // todo: check if placeable peeps of current player >0
