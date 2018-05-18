@@ -50,16 +50,15 @@ public class TestGameEngine {
         cdb.cardDB.get(21).setDown(CardSide.GRASS);     //Anpassung Neue Karte Check
         cdb.cardDB.get(21).setLeft(CardSide.CASTLE);
 
-        cdb.cardDB.get(22).setRight(CardSide.STREET);
+        cdb.cardDB.get(22).setRight(CardSide.GRASS);
         cdb.cardDB.get(22).setDown(CardSide.STREET);
         cdb.cardDB.get(22).setTop(CardSide.GRASS);
-        cdb.cardDB.get(22).setLeft(CardSide.GRASS);
+        cdb.cardDB.get(22).setLeft(CardSide.STREET);
 
         cdb.cardDB.get(23).setTop(CardSide.STREET);
         cdb.cardDB.get(23).setRight(CardSide.STREET);
         cdb.cardDB.get(23).setLeft(CardSide.GRASS);
         cdb.cardDB.get(23).setDown(CardSide.GRASS);
-
 
         cdb.cardDB.get(24).setRight(CardSide.STREET);
         cdb.cardDB.get(24).setLeft(CardSide.STREET);
@@ -146,11 +145,11 @@ public class TestGameEngine {
     public void checkGetStreet(){
         //Settings...
         Card card;
-        ge.placeCard(card = new Card(23, -1, 0, NORTH));
+        ge.placeCard(card = new Card(23, -1, 0, EAST));
         ge.placeCard(card = new Card(24, -1, -1, NORTH));
         ge.placeCard(card = new Card(25, 0, -1, NORTH));
         ge.placeCard(card = new Card(26, 1, -1, NORTH));
-        Card testCard = new Card(23,-1,0,NORTH);
+        Card testCard = new Card(23,-1,0,EAST);
 
         ArrayList<Card> street = ge.getStreet(testCard, SOUTH);
         Assert.assertTrue(street.size() == 3);
@@ -160,11 +159,11 @@ public class TestGameEngine {
     public void testCheckStreetComplete(){
         //Settings...
         Card card;
-        ge.placeCard(card = new Card(23, -1, 0, NORTH));
+        ge.placeCard(card = new Card(23, -1, 0, EAST));
         ge.placeCard(card = new Card(24, -1, -1, NORTH));
         ge.placeCard(card = new Card(25, 0, -1, NORTH));
         ge.placeCard(card = new Card(26, 1, -1, NORTH));
-        Card testCard = new Card(23,-1,0,NORTH);
+        Card testCard = new Card(23,-1,0,EAST);
         ArrayList<Card> street = ge.getStreet(testCard, SOUTH);
 
         Boolean complete = ge.checkStreetComplete(street);
@@ -174,9 +173,9 @@ public class TestGameEngine {
     @Test
     public void checkPlacePeep(){
         Card card = new Card(25,0,-1,NORTH);
-        Peep nextPeep = new Peep(card, PeepPosition.RightMid, Color.YELLOW);
+        Peep nextPeep = new Peep(card, PeepPosition.Right, Color.YELLOW);
 
-        Assert.assertTrue(ge.checkPeepPlaceable(nextPeep,card));
+        Assert.assertTrue(ge.checkPeepPlaceable(card));
         ge.placePeep(nextPeep);
         Assert.assertTrue(gs.getPeeps().size()==1);
         ArrayList<Peep> peeps = gs.getPeeps();

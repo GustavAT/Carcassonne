@@ -41,7 +41,7 @@ public interface IGameController {
      * Place figure on the field
      * @return false if position is invalid
      */
-    boolean placeFigure(Peep peep, Card nextCard);
+    boolean placeFigure(PeepPosition position, Card nextCard);
 
 
     /**

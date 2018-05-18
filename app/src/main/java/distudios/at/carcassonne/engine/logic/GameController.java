@@ -86,12 +86,14 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public boolean placeFigure(Peep nextPeep, Card currentCard) {
+    public boolean placeFigure(PeepPosition position, Card currentCard) {
         if (cState != CState.PLACE_FIGURE) return false;
+        //Change color to playerNr
+        Peep nextPeep = new Peep(currentCard, position, Color.YELLOW);
 
         cState = CState.END_TURN;
 
-        if(gameEngine.checkPeepPlaceable(nextPeep, currentCard)){
+        if(gameEngine.checkPeepPlaceable(currentCard)){
             gameEngine.placePeep(nextPeep);
             return true;
         }

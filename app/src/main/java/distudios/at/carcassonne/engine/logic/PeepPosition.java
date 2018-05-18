@@ -5,9 +5,10 @@ package distudios.at.carcassonne.engine.logic;
  */
 
 public enum PeepPosition {
-    TopLeft, TopMid, TopRight,
-    LeftDown, LeftMid, LeftUp,
-    RightDown, RightMid, RightUp,
-    DownLeft, DownMid, DownRight,
-    Center
+    TopLeft, Top, TopRight,
+    Left,
+    Right,
+    Center,
+    BottomLeft, Bottom, BottomRight
+
 }

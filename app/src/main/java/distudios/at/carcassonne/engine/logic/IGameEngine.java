@@ -19,6 +19,6 @@ public interface IGameEngine {
 
     void placePeep(Peep peep);
 
-    boolean checkPeepPlaceable(Peep peep, Card nextCard);
+    boolean checkPeepPlaceable(Card nextCard);
 
 }
