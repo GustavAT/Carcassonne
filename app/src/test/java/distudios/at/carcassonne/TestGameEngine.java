@@ -173,14 +173,14 @@ public class TestGameEngine {
     public void checkGetCastle(){
         //Settings...
         Card card;
-        ge.placeCard(card = new Card(20, 0, 1, NORTH));
+        ge.placeCard(card = new Card(20, 0, 1, WEST));
         ge.placeCard(card = new Card(21, 1, 0, NORTH));
-        ge.placeCard(card = new Card(22, 1, 1, NORTH));
-        //ge.placeCard(card = new Card(27, 2, 1, NORTH));
+        //ge.placeCard(card = new Card(22, 1, 1, NORTH));
+        ge.placeCard(card = new Card(27, 2, 1, NORTH));
         Card testCard = new Card(20, 0, 1, NORTH);
 
         ArrayList<Card> castle = ge.getCastle(testCard);
-        Assert.assertTrue(castle.size() == 3);
+        Assert.assertTrue(castle.size() == 2);
     }
 
     @Test

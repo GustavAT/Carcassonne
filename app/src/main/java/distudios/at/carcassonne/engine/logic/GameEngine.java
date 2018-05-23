@@ -336,33 +336,38 @@ public class GameEngine implements IGameEngine {
      */
     public ArrayList<Card> getConnectedCastleCards(Card card){
         ArrayList<Card> connectedCastleCards = new ArrayList<Card>();
-       // connectedCastleCards.add(card);
         ArrayList<Card> field = currentState.getCards();
         int cardID = card.getId();
         CardDataBase cdb = CardDataBase.getInstance();
         ArrayList<Orientation> castleOs = cdb.getMatchingOrientations(cardID,CASTLE);
 
-        if(castleOs.contains(NORTH)){
+        /*if(castleOs.contains(NORTH)){
             if(getFollowedCard(card,field,NORTH) != null){
                 connectedCastleCards.add(getFollowedCard(card,field,NORTH));
             }
-        }
+        }*/
 
+        if(castleOs.contains(NORTH)){
+            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(NORTH, card.getOrientation())) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(NORTH, card.getOrientation())));
+            }
+        }
+Card test = getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation()));
         if(castleOs.contains(EAST)){
-            if(getFollowedCard(card,field,EAST) != null){
-                connectedCastleCards.add(getFollowedCard(card,field,EAST));
+            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation())) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation())));
             }
         }
 
         if(castleOs.contains(SOUTH)){
-            if(getFollowedCard(card,field,SOUTH) != null){
-                connectedCastleCards.add(getFollowedCard(card,field,SOUTH));
+            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation())) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation())));
             }
         }
-
+        Card testI = getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation()));
         if(castleOs.contains(WEST)){
-            if(getFollowedCard(card,field,WEST) != null){
-                connectedCastleCards.add(getFollowedCard(card,field,WEST));
+            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation())) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation())));
             }
         }
         return connectedCastleCards;
@@ -419,90 +424,6 @@ public class GameEngine implements IGameEngine {
         if(!(castleIDs.contains(cardID))){
             castle.add(card);
         }
-
-        return castle;
-    }
-
-        /*
-        //Wenn card zwei gegenüberliegende Castles enthält
-        if((castleOs.size()==2 && castleOs.contains(Orientation.NORTH) && castleOs.contains(Orientation.SOUTH))){
-            nortSouth = true;
-        }
-        if ((castleOs.size()==2 && castleOs.contains(Orientation.EAST) && castleOs.contains(Orientation.WEST))){
-            eastWest = true;
-        }
-
-        //Wenn card in Richtung Norden eine Castle-Verbindung enthält, wird dieses weiterverfolgt
-        if(castleOs.contains(Orientation.NORTH)){
-            while(getFollowedCard(card, field,Orientation.NORTH) != null){
-                if (!(castle.contains(card))) {
-                    castle.add(card);
-                    yCards.add(card); //Cards in y-Richtung für iterativen Durchlauf
-                }
-                Card nextCard = getFollowedCard(card, field,Orientation.NORTH);
-                int nextID = nextCard.getId();
-                if (!(castle.contains(nextCard)) && (cdb.getCardSide(nextID, Orientation.NORTH) == CardSide.CASTLE)) {
-                    castle.add(nextCard);
-                    yCards.add(nextCard);
-                }
-                card = nextCard;
-            }
-        }
-
-        card = paramCard; //card muss jeweils auf den Parameter zurückgesetzt werden
-
-        //Wenn card in Richtung Osten eine Castle-Verbindung enthält, wird dieses weiterverfolgt
-        if(castleOs.contains(Orientation.EAST)){
-            while(getFollowedCard(card, field,Orientation.EAST) != null) {
-                if (!(castle.contains(card))) {
-                    castle.add(card);
-                    xCards.add(card); //Cards in x-Richtung für iterativen Durchlauf
-                }
-                Card nextCard = getFollowedCard(card, field, Orientation.EAST);
-                if (!(castle.contains(nextCard))) {
-                    castle.add(nextCard);
-                    xCards.add(nextCard);
-                }
-                card = nextCard;
-            }
-        }
-
-        card = paramCard;
-
-        //Wenn card in Richtung Süden eine Castle-Verbindung enthält, wird dieses weiterverfolgt
-        if(castleOs.contains(Orientation.SOUTH)){
-            while(getFollowedCard(card, field,Orientation.SOUTH) != null) {
-                if (!(castle.contains(card))) {
-                    castle.add(card);
-                    yCards.add(card);
-                }
-                Card nextCard = getFollowedCard(card, field, Orientation.SOUTH);
-                if (!(castle.contains(nextCard))) {
-                    castle.add(nextCard);
-                    yCards.add(nextCard);
-                }
-                card = nextCard;
-            }
-        }
-
-        card = paramCard;
-
-        //Wenn card in Richtung Westen eine Castle-Verbindung enthält, wird dieses weiterverfolgt
-        if(castleOs.contains(Orientation.WEST)){
-            while(getFollowedCard(card, field,Orientation.WEST) != null) {
-                if (!(castle.contains(card))) {
-                    castle.add(card);
-                    xCards.add(card);
-                }
-                Card nextCard = getFollowedCard(card, field, Orientation.WEST);
-                if (!(castle.contains(nextCard))) {
-                    castle.add(nextCard);
-                    xCards.add(nextCard);
-                }
-                card = nextCard;
-            }
-        }
-
 
         return castle;
     }
