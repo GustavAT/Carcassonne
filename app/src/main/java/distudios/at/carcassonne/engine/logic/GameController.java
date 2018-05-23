@@ -89,7 +89,7 @@ public class GameController implements IGameController {
     public boolean placeFigure(PeepPosition position, Card currentCard) {
         if (cState != CState.PLACE_FIGURE) return false;
         //Change color to playerNr
-        Peep nextPeep = new Peep(currentCard, position, Color.YELLOW);
+        Peep nextPeep = new Peep(currentCard, position, 1);
 
         cState = CState.END_TURN;
 

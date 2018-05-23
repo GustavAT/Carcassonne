@@ -203,13 +203,16 @@ public class CardDataBase {
         }
     }
 
-    public ArrayList<Orientation> getStreetSides(int id){
-        ArrayList<Orientation> streetSides = new ArrayList<Orientation>();
-        if (this.getCardSide(id,Orientation.NORTH)==CardSide.STREET) streetSides.add(Orientation.NORTH);
-        if (this.getCardSide(id,Orientation.EAST)==CardSide.STREET) streetSides.add(Orientation.EAST);
-        if (this.getCardSide(id,Orientation.SOUTH)==CardSide.STREET) streetSides.add(Orientation.SOUTH);
-        if (this.getCardSide(id,Orientation.WEST)==CardSide.STREET) streetSides.add(Orientation.WEST);
+    /*
+    Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
+     */
+    public ArrayList<Orientation> getMatchingOrientations(int id, CardSide cardSide){
+        ArrayList<Orientation> cardSides = new ArrayList<Orientation>();
+        if (this.getCardSide(id,Orientation.NORTH)== cardSide) cardSides.add(Orientation.NORTH);
+        if (this.getCardSide(id,Orientation.EAST)==cardSide) cardSides.add(Orientation.EAST);
+        if (this.getCardSide(id,Orientation.SOUTH)==cardSide) cardSides.add(Orientation.SOUTH);
+        if (this.getCardSide(id,Orientation.WEST)==cardSide) cardSides.add(Orientation.WEST);
 
-        return streetSides;
+        return cardSides;
     }
 }

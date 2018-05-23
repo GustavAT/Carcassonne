@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
-import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
 import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
 import static distudios.at.carcassonne.engine.logic.Orientation.EAST;
 import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
 import static distudios.at.carcassonne.engine.logic.Orientation.SOUTH;
 import static distudios.at.carcassonne.engine.logic.Orientation.WEST;
 import static distudios.at.carcassonne.engine.logic.PeepPosition.Bottom;
+import static distudios.at.carcassonne.engine.logic.PeepPosition.Center;
 import static distudios.at.carcassonne.engine.logic.PeepPosition.Left;
 import static distudios.at.carcassonne.engine.logic.PeepPosition.Right;
 import static distudios.at.carcassonne.engine.logic.PeepPosition.Top;
@@ -90,7 +90,7 @@ public class GameEngine implements IGameEngine {
                 isconnected = true;
             }
             //Nächste Seite
-            current = Card.getAbsoluteOrientation(current, Orientation.EAST);
+            current = Card.getAbsoluteOrientation(current, EAST);
         }
         return isconnected;
     }
@@ -118,11 +118,11 @@ public class GameEngine implements IGameEngine {
         //Füge Connections der aktuellen Karte zusammen
         if (sborder == Orientation.NORTH) {
             checkside.set(0, true);
-        } else if (sborder == Orientation.EAST) {
+        }else if (sborder == EAST) {
             checkside.set(1, true);
         } else if (sborder == Orientation.SOUTH) {
             checkside.set(2, true);
-        } else if (sborder == Orientation.WEST) {
+        } else if (sborder == WEST) {
             checkside.set(3, true);
         } else ;
 
@@ -145,7 +145,7 @@ public class GameEngine implements IGameEngine {
         return itcards;
     }
 
-    private ArrayList<Card> getConnectedCards(Card card, Orientation border) {
+    public ArrayList<Card> getConnectedCards(Card card, Orientation border) {
         ArrayList<Card> itcards = new ArrayList<>();
         ArrayList<Card> finalcards = new ArrayList<>();
         ArrayList<Orientation> oitcard = new ArrayList<>();
@@ -204,7 +204,7 @@ public class GameEngine implements IGameEngine {
     }
 
 
-    private boolean checkBorder(Card a, ArrayList<Card> field, Orientation oa) {
+    public boolean checkBorder(Card a, ArrayList<Card> field, Orientation oa) {
 
         CardDataBase cdb = CardDataBase.getInstance();
         Orientation ob = Card.getAbsoluteOrientation(oa, Orientation.SOUTH);
@@ -226,7 +226,7 @@ public class GameEngine implements IGameEngine {
                     return false;
                 }
                 break;
-            } else if (oa == Orientation.EAST && xa + 1 == xb && ya + 1 == yb) {
+            } else if (oa == EAST && xa + 1 == xb && ya + 1 == yb) {
                 ha = Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb = Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
@@ -242,7 +242,7 @@ public class GameEngine implements IGameEngine {
                     return false;
                 }
                 break;
-            } else if (oa == Orientation.WEST && xa - 1 == xb && ya == yb) {
+            } else if (oa == WEST && xa - 1 == xb && ya == yb) {
                 ha = Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb = Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
@@ -274,9 +274,9 @@ public class GameEngine implements IGameEngine {
                 return nextCard;
             } else if (oa == Orientation.SOUTH && xa == xb && ya - 1 == yb) {
                 return nextCard;
-            } else if (oa == Orientation.EAST && xa + 1 == xb && ya == yb) {
+            } else if (oa == EAST && xa + 1 == xb && ya == yb) {
                 return nextCard;
-            } else if (oa == Orientation.WEST && xa - 1 == xb && ya == yb) {
+            } else if (oa == WEST && xa - 1 == xb && ya == yb) {
                 return nextCard;
             } else {
 
@@ -292,7 +292,6 @@ public class GameEngine implements IGameEngine {
     public ArrayList getPossibilities(Card card) {
         ArrayList positions = new ArrayList();
         ArrayList<Card> cards = currentState.getCards();
-
 
         for (Card thisCard : cards) {
             card.setxCoordinate(thisCard.getxCoordinate() + 1);
@@ -332,6 +331,182 @@ public class GameEngine implements IGameEngine {
     }
 
 
+    /*
+    Gibt ein Array mit Karten zurück, die zur Parameter-Karte eine Castle-Verbindung haben
+     */
+    public ArrayList<Card> getConnectedCastleCards(Card card){
+        ArrayList<Card> connectedCastleCards = new ArrayList<Card>();
+       // connectedCastleCards.add(card);
+        ArrayList<Card> field = currentState.getCards();
+        int cardID = card.getId();
+        CardDataBase cdb = CardDataBase.getInstance();
+        ArrayList<Orientation> castleOs = cdb.getMatchingOrientations(cardID,CASTLE);
+
+        if(castleOs.contains(NORTH)){
+            if(getFollowedCard(card,field,NORTH) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,NORTH));
+            }
+        }
+
+        if(castleOs.contains(EAST)){
+            if(getFollowedCard(card,field,EAST) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,EAST));
+            }
+        }
+
+        if(castleOs.contains(SOUTH)){
+            if(getFollowedCard(card,field,SOUTH) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,SOUTH));
+            }
+        }
+
+        if(castleOs.contains(WEST)){
+            if(getFollowedCard(card,field,WEST) != null){
+                connectedCastleCards.add(getFollowedCard(card,field,WEST));
+            }
+        }
+        return connectedCastleCards;
+    }
+
+
+    public ArrayList<Card> getCastle(Card card) {
+        //todo: absolute Orientierung implementieren
+        //todo: lösung für gegenüberliegende Castles
+        ArrayList<Card> castle = new ArrayList<Card>();
+        CardDataBase cdb = CardDataBase.getInstance();
+        int cardID = card.getId();
+        ArrayList<Orientation> castleOs = cdb.getMatchingOrientations(cardID,CASTLE);
+
+        if(castleOs.isEmpty()){//card hat kein Castle
+            return castle;
+        } else if(getConnectedCastleCards(card).isEmpty()){ //card hat keine Castle-Verbindung
+            castle.add(card);
+            return castle;
+        }
+
+        //conCards = alle gültigen Castle-Verbindungen von card
+        ArrayList<Card> conCards = getConnectedCastleCards(card);
+        do {
+            for (Card conCard:conCards) {           //Wenn gültige Verbindungen neue Karten enthalten, werden diese zum Castle hinzugefügt
+                if(castle.contains(conCard)){
+                    conCards.remove(conCard);
+                } else castle.add(conCard);    //bereits vorhandene Karten werden aus den gültigen Karten gelöscht
+                if(conCards.isEmpty()){
+                    return castle;
+                }
+            }
+            ArrayList<Card> pHolder = new ArrayList<Card>();
+            for (Card conCard:conCards) {          //Alle neuen gültigen Karten müssen ihrerseits nach weiteren Verbindungen geprüft werden
+                for (Card c:getConnectedCastleCards(conCard)) {
+                    if(!(pHolder.contains(c))){
+                        pHolder.add(c);
+                    }
+                }
+                //pHolder.addAll(getConnectedCastleCards(conCard));
+                pHolder.remove(conCard);           //Jetzt können jene gültigen Karten entfernt werden, die in diesem Schleifendurchlauf zum Castle addiert wurden
+            }
+
+            conCards = pHolder;
+        }while(!(conCards.isEmpty()));                //Sobald keine gültigen neuen Karten mehr vorhanden sind, ist das Castle fertig
+
+        //Falls in do...while Schleife noch keine Karte mit card-ID hinzugefügt wurde, muss sie hier
+        //manuell hinzugefügt werden, da in Schleife mit anderer Instanz als card gearbeitet wird
+        ArrayList<Integer> castleIDs = new ArrayList<Integer>();
+        for (Card cCard:castle) {
+            int cCardID = cCard.getId();
+            castleIDs.add(cCardID);
+        }
+        if(!(castleIDs.contains(cardID))){
+            castle.add(card);
+        }
+
+        return castle;
+    }
+
+        /*
+        //Wenn card zwei gegenüberliegende Castles enthält
+        if((castleOs.size()==2 && castleOs.contains(Orientation.NORTH) && castleOs.contains(Orientation.SOUTH))){
+            nortSouth = true;
+        }
+        if ((castleOs.size()==2 && castleOs.contains(Orientation.EAST) && castleOs.contains(Orientation.WEST))){
+            eastWest = true;
+        }
+
+        //Wenn card in Richtung Norden eine Castle-Verbindung enthält, wird dieses weiterverfolgt
+        if(castleOs.contains(Orientation.NORTH)){
+            while(getFollowedCard(card, field,Orientation.NORTH) != null){
+                if (!(castle.contains(card))) {
+                    castle.add(card);
+                    yCards.add(card); //Cards in y-Richtung für iterativen Durchlauf
+                }
+                Card nextCard = getFollowedCard(card, field,Orientation.NORTH);
+                int nextID = nextCard.getId();
+                if (!(castle.contains(nextCard)) && (cdb.getCardSide(nextID, Orientation.NORTH) == CardSide.CASTLE)) {
+                    castle.add(nextCard);
+                    yCards.add(nextCard);
+                }
+                card = nextCard;
+            }
+        }
+
+        card = paramCard; //card muss jeweils auf den Parameter zurückgesetzt werden
+
+        //Wenn card in Richtung Osten eine Castle-Verbindung enthält, wird dieses weiterverfolgt
+        if(castleOs.contains(Orientation.EAST)){
+            while(getFollowedCard(card, field,Orientation.EAST) != null) {
+                if (!(castle.contains(card))) {
+                    castle.add(card);
+                    xCards.add(card); //Cards in x-Richtung für iterativen Durchlauf
+                }
+                Card nextCard = getFollowedCard(card, field, Orientation.EAST);
+                if (!(castle.contains(nextCard))) {
+                    castle.add(nextCard);
+                    xCards.add(nextCard);
+                }
+                card = nextCard;
+            }
+        }
+
+        card = paramCard;
+
+        //Wenn card in Richtung Süden eine Castle-Verbindung enthält, wird dieses weiterverfolgt
+        if(castleOs.contains(Orientation.SOUTH)){
+            while(getFollowedCard(card, field,Orientation.SOUTH) != null) {
+                if (!(castle.contains(card))) {
+                    castle.add(card);
+                    yCards.add(card);
+                }
+                Card nextCard = getFollowedCard(card, field, Orientation.SOUTH);
+                if (!(castle.contains(nextCard))) {
+                    castle.add(nextCard);
+                    yCards.add(nextCard);
+                }
+                card = nextCard;
+            }
+        }
+
+        card = paramCard;
+
+        //Wenn card in Richtung Westen eine Castle-Verbindung enthält, wird dieses weiterverfolgt
+        if(castleOs.contains(Orientation.WEST)){
+            while(getFollowedCard(card, field,Orientation.WEST) != null) {
+                if (!(castle.contains(card))) {
+                    castle.add(card);
+                    xCards.add(card);
+                }
+                Card nextCard = getFollowedCard(card, field, Orientation.WEST);
+                if (!(castle.contains(nextCard))) {
+                    castle.add(nextCard);
+                    xCards.add(nextCard);
+                }
+                card = nextCard;
+            }
+        }
+
+
+        return castle;
+    }
+
 
     /*
     Prüft, ob card in der Richtung oc Teil einer Straße ist und gibt diese zurück (null wenn keine Straße)
@@ -348,11 +523,14 @@ public class GameEngine implements IGameEngine {
 
         //falls überprüfte Orientierung gar keine Straße ist/hat
         CardSide cs = cdb.getCardSide(cardID, test);
-        if (cs != CardSide.STREET) {
+        if (cs != STREET) {
             return null;
         } else {
-            street.add(card);
+
             while (getFollowedCard(card, field, oc) != null) {
+                if (!(street.contains(card))) {
+                    street.add(card);
+                }
                 Card nextCard = getFollowedCard(card, field, oc);
                 if (!(street.contains(nextCard))) {
                     street.add(nextCard);
@@ -360,12 +538,12 @@ public class GameEngine implements IGameEngine {
 
                 int nextCardID = nextCard.getId();
                 //Wenn Straße in Kreuzung oder Castle endet
-                if (cdb.getStreetSides(nextCardID).size() > 2 || cdb.getStreetSides(nextCardID).size() == 1) {
+                if (cdb.getMatchingOrientations(nextCardID, STREET).size() > 2 || cdb.getMatchingOrientations(nextCardID, STREET).size() == 1) {
                     break;
                 }
 
-                Orientation oa = cdb.getStreetSides(nextCardID).get(0); //Erster Ausgang als Straße
-                Orientation ob = cdb.getStreetSides(nextCardID).get(1); //Zweiter Ausgang als Straße
+                Orientation oa = cdb.getMatchingOrientations(nextCardID, STREET).get(0); //Erster Ausgang als Straße
+                Orientation ob = cdb.getMatchingOrientations(nextCardID, STREET).get(1); //Zweiter Ausgang als Straße
 
                 //Herkunftsseite herausfinden, auf der anderen Seite geht's weiter
                 Orientation vg = Card.getAbsoluteOrientation(oc, Orientation.SOUTH); //oc um 180° gedreht
@@ -389,32 +567,33 @@ public class GameEngine implements IGameEngine {
          */
     public ArrayList<Card> combineStreets(ArrayList<Card> streetNorth, ArrayList<Card> streetEast, ArrayList<Card> streetSouth, ArrayList<Card> streetWest) {
         ArrayList<Card> combinedStreet = new ArrayList<Card>();
+        int skip = 0;
 
         //Gibt es im Norden von currentCard eine fertige Straße?
-        if (streetNorth != null && checkStreetComplete(streetNorth)) {
-            return null;
+        if (!(streetNorth.isEmpty()) && checkStreetComplete(streetNorth) == true) {
+            skip++;
         }
         //Wenn die Straße im Norden nicht fertig ist, werden zwei Straßen zusammengeführt
-        else if (streetNorth != null && !(checkStreetComplete(streetNorth))) {
+        if (!(streetNorth.isEmpty()) && !(checkStreetComplete(streetNorth))) {
             combinedStreet.addAll(streetNorth);
         }
 
         //Gleiches Vorgehen für alle Richtungen
-        if (streetEast != null && checkStreetComplete(streetEast)) {
-            return null;
-        } else if (streetEast != null && !(checkStreetComplete(streetEast))) {
+        if (!(streetEast.isEmpty()) && checkStreetComplete(streetEast)) {
+            skip++;
+        } if (!(streetEast.isEmpty()) && !(checkStreetComplete(streetEast))) {
             combinedStreet.addAll(streetEast);
         }
 
-        if (streetSouth != null && checkStreetComplete(streetSouth)) {
-            return null;
-        } else if (streetSouth != null && !(checkStreetComplete(streetSouth))) {
+        if (!(streetSouth.isEmpty()) && checkStreetComplete(streetSouth)) {
+            skip++;
+        } if (!(streetSouth.isEmpty()) && !(checkStreetComplete(streetSouth))) {
             combinedStreet.addAll(streetSouth);
         }
 
-        if (streetWest != null && checkStreetComplete(streetWest)) {
-            return null;
-        } else if (streetWest != null && !(checkStreetComplete(streetWest))) {
+        if (!(streetWest.isEmpty()) && checkStreetComplete(streetWest)) {
+            skip++;
+        }  if (!(streetWest.isEmpty()) && !(checkStreetComplete(streetWest))) {
             combinedStreet.addAll(streetWest);
         }
         return combinedStreet;
@@ -434,12 +613,12 @@ public class GameEngine implements IGameEngine {
         boolean end = false;
 
         //Prüfen, ob Startkarte eine Kreuzung ist
-        if (cdb.getStreetSides(startID).size() > 2 || cdb.getStreetSides(startID).size() == 1) {
+        if (cdb.getMatchingOrientations(startID, STREET).size() > 2 || cdb.getMatchingOrientations(startID, STREET).size() == 1) {
             start = true;
         }
 
         //Prüfen, ob Endkarte eine Kreuzung ist
-        if (cdb.getStreetSides(lastID).size() > 2 || cdb.getStreetSides(lastID).size() == 1) {
+        if (cdb.getMatchingOrientations(lastID, STREET).size() > 2 || cdb.getMatchingOrientations(lastID, STREET).size() == 1) {
             end = true;
         }
 
@@ -474,12 +653,17 @@ public class GameEngine implements IGameEngine {
         ArrayList<PeepPosition> positions = new ArrayList<PeepPosition>();
 
         //Zu prüfende Teilstraßen holen
-        Boolean placeable = false;
         ArrayList<Card> streetNorth = getStreet(currentCard, Orientation.NORTH);
-        ArrayList<Card> streetEast = getStreet(currentCard, Orientation.EAST);
+        ArrayList<Card> streetEast = getStreet(currentCard, EAST);
         ArrayList<Card> streetSouth = getStreet(currentCard, Orientation.SOUTH);
-        ArrayList<Card> streetWest = getStreet(currentCard, Orientation.WEST);
+        ArrayList<Card> streetWest = getStreet(currentCard, WEST);
 
+        //Prüfen, ob zwei unbesetzte Teilstraßen verbunden werden können => Position Center
+        ArrayList<Card> combinedStreet = combineStreets(streetNorth, streetEast, streetSouth, streetWest);
+        if(!(combinedStreet.isEmpty()) && !(checkPeepsStreet(combinedStreet))){
+            positions.add(Center);
+        }
+        //Prüfen, ob vorhandene Teilstraßen unbesetzt sind
         if (!(streetNorth.isEmpty()) && !(checkPeepsStreet(streetNorth))) {
             positions.add(Top);
         }
@@ -492,6 +676,7 @@ public class GameEngine implements IGameEngine {
         if (!(streetWest.isEmpty()) && !(checkPeepsStreet(streetWest))) {
             positions.add(Left);
         }
+
         return positions;
     }
 

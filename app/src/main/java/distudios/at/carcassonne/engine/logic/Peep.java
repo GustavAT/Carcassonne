@@ -10,12 +10,12 @@ public class Peep {
     private Card card;
     //Position of Peep on Card
     private PeepPosition peepPosition;
-    private Color color; //Could also be a Player who has chosen a color and has a number of Peeps left to place
+    private int playerID;
 
-    public Peep(Card card, PeepPosition peepPosition, Color color) {
+    public Peep(Card card, PeepPosition peepPosition, int playerID) {
         this.peepPosition = peepPosition;
         this.card = card;
-        this.color = color;
+        this.playerID = playerID;
     }
 
     public Card getCard() {
@@ -28,7 +28,7 @@ public class Peep {
 
     public void setPeepPosition(PeepPosition peepPosition){this.peepPosition = peepPosition;}
 
-    public Color getColor(){return color;}
+    public int getPlayerID(){return playerID;}
 
-    public void setColor(Color color){this.color = color;}
+    public void setPlayerID(int playerID){this.playerID = playerID;}
 }
