@@ -1,5 +1,6 @@
 package distudios.at.carcassonne.engine.logic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
@@ -19,6 +20,8 @@ public class Card {
     @JsonField
     private int yCoordinate;
 
+    private ArrayList<Orientation> marks;
+
     public Card() {}
 
     public Card(int id,  int xCoordinate, int yCoordinate, Orientation orientation) {
@@ -26,6 +29,7 @@ public class Card {
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.marks = new ArrayList<Orientation>();
     }
 
     public int getId() {
@@ -58,6 +62,14 @@ public class Card {
 
     public void setyCoordinate(int yCoordinate) {
         this.yCoordinate = yCoordinate;
+    }
+
+    public ArrayList<Orientation> getMarks() { return marks; }
+
+    public void setMark(Orientation mark) {
+        if(!(this.marks.contains(mark))) {
+            this.marks.add(mark);
+        }
     }
 
     @Override
