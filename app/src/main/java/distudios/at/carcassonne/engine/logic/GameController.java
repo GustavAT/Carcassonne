@@ -10,6 +10,11 @@ import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
+import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
+import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
+import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
+import static distudios.at.carcassonne.engine.logic.PeepPosition.Left;
+
 public class GameController implements IGameController {
 
     private IGameEngine gameEngine;
@@ -86,20 +91,28 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public boolean placeFigure(PeepPosition position, Card currentCard) {
+    public void showPossibleFigurePos(Card card){
+        ArrayList<PeepPosition> figurePos = gameEngine.getALLFigurePos(card);
+        //todo: implement view to schow possible Positions
+    }
+
+    @Override
+    public PeepPosition getChosenFigurePos(Card card) {
+        //todo: get the chosen position from view
+        PeepPosition position = Left;
+        return position;
+    }
+
+    @Override
+    public boolean placeFigure(Card card, int playerID) {
+        PeepPosition chosenMark = getChosenFigurePos(card);
         if (cState != CState.PLACE_FIGURE) return false;
-        //Change color to playerNr
-        Peep nextPeep = new Peep(currentCard, position, 1);
 
-        cState = CState.END_TURN;
-
-        if(gameEngine.checkPeepPlaceable(currentCard)){
-            gameEngine.placePeep(nextPeep);
+        if(gameEngine.placePeep(card,chosenMark,playerID)){
+            gameEngine.placePeep(card,chosenMark,playerID);
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
 
@@ -107,6 +120,7 @@ public class GameController implements IGameController {
     public void endTurn() {
         if (cState != CState.END_TURN || !isMyTurn()) return;
 
+        gameEngine.markAllCards();
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
         GameState state = getGameState();
         state.currentPlayer = state.getNextPlayer();

@@ -20,7 +20,7 @@ public class Card {
     @JsonField
     private int yCoordinate;
 
-    private ArrayList<Orientation> marks;
+    private ArrayList<PeepPosition> marks;
 
     public Card() {}
 
@@ -29,7 +29,7 @@ public class Card {
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        this.marks = new ArrayList<Orientation>();
+        this.marks = new ArrayList<PeepPosition>();
     }
 
     public int getId() {
@@ -64,9 +64,9 @@ public class Card {
         this.yCoordinate = yCoordinate;
     }
 
-    public ArrayList<Orientation> getMarks() { return marks; }
+    public ArrayList<PeepPosition> getMarks() { return marks; }
 
-    public void setMark(Orientation mark) {
+    public void setMark(PeepPosition mark) {
         if(!(this.marks.contains(mark))) {
             this.marks.add(mark);
         }

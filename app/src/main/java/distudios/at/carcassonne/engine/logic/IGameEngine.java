@@ -21,4 +21,16 @@ public interface IGameEngine {
 
     boolean checkPeepPlaceable(Card nextCard);
 
+    ArrayList<PeepPosition> getMarkedBorders(Card card, CardSide cardSide);
+
+    ArrayList<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide);
+
+    boolean markCard(Card card, PeepPosition mark, CardSide cardSide);
+
+    boolean placePeep(Card card, PeepPosition mark, int playerID );
+
+    ArrayList<PeepPosition> getALLFigurePos(Card card);
+
+    boolean markAllCards();
+
 }
