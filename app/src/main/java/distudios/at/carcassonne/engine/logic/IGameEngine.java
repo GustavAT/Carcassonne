@@ -17,10 +17,6 @@ public interface IGameEngine {
 
     ArrayList<Integer> getScoreChanges(Card card);
 
-    void placePeep(Peep peep);
-
-    boolean checkPeepPlaceable(Card nextCard);
-
     ArrayList<PeepPosition> getMarkedBorders(Card card, CardSide cardSide);
 
     ArrayList<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide);

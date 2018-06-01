@@ -291,197 +291,6 @@ public class GameEngine implements IGameEngine {
         return null;
     }
 
-    /*
-    Prüft, ob card in der Richtung oc Teil einer Straße ist und gibt diese zurück (null wenn keine Straße)
-     */
-    public ArrayList<Card> getStreet(Card card, Orientation oc) {
-        ArrayList<Card> street = new ArrayList<Card>();
-        ArrayList<Card> field = currentState.getCards();
-        CardDataBase cdb = CardDataBase.getInstance();
-        int cardID = card.getId();
-
-        //Umrechnung von oc in die tatsächlich auf dem Spielfeld liegende Orientierung
-        Orientation ao = Card.getAbsoluteOrientation(oc, card.getOrientation());
-        Orientation test = Card.getAbsoluteOrientation(ao, oc);
-
-        //falls überprüfte Orientierung gar keine Straße ist/hat
-        CardSide cs = cdb.getCardSide(cardID, test);
-        if (cs != STREET) {
-            return null;
-        } else {
-
-            while (getFollowedCard(card, field, oc) != null) {
-                if (!(street.contains(card))) {
-                    street.add(card);
-                }
-                Card nextCard = getFollowedCard(card, field, oc);
-                if (!(street.contains(nextCard))) {
-                    street.add(nextCard);
-                }
-
-                int nextCardID = nextCard.getId();
-                //Wenn Straße in Kreuzung oder Castle endet
-                if (cdb.getMatchingOrientations(nextCardID, STREET).size() > 2 || cdb.getMatchingOrientations(nextCardID, STREET).size() == 1) {
-                    break;
-                }
-
-                Orientation oa = cdb.getMatchingOrientations(nextCardID, STREET).get(0); //Erster Ausgang als Straße
-                Orientation ob = cdb.getMatchingOrientations(nextCardID, STREET).get(1); //Zweiter Ausgang als Straße
-
-                //Herkunftsseite herausfinden, auf der anderen Seite geht's weiter
-                Orientation vg = Card.getAbsoluteOrientation(oc, Orientation.SOUTH); //oc um 180° gedreht
-                if (oa == vg) {
-                    oc = ob;
-                } else if (ob == vg) {
-                    oc = oa;
-                }
-
-                card = nextCard;
-            }
-        }
-
-        return street;
-    }
-
-
-    /*
-        Ermittelt für current Card, ob sie eine Straße vervollständigt oder zwei Straßen vereint
-        Gibt die Straße jeweils zurück
-         */
-    public ArrayList<Card> combineStreets(ArrayList<Card> streetNorth, ArrayList<Card> streetEast, ArrayList<Card> streetSouth, ArrayList<Card> streetWest) {
-        ArrayList<Card> combinedStreet = new ArrayList<Card>();
-        int skip = 0;
-
-        //Gibt es im Norden von currentCard eine fertige Straße?
-        if (!(streetNorth.isEmpty()) && checkStreetComplete(streetNorth) == true) {
-            skip++;
-        }
-        //Wenn die Straße im Norden nicht fertig ist, werden zwei Straßen zusammengeführt
-        if (!(streetNorth.isEmpty()) && !(checkStreetComplete(streetNorth))) {
-            combinedStreet.addAll(streetNorth);
-        }
-
-        //Gleiches Vorgehen für alle Richtungen
-        if (!(streetEast.isEmpty()) && checkStreetComplete(streetEast)) {
-            skip++;
-        }
-        if (!(streetEast.isEmpty()) && !(checkStreetComplete(streetEast))) {
-            combinedStreet.addAll(streetEast);
-        }
-
-        if (!(streetSouth.isEmpty()) && checkStreetComplete(streetSouth)) {
-            skip++;
-        }
-        if (!(streetSouth.isEmpty()) && !(checkStreetComplete(streetSouth))) {
-            combinedStreet.addAll(streetSouth);
-        }
-
-        if (!(streetWest.isEmpty()) && checkStreetComplete(streetWest)) {
-            skip++;
-        }
-        if (!(streetWest.isEmpty()) && !(checkStreetComplete(streetWest))) {
-            combinedStreet.addAll(streetWest);
-        }
-        return combinedStreet;
-    }
-
-
-    /*
-    Prüft, ob die übergebene Straße vollständig ist
-     */
-    public boolean checkStreetComplete(ArrayList<Card> street) {
-        CardDataBase cdb = CardDataBase.getInstance();
-        Card startCard = street.get(0);
-        Card lastCard = street.get(street.size() - 1);
-        int startID = startCard.getId();
-        int lastID = lastCard.getId();
-        boolean start = false;
-        boolean end = false;
-
-        //Prüfen, ob Startkarte eine Kreuzung ist
-        if (cdb.getMatchingOrientations(startID, STREET).size() > 2 || cdb.getMatchingOrientations(startID, STREET).size() == 1) {
-            start = true;
-        }
-
-        //Prüfen, ob Endkarte eine Kreuzung ist
-        if (cdb.getMatchingOrientations(lastID, STREET).size() > 2 || cdb.getMatchingOrientations(lastID, STREET).size() == 1) {
-            end = true;
-        }
-
-        //Endpunkte werden bereits in getStreet geprüft, daher fertig
-        if (start == true && end == true) {
-            return true;
-        } else return false;
-    }
-
-
-    public void placePeep(Peep peep) {
-        currentState.addPeep(peep);
-        //todo: reduce placeable Peeps of the player
-    }
-
-
-    /*
-    Prüft, ob ein Peep auf currentCard gesetzt werden kann
-     */
-    public boolean checkPeepPlaceable(Card currentCard) {
-        if (!(getPeepPositionsStreet(currentCard).isEmpty())) {
-            return true;
-        } else return false;
-    }
-
-    /*
-    Gibt alle möglichen PeepPositions für currentCard in einem Array aus
-     */
-    public ArrayList<PeepPosition> getPeepPositionsStreet(Card currentCard) {
-        // todo: get cards of a castle
-        // todo: check if placeable peeps of current player >0
-        ArrayList<PeepPosition> positions = new ArrayList<PeepPosition>();
-
-        //Zu prüfende Teilstraßen holen
-        ArrayList<Card> streetNorth = getStreet(currentCard, Orientation.NORTH);
-        ArrayList<Card> streetEast = getStreet(currentCard, EAST);
-        ArrayList<Card> streetSouth = getStreet(currentCard, Orientation.SOUTH);
-        ArrayList<Card> streetWest = getStreet(currentCard, WEST);
-
-        //Prüfen, ob zwei unbesetzte Teilstraßen verbunden werden können => Position Center
-        ArrayList<Card> combinedStreet = combineStreets(streetNorth, streetEast, streetSouth, streetWest);
-        if (!(combinedStreet.isEmpty()) && !(checkPeepsBuilding(combinedStreet, Center))) {
-            positions.add(Center);
-        }
-        //Prüfen, ob vorhandene Teilstraßen unbesetzt sind
-        if (!(streetNorth.isEmpty()) && !(checkPeepsBuilding(streetNorth, Top))) {
-            positions.add(Top);
-        }
-        if (!(streetEast.isEmpty()) && !(checkPeepsBuilding(streetEast, Right))) {
-            positions.add(Right);
-        }
-        if (!(streetSouth.isEmpty()) && !(checkPeepsBuilding(streetSouth, Bottom))) {
-            positions.add(Bottom);
-        }
-        if (!(streetWest.isEmpty()) && !(checkPeepsBuilding(streetWest, Left))) {
-            positions.add(Left);
-        }
-
-        return positions;
-    }
-
-    /*
-    Prüft, ob im übergebenen Array bereits eine Karte mit Peep auf übergebener Position existiert
-    Return true = Array (Straße oder Castle) schon besetzt
-     */
-    public boolean checkPeepsBuilding(ArrayList<Card> building, PeepPosition peepPos) {
-        ArrayList<Peep> peeps = currentState.getPeeps();
-        for (Card card : building) {
-            for (Peep thisPeep : peeps) {
-                if (thisPeep.getCard() == card && thisPeep.getPeepPosition() == peepPos) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * Hilfsfunktion, die für zwei Karten (card, testCard), die zueinander in der übergebenen Orientierung liegen,
      * die für card blockierten Seiten zum Setzen von Peeps zurückgibt
@@ -552,11 +361,6 @@ public class GameEngine implements IGameEngine {
         int cardID = card.getId();
         Card testCard;
 
-        /*Wenn card eine Cathedral ist, ist nur Center markiert, es kann an alle Seiten angelegt werden
-        if (cdb.getCardById(cardID).isCathedral()) {
-            markedBorders.add(Center);
-            return markedBorders;
-        }*/
         Orientation oIV = Card.getAbsoluteOrientation(NORTH, card.getOrientation());
         if (getFollowedCard(card, field, Card.getAbsoluteOrientation(NORTH, card.getOrientation())) != null) {
             testCard = getFollowedCard(card, field, Card.getAbsoluteOrientation(NORTH, card.getOrientation())); //passende Folgekarte gemäß Spielfeld
@@ -567,7 +371,7 @@ public class GameEngine implements IGameEngine {
                     markedBorders.add(pos);
                 }
             }
-            //markedBorders = getBordersByOrientation(card, testCard, NORTH);
+
         }
             Orientation o = Card.getAbsoluteOrientation(EAST, card.getOrientation());
             if (getFollowedCard(card, field, Card.getAbsoluteOrientation(EAST, card.getOrientation())) != null) {
@@ -602,6 +406,23 @@ public class GameEngine implements IGameEngine {
                         }
                     }
                 }
+
+        if(markedBorders.contains(Top) && cdb.getCardSide(cardID,card.getOrientation()) != cardSide){
+            markedBorders.remove(Top);
+        } Orientation oI = getRightSide(card.getOrientation());
+        if(markedBorders.contains(Right) && cdb.getCardSide(cardID,getRightSide(card.getOrientation())) != cardSide){
+            markedBorders.remove(Right);
+        }
+        Orientation oIIy = Card.getAbsoluteOrientation(card.getOrientation(),SOUTH);
+        if(markedBorders.contains(Bottom) && cdb.getCardSide(cardID,Card.getAbsoluteOrientation(card.getOrientation(),SOUTH)) != cardSide){
+
+            markedBorders.remove(Bottom);
+        }Orientation oIVz = getLeftSide(card.getOrientation());
+        if(markedBorders.contains(Left) && cdb.getCardSide(cardID,getLeftSide(card.getOrientation())) != cardSide){
+
+            markedBorders.remove(Left);
+        }
+
         return markedBorders;
     }
 
@@ -610,7 +431,6 @@ public class GameEngine implements IGameEngine {
   */
     public ArrayList<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide) {
         ArrayList<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> unmarkedBuildingBorders = new ArrayList<PeepPosition>();
         ArrayList<PeepPosition> markedBorders = new ArrayList<PeepPosition>();
         ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
         CardDataBase cdb = CardDataBase.getInstance();
@@ -643,12 +463,6 @@ public class GameEngine implements IGameEngine {
 
         //Abfangen einiger Sonderfälle für Castles:
 
-        //Wenn auf der 4-Castle-Sonderkarte nicht alle Seiten frei sind -> Kein Peep platzierbar
-       /* if (cardSide == CASTLE && buildingOs.size() > unmarkedBuildingBorders.size()) {
-            unmarkedBuildingBorders.clear();
-            return unmarkedBuildingBorders;
-        }*/
-
         //Es handelt sich um die "Vierer-Castle-Karte" => nur im Center positionierbar
         if (cardSide == CASTLE && buildingOs.size() == 4 && unmarkedBorders.size() == 4) {
             unmarkedBorders.clear();
@@ -662,17 +476,9 @@ public class GameEngine implements IGameEngine {
                 unmarkedBorders.clear();
                 return unmarkedBorders;
         }
-        /*Das Castle auf card rechtwinklig NICHT VERBUNDEN (splitStop == true)
-        if (cardSide == CASTLE && buildingOs.size() == 2 && buildingOs.size() > unmarkedBorders.size() && cdb.getCardById(cardID).isSplitStop() == true) {
-
-        }
-        //Wenn 1 oder 3 Castle-Seiten und nicht alle Seiten frei, werden zwei Castles verbunden, von denen mindestens eins belegt ist
-        if (cardSide == CASTLE && buildingOs.size() > unmarkedBorders.size()) {
-            unmarkedBorders.clear();
-            return unmarkedBorders;
-        }*/
 
         //Sonderfall Cathedral abfangen:
+
         //Wenn card eine Cathedral ist und auch eine Straße hat -> auch im Center platzierbar
         if (cdb.getCardById(cardID).isCathedral() && cardSide == STREET && buildingOs.size() > 0) {
             if(!(unmarkedBorders.contains(Center))) {
@@ -695,13 +501,11 @@ public class GameEngine implements IGameEngine {
      * @return
      */
     public ArrayList<PeepPosition> getUnmarkedBuildingBorders(Card card, ArrayList<Orientation> buildingOs, CardSide cardSide){
-        ArrayList<Card> field = currentState.getCards();
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID = card.getId();
         ArrayList<PeepPosition> markedBuildingBorders = new ArrayList<PeepPosition>();
         ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
         ArrayList<PeepPosition> unmarkedBuildingBorders = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> pBorders = new ArrayList<PeepPosition>();
 
         markedBuildingBorders = getMarkedBorders(card, cardSide);
 
@@ -769,25 +573,23 @@ public class GameEngine implements IGameEngine {
     }
 
     /**
-     * Gibt für übergeben Orientierungen an, ob sie rechtwinklig zueinander liegen
-     * @param castleOs Sollte nur Orientierungen mit der gleichen CardSide enthalten
-     * @return
+     * Hilfsfunktion, die für eine Karte die markierten Seiten gegenmarkiert
+     * @param card
      */
-    public boolean areConnected(ArrayList<Orientation> castleOs){
-        //Nord ist mit West oder Ost verbunden => rechtwinklig
-        if((castleOs.contains(EAST) || castleOs.contains(WEST)) && castleOs.contains(NORTH)){
-            return true;
+    public void markMarkedBorders(Card card){
+        ArrayList<PeepPosition> markedCastleBorders = getMarkedBorders(card, CASTLE); //Markierte Castle-Stellen holen
+        ArrayList<PeepPosition> markedStreetBorders = getMarkedBorders(card, STREET); //Markierte Street-Stellen holen
+
+        for (PeepPosition pos:markedCastleBorders) {
+            if(!(card.getMarks().contains(pos))){
+                card.setMark(pos);
+            }
         }
-        if((castleOs.contains(NORTH) || castleOs.contains(SOUTH)) && castleOs.contains(EAST)){
-            return true;
+        for (PeepPosition pos:markedStreetBorders) {
+            if(!(card.getMarks().contains(pos))){
+                card.setMark(pos);
+            }
         }
-        if((castleOs.contains(EAST) || castleOs.contains(WEST)) && castleOs.contains(SOUTH)){
-            return true;
-        }
-        if((castleOs.contains(NORTH) || castleOs.contains(SOUTH)) && castleOs.contains(WEST)){
-            return true;
-        }
-        return false;
     }
 
     /*
@@ -800,20 +602,25 @@ public class GameEngine implements IGameEngine {
         int cardID = card.getId();
         ArrayList<Orientation> sideOs= cdb.getMatchingOrientations(cardID, cardSide);
 
+        //Wichtig: "belegte" Seiten gegenmarkieren
+       markMarkedBorders(card);
+
         //Straßenkarte mit genau zwei Anschlüssen und beide sind frei => beide markieren um spätere Falschmarkierung zu verhindern
         if(cardSide == STREET && unmarkedBorders.size() == 2 && sideOs.size() == 2){
             for (PeepPosition markI:unmarkedBorders) {
-                card.setMark(markI);
+                if(!(card.getMarks().contains(markI))) {
+                    card.setMark(markI);
+                }
             }return  true;
         }
 
         //Wenn card die "Vierer-Castle-Karte" ist müssen alle vier Seiten (nicht die Ecken) markiert werden
         ArrayList<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, cardSide);
         if (cardSide == CASTLE && cdb.getMatchingOrientations(cardID, cardSide).size() == 4) {
-            card.setMark(Top);
-            card.setMark(Bottom);
-            card.setMark(Left);
-            card.setMark(Right);
+            if(!(card.getMarks().contains(Top)))card.setMark(Top);
+            if(!(card.getMarks().contains(Bottom)))card.setMark(Bottom);
+            if(!(card.getMarks().contains(Left)))card.setMark(Left);
+            if(!(card.getMarks().contains(Right)))card.setMark(Right);
             return true;
         }
 
@@ -822,7 +629,7 @@ public class GameEngine implements IGameEngine {
         //mehr erreicht werden oder sie ist/sind noch frei
         if(cdb.getCardById(cardID).isSplitStop()){
             if (unmarkedBorders.contains(mark)) {
-                card.setMark(mark);
+                if(!(card.getMarks().contains(mark)))card.setMark(mark);
                 }
                 return true;
         }
@@ -837,14 +644,14 @@ public class GameEngine implements IGameEngine {
 
         if (unmarkedBorders.contains(mark)) { //Absicherung das mark wirklich nicht markiert ist
             for (PeepPosition unmarked : unmarkedBorders) { //Alle bisher für die CardSide freien Stellen werden markiert
-                card.setMark(unmarked);
+                if(!(card.getMarks().contains(unmarked)))card.setMark(unmarked);
             }
             return true;
         }
 
         //Falls Cathedral-Karte mit cardSide Castle überprüft werden sollte aber Center (die Cathedral) gewählt wurde
         if(cdb.getCardById(cardID).isCathedral() && cardSide == CASTLE && mark == Center){
-            card.setMark(Center);
+            if(!(card.getMarks().contains(Center)))card.setMark(Center);
             return true;
         }
         return false; //mark könnte z.B. für ein anderes Gebäude frei sein -> cardSide ändern
@@ -874,15 +681,6 @@ public class GameEngine implements IGameEngine {
             }
             return true;
         }
-        /*if(unmarkedGrassBorders.contains(chosenMark)){
-            if(markCard(card, chosenMark, GRASS)){
-                markCard(card, chosenMark, GRASS);
-                Peep peep = new Peep(card,chosenMark,playerID);
-                currentState.addPeep(peep);
-                return true;
-            }
-            return true;
-        }*/
         return false;
     }
 
@@ -891,11 +689,17 @@ public class GameEngine implements IGameEngine {
         ArrayList<PeepPosition> unmarkedCastleBorders = getUnmarkedBorders(card, CASTLE);
         ArrayList<PeepPosition> unmarkedStreetBorders = getUnmarkedBorders(card, STREET);
 
-        figurePos.addAll(unmarkedCastleBorders);
-        for (PeepPosition pos : unmarkedStreetBorders) {
-            if (!(figurePos.contains(pos))) {
-                figurePos.add(pos);
+        if(getPlayerPeeps(currentState.currentPlayer) < 10) {
+            figurePos.addAll(unmarkedCastleBorders);
+            for (PeepPosition pos : unmarkedStreetBorders) {
+                if (!(figurePos.contains(pos))) {
+                    figurePos.add(pos);
+                }
             }
+            return figurePos;
+        }
+        else {
+            System.out.println("Du hast keine Spieler mehr zum setzen!");
         }
         return figurePos;
     }
@@ -906,575 +710,55 @@ public class GameEngine implements IGameEngine {
      */
     public boolean markAllCards() {
         ArrayList<Card> field = currentState.getCards();
+        ArrayList<Orientation> castleOs = new ArrayList<Orientation>();
+        ArrayList<Orientation> streetOs = new ArrayList<Orientation>();
+        ArrayList<PeepPosition> markedCastleBorders = new ArrayList<PeepPosition>();
+        ArrayList<PeepPosition> markedStreetBorders = new ArrayList<PeepPosition>();
+        CardDataBase cdb = CardDataBase.getInstance();
+        int cardID;
 
             //getFollowedCard und marks orientieren sich am Spielfeld, daher:
             for (Card card : field) {
-                if (getFollowedCard(card, field, NORTH).getMarks().contains(Bottom)) { //wenn die nördliche Karte im Süden eine Markierung hat, muss die aktuelle Karte im Norden markiert werden usw.
-                    if (!(card.getMarks().contains(Top))) {
-                        card.setMark(Top);
-                    }
-                }
-                if (getFollowedCard(card, field, NORTH).getMarks().contains(BottomLeft)) { //wenn die nördliche Karte im Süden eine Markierung hat, muss die aktuelle Karte im Norden markiert werden usw.
-                    if (!(card.getMarks().contains(TopLeft))) {
-                        card.setMark(TopLeft);
-                    }
-                }
-                if (getFollowedCard(card, field, NORTH).getMarks().contains(BottomRight)) { //wenn die nördliche Karte im Süden eine Markierung hat, muss die aktuelle Karte im Norden markiert werden usw.
-                    if (!(card.getMarks().contains(TopRight))) {
-                        card.setMark(TopRight);
-                    }
-                }
+                markMarkedBorders(card); //markierte Seiten gegenmarkieren
 
-                if (getFollowedCard(card, field, EAST).getMarks().contains(Left)) {
-                    if (!(card.getMarks().contains(Right))) {
-                        card.setMark(Right);
-                    }
-                }
-                if (getFollowedCard(card, field, EAST).getMarks().contains(TopLeft)) {
-                    if (!(card.getMarks().contains(TopRight))) {
-                        card.setMark(TopRight);
-                    }
-                }
-                if (getFollowedCard(card, field, EAST).getMarks().contains(BottomLeft)) {
-                    if (!(card.getMarks().contains(BottomRight))) {
-                        card.setMark(BottomRight);
-                    }
-                }
+                cardID = card.getId();
+                castleOs = cdb.getMatchingOrientations(cardID,CASTLE);
+                streetOs = cdb.getMatchingOrientations(cardID,STREET);
+                markedCastleBorders = getMarkedBorders(card,CASTLE);
+                markedStreetBorders = getMarkedBorders(card,STREET);
 
-                if (getFollowedCard(card, field, SOUTH).getMarks().contains(Top)) {
-                    if (!(card.getMarks().contains(Bottom))) {
-                        card.setMark(Bottom);
+                //Wenn die aktuelle Karte zwei verbundene Castle-Seiten hat und eine markiert ist,
+                // muss die andere auch markiert werden
+                ArrayList<PeepPosition> testII = getUnmarkedBuildingBorders(card,castleOs,CASTLE);
+                if(!(cdb.getCardById(cardID).isSplitStop()) && markedCastleBorders.size() > 0 && markedCastleBorders.size() < castleOs.size()){
+                    for (PeepPosition pos:getUnmarkedBuildingBorders(card,castleOs,CASTLE)) {
+                        if(!(card.getMarks().contains(pos))){
+                            card.setMark(pos);
+                        }
                     }
                 }
-                if (getFollowedCard(card, field, SOUTH).getMarks().contains(TopLeft)) {
-                    if (!(card.getMarks().contains(BottomLeft))) {
-                        card.setMark(BottomLeft);
-                    }
-                }
-                if (getFollowedCard(card, field, SOUTH).getMarks().contains(TopRight)) {
-                    if (!(card.getMarks().contains(BottomRight))) {
-                        card.setMark(BottomRight);
-                    }
-                }
-
-                if (getFollowedCard(card, field, WEST).getMarks().contains(Right)) {
-                    if (!(card.getMarks().contains(Left))) {
-                        card.setMark(Left);
-                    }
-                }
-                if (getFollowedCard(card, field, WEST).getMarks().contains(TopRight)) {
-                    if (!(card.getMarks().contains(TopLeft))) {
-                        card.setMark(TopLeft);
-                    }
-                }
-                if (getFollowedCard(card, field, WEST).getMarks().contains(BottomRight)) {
-                    if (!(card.getMarks().contains(BottomLeft))) {
-                        card.setMark(BottomLeft);
+                ArrayList<PeepPosition> test = getUnmarkedBuildingBorders(card,streetOs,STREET);
+                if(streetOs.size() == 2 && markedStreetBorders.size() > 0 && markedStreetBorders.size() < streetOs.size()){
+                    for (PeepPosition pos:getUnmarkedBuildingBorders(card,streetOs,STREET)) {
+                        if(!(card.getMarks().contains(pos))){
+                            card.setMark(pos);
+                        }
                     }
                 }
         }
-        return true;
+            return true;
+    }
+
+    public int getPlayerPeeps(int playerID){
+        int playerPeeps = 0;
+        ArrayList<Peep> peeps = currentState.getPeeps();
+
+        for (Peep peep:peeps) {
+            if(peep.getPlayerID() == playerID){
+                ++playerPeeps;
+            }
+        }
+        return playerPeeps;
     }
 }
 
-        /*
-        Gibt für übergebene Karte und übergebene CardSide die markierten Seiten (gemäß Spielfeld) an
-         */
-    /*    public ArrayList<Orientation> getMarkedBorders(Card card, CardSide cardSide){
-            ArrayList<Orientation> markedBorders = new ArrayList<Orientation>();
-            ArrayList<Card> field = currentState.getCards();
-            CardDataBase cdb = CardDataBase.getInstance();
-            int cardID = card.getId();
-            //Seiten mit passender CardSide gemäß cdb
-            ArrayList<Orientation> castleOs = cdb.getMatchingOrientations(cardID,cardSide);
-            Card testCard;
-
-
-
-
-            if(castleOs.contains(EAST)){
-                if(getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation())) != null){
-     /*               testCard = getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation()));
-
-                    if (testCard.getMarks().contains(Card.getAbsoluteOrientation((Card.getAbsoluteOrientation(EAST, card.getOrientation())),Orientation.SOUTH))){ //Nächste Karte hat Merkierung an gegenüberliegender Seite
-                        markedBorders.add(Card.getAbsoluteOrientation(EAST, card.getOrientation())); //marks von card enthält Markierungen gemäß dem SPIELFELD
-                    }
-                }
-            }
-
-            if(castleOs.contains(SOUTH)){
-                if(getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation())) != null){
-                    testCard = getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation()));
-
-                    if (testCard.getMarks().contains(Card.getAbsoluteOrientation((Card.getAbsoluteOrientation(SOUTH, card.getOrientation())),Orientation.SOUTH))){ //Nächste Karte hat Merkierung an gegenüberliegender Seite
-                        markedBorders.add(Card.getAbsoluteOrientation(SOUTH, card.getOrientation())); //marks von card enthält Markierungen gemäß dem SPIELFELD
-                    }
-                }
-            }
-
-            if(castleOs.contains(WEST)){
-                if(getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation())) != null){
-                    testCard = getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation()));
-
-                    if (testCard.getMarks().contains(Card.getAbsoluteOrientation((Card.getAbsoluteOrientation(WEST, card.getOrientation())),Orientation.SOUTH))){ //Nächste Karte hat Merkierung an gegenüberliegender Seite
-                        markedBorders.add(Card.getAbsoluteOrientation(WEST, card.getOrientation())); //marks von card enthält Markierungen gemäß dem SPIELFELD
-                    }
-                }
-            }
-            return markedBorders;
-        }
-
-    /*
-    Gibt für übergebene Karte und übergebene CardSide die freien Seiten (gemäß Spielfeld) an
-     */
-   /* public ArrayList<Orientation> getUnmarkedBorders(Card card, CardSide cardSide){
-        ArrayList<Orientation> unmarkedBorders = new ArrayList<Orientation>();
-        ArrayList<Card> field = currentState.getCards();
-        CardDataBase cdb = CardDataBase.getInstance();
-        int cardID = card.getId();
-        //Seiten mit passender CardSide gemäß cdb
-        ArrayList<Orientation> castleOs = cdb.getMatchingOrientations(cardID,cardSide);
-        Card testCard;
-
-        if(castleOs.contains(NORTH)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(NORTH, card.getOrientation())) == null){ //Keine Folgekarte, also anlegbar da checkPlacable=T vorher geklärt
-                unmarkedBorders.add(Card.getAbsoluteOrientation(NORTH, card.getOrientation()));
-            }
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(NORTH, card.getOrientation())) != null){      //Nur wenn Folgekarte bereits ausliegt
-                testCard = getFollowedCard(card,field,Card.getAbsoluteOrientation(NORTH, card.getOrientation())); //passende Folgekarte gemäß Spielfeld
-
-                if (!(testCard.getMarks().contains(Card.getAbsoluteOrientation((Card.getAbsoluteOrientation(NORTH, card.getOrientation())),Orientation.SOUTH)))){ //Nächste Karte hat keine Merkierung an gegenüberliegender Seite
-                    if(!(unmarkedBorders.contains(Card.getAbsoluteOrientation(NORTH, card.getOrientation())))){
-                        unmarkedBorders.add(Card.getAbsoluteOrientation(NORTH, card.getOrientation())); //marks von card enthält freie Markierungen gemäß dem SPIELFELD
-                    }
-                }
-            }
-        }
-
-        if(castleOs.contains(EAST)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation())) == null){ //Keine Folgekarte, also anlegbar da checkPlacable=T vorher geklärt
-                unmarkedBorders.add(Card.getAbsoluteOrientation(EAST, card.getOrientation()));
-            }
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation())) != null){
-                testCard = getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation()));
-
-                if (!(testCard.getMarks().contains(Card.getAbsoluteOrientation((Card.getAbsoluteOrientation(EAST, card.getOrientation())),Orientation.SOUTH)))){ //Nächste Karte hat Merkierung an gegenüberliegender Seite
-                    if(!(unmarkedBorders.contains(Card.getAbsoluteOrientation(EAST, card.getOrientation())))){
-                        unmarkedBorders.add(Card.getAbsoluteOrientation(EAST, card.getOrientation())); //marks von card enthält freie Markierungen gemäß dem SPIELFELD
-                    }
-                }
-            }
-        }
-
-        if(castleOs.contains(SOUTH)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation())) == null){ //Keine Folgekarte, also anlegbar da checkPlacable=T vorher geklärt
-                unmarkedBorders.add(Card.getAbsoluteOrientation(SOUTH, card.getOrientation()));
-            }
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation())) != null){
-                testCard = getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation()));
-
-                if (!(testCard.getMarks().contains(Card.getAbsoluteOrientation((Card.getAbsoluteOrientation(SOUTH, card.getOrientation())),Orientation.SOUTH)))){ //Nächste Karte hat Merkierung an gegenüberliegender Seite
-                    if(!(unmarkedBorders.contains(Card.getAbsoluteOrientation(SOUTH, card.getOrientation())))){
-                        unmarkedBorders.add(Card.getAbsoluteOrientation(SOUTH, card.getOrientation())); //marks von card enthält freie Markierungen gemäß dem SPIELFELD
-                    }
-                }
-            }
-        }
-
-        if(castleOs.contains(WEST)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation())) == null){ //Keine Folgekarte, also anlegbar da checkPlacable=T vorher geklärt
-                unmarkedBorders.add(Card.getAbsoluteOrientation(WEST, card.getOrientation()));
-            }
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation())) != null){
-                testCard = getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation()));
-
-                if (!(testCard.getMarks().contains(Card.getAbsoluteOrientation((Card.getAbsoluteOrientation(WEST, card.getOrientation())),Orientation.SOUTH)))){ //Nächste Karte hat Merkierung an gegenüberliegender Seite
-                    if(!(unmarkedBorders.contains(Card.getAbsoluteOrientation(WEST, card.getOrientation())))){
-                        unmarkedBorders.add(Card.getAbsoluteOrientation(WEST, card.getOrientation())); //marks von card enthält freie Markierungen gemäß dem SPIELFELD
-                    }
-                }
-            }
-        }
-        if(castleOs.size() == 3 && unmarkedBorders.size() < 3 && cardSide == CASTLE){ //Wenn Karte 3 Castle-Seiten hat und nicht alle Seiten frei sind, werden zwei Castles verbunden => nicht frei
-            unmarkedBorders.clear();
-            return unmarkedBorders;
-        }
-        if(castleOs.size() == 4 && unmarkedBorders.size() < 4 && cardSide == CASTLE){ //Wie oben nur für die 4-Castle-Sonderkarte
-            unmarkedBorders.clear();
-            return unmarkedBorders;
-        }
-        return unmarkedBorders;
-    }
-
-
-    /*
-    Markiert die aktuelle Karte gemäß den freien Stellen für die übergebene CarSide
-    @Param mark: die vom Spieler gewählte Markiereung (indirekt Position von Peep)
-     */
-  /*  public boolean markCard(Card card, Orientation mark, CardSide cardSide){
-        ArrayList<Orientation> unmarkedBorders = getUnmarkedBorders(card,cardSide); //Unmarkierte Stellen holen
-
-        if(unmarkedBorders.contains(mark)){ //Absicherung das mark wirklich nicht markiert ist
-            for (Orientation unmarked:unmarkedBorders) { //Alle bisher für die CardSide freien Stellen werden markiert
-                card.setMark(unmarked);
-            }
-            return true;
-        }
-        return false; //mark könnte z.B. für ein anderes Gebäude frei sein -> cardSide ändern
-    }
-
-    public boolean placePeep(Card card, Orientation mark, CardSide cardSide, int playerID ){
-        PeepPosition peepPos = Center;
-
-        if(mark == EAST){
-            peepPos = Right;
-        }
-        if(mark == SOUTH){
-            peepPos = Bottom;
-        }
-        if(mark == WEST){
-            peepPos = Left;
-        }
-        if(mark == NORTH){
-            peepPos = Top;
-        }
-
-        if(markCard(card,mark,cardSide)){
-            Peep peep = new Peep(card,peepPos,playerID);
-            currentState.addPeep(peep);
-        }
-        return true;
-    }
-
-    /*
-    Markiert alle ausliegenden Karten zur Sicherheit nach, wenn die Folgekarten entsprechend markiert sind
-    AM ENDE JEDES SPIELZUGS
-     */
- /*   public boolean markAllCards(){
-        ArrayList<Card> field = currentState.getCards();
-
-        //getFollowedCard und marks orientieren sich am Spielfeld, daher:
-        for (Card card:field) {
-            if(getFollowedCard(card,field,NORTH).getMarks().contains(SOUTH)){ //wenn die nördliche Karte im Süden eine Markierung hat, muss die aktuelle Karte im Norden markiert werden usw.
-                card.setMark(NORTH);
-            }
-            if(getFollowedCard(card,field,EAST).getMarks().contains(WEST)){
-                card.setMark(EAST);
-            }
-            if(getFollowedCard(card,field,SOUTH).getMarks().contains(NORTH)){
-                card.setMark(SOUTH);
-            }
-            if(getFollowedCard(card,field,WEST).getMarks().contains(EAST)){
-                card.setMark(WEST);
-            }
-        }
-        return true;
-    }
-
-
-//_____________________________________________________________________________________________________
-    /*
-    Gibt ein Array mit Karten zurück, die zur Parameter-Karte eine Castle-Verbindung haben
-     */
- /*   public ArrayList<Card> getConnectedCastleCards(Card card){
-        ArrayList<Card> connectedCastleCards = new ArrayList<Card>();
-        ArrayList<Card> field = currentState.getCards();
-        int cardID = card.getId();
-        CardDataBase cdb = CardDataBase.getInstance();
-        ArrayList<Orientation> castleOs = cdb.getMatchingOrientations(cardID,CASTLE);
-
-
-
-        if(castleOs.contains(NORTH)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(NORTH, card.getOrientation())) != null){
-                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(NORTH, card.getOrientation())));
-            }
-        }
-
-        if(castleOs.contains(EAST)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation())) != null){
-                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(EAST, card.getOrientation())));
-            }
-        }
-
-        if(castleOs.contains(SOUTH)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation())) != null){
-                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(SOUTH, card.getOrientation())));
-            }
-        }
-
-        if(castleOs.contains(WEST)){
-            if(getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation())) != null){
-                connectedCastleCards.add(getFollowedCard(card,field,Card.getAbsoluteOrientation(WEST, card.getOrientation())));
-            }
-        }
-        return connectedCastleCards;
-    }
-
-    /*
-    Gibt ein Array mit Karten zurück, die direkt ODER indirekt über Castles mit der Parameter-Karte
-    verbunden sind. Es kann sich dabei um verschiedenen Castles handeln
-     */
-  /*  public ArrayList<Card> getCastleConnections(Card card) {
-        //todo: lösung für verschiedene Castles an einer Karte
-        ArrayList<Card> field = currentState.getCards();
-        ArrayList<Card> castle = new ArrayList<Card>();
-        CardDataBase cdb = CardDataBase.getInstance();
-        int cardID = card.getId();
-        ArrayList<Orientation> castleOs = cdb.getMatchingOrientations(cardID,CASTLE);
-
-        if(castleOs.isEmpty()){//card hat kein Castle
-            return castle;
-        } else if(getConnectedCastleCards(card).isEmpty()){ //card hat keine Castle-Verbindung
-            castle.add(card);
-            return castle;
-        }
-
-        //conCards = alle gültigen Castle-Verbindungen von card
-        ArrayList<Card> conCards = getConnectedCastleCards(card);
-        do {
-            for (Card conCard:conCards) {           //Wenn gültige Verbindungen neue Karten enthalten, werden diese zum Castle hinzugefügt
-                if(castle.contains(conCard)){
-                    conCards.remove(conCard);
-                } else castle.add(conCard);    //bereits vorhandene Karten werden aus den gültigen Karten gelöscht
-                if(conCards.isEmpty()){
-                    return castle;
-                }
-            }
-            ArrayList<Card> pHolder = new ArrayList<Card>();
-            for (Card conCard:conCards) {          //Alle neuen gültigen Karten müssen ihrerseits nach weiteren Verbindungen geprüft werden
-                for (Card c:getConnectedCastleCards(conCard)) {
-                    if(!(pHolder.contains(c))){
-                        pHolder.add(c);
-                    }
-                }
-                //pHolder.addAll(getConnectedCastleCards(conCard));
-                pHolder.remove(conCard);           //Jetzt können jene gültigen Karten entfernt werden, die in diesem Schleifendurchlauf zum Castle addiert wurden
-            }
-
-            conCards = pHolder;
-        }while(!(conCards.isEmpty()));                //Sobald keine gültigen neuen Karten mehr vorhanden sind, ist das Castle fertig
-
-        //Falls in do...while Schleife noch keine Karte mit card-ID hinzugefügt wurde, muss sie hier
-        //manuell hinzugefügt werden, da in Schleife mit anderer Instanz als card gearbeitet wird
-        ArrayList<Integer> castleIDs = new ArrayList<Integer>();
-        for (Card cCard:castle) {
-            int cCardID = cCard.getId();
-            castleIDs.add(cCardID);
-        }
-        if(!(castleIDs.contains(cardID))){
-            castle.add(card);
-        }
-
-        return castle;
-    }
-
-
-    public ArrayList<PeepPosition> castlesPlaceable(Card card){
-        ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
-        ArrayList<Card> sumCastle = new ArrayList<Card>();
-        ArrayList<Card> castleCons = getConnectedCastleCards(card);
-        ArrayList<Card> castleNorth = new ArrayList<Card>();
-        ArrayList<Card> castleEast = new ArrayList<Card>();
-        ArrayList<Card> castleSouth = new ArrayList<Card>();
-        ArrayList<Card> castleWest = new ArrayList<Card>();
-        ArrayList<Card> cardCastle = getCastleConnections(card);
-        int cardX = card.getxCoordinate();
-        int cardY = card.getyCoordinate();
-
-        //Wenn es nur eine castle-CardSide auf card gibt, muss geprüft werden in welcher Richtung
-        // das castle ist und ob es bereits besetzt ist. Falls nicht, kann ein Peep in der entsprechenden
-        //Richtung von card gesetzt werden
-        if(castleCons.size() == 1){
-            //Einzige Folgekarte ist oberhalb von card (position Top) und das castle ist noch nicht besetzt
-            if(castleCons.get(0).getyCoordinate() == cardY+1 && !(checkPeepsBuilding(cardCastle, Top))){
-                peepPositions.add(Top);
-            }
-            if(castleCons.get(0).getyCoordinate() == cardY-1 && !(checkPeepsBuilding(cardCastle, Bottom))){
-                peepPositions.add(Bottom);
-            }
-            if(castleCons.get(0).getxCoordinate() == cardX+1 && !(checkPeepsBuilding(cardCastle, Right))){
-                peepPositions.add(Right);
-            }
-            if(castleCons.get(0).getxCoordinate() == cardX-1 && !(checkPeepsBuilding(cardCastle, Left))){
-                peepPositions.add(Left);
-            }
-            return peepPositions;
-        }
-
-        //Castles der an card angrenzenden Karten werden befüllt, falls vorhanden
-        for (Card c:castleCons) {
-            if(c.getxCoordinate() == cardX+1){
-                castleEast = getCastleConnections(c);
-            }
-            if(c.getxCoordinate() == cardX-1){
-                castleWest = getCastleConnections(c);
-            }
-            if(c.getyCoordinate() == cardY-1){
-                castleSouth = getCastleConnections(c);
-            }
-            if(c.getyCoordinate() == cardY+1){
-                castleNorth = getCastleConnections(c);
-            }
-        }
-
-        //Nun prüfen, welche Teil-Castles miteinander verbunden sind:
-        //Zuerst wenn alle fünf Teil-Castles verbunden sind
-        if(testSameCastle(cardCastle, castleWest) && testSameCastle(cardCastle, castleNorth)
-                && testSameCastle(cardCastle, castleEast) && testSameCastle(cardCastle, castleSouth)) {//geprüfte Karte (card) hat mit allen umgebenen Castles eine Verbindung
-
-            //Alle Teil-Castles werden addiert (mit Duplikaten)
-            sumCastle = addCastles(cardCastle, castleWest, castleNorth, castleEast, castleSouth);
-
-            if (!(checkPeepsBuilding(sumCastle, Center))) { //Keine Karte des Castles ist besetzt
-                peepPositions.add(Center);          //Ein Peep kann in der Mitte der Karte platziert werden
-            }
-            sumCastle.clear();
-        }
-        //Wenn vier Teil-Castles miteinander verbunden sind:
-        if(testSameCastle(cardCastle, castleEast) && testSameCastle(cardCastle, castleSouth)
-                && testSameCastle(cardCastle, castleWest)) {
-
-            sumCastle = addCastles(cardCastle, castleWest, castleEast, castleSouth);
-
-            if (!(checkPeepsBuilding(sumCastle, Bottom))) {
-                peepPositions.add(Bottom);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleNorth) && testSameCastle(cardCastle, castleSouth)
-                && testSameCastle(cardCastle, castleWest)) {
-
-            sumCastle = addCastles(cardCastle, castleWest, castleNorth, castleSouth);
-
-            if (!(checkPeepsBuilding(sumCastle, Left))) {
-                peepPositions.add(Left);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleNorth) && testSameCastle(cardCastle, castleEast)
-                && testSameCastle(cardCastle, castleWest)) {
-
-            sumCastle = addCastles(cardCastle, castleWest, castleEast, castleNorth);
-
-            if (!(checkPeepsBuilding(sumCastle, Top))) {
-                peepPositions.add(Top);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleEast) && testSameCastle(cardCastle, castleSouth)
-                && testSameCastle(cardCastle, castleNorth)) {
-
-            sumCastle = addCastles(cardCastle, castleNorth, castleEast, castleSouth);
-
-            if (!(checkPeepsBuilding(sumCastle, Right))) {
-                peepPositions.add(Right);
-            }
-            sumCastle.clear();
-        }
-        //Wenn drei Teil-Castles miteinander verbunden sind:
-        if(testSameCastle(cardCastle, castleEast) && testSameCastle(cardCastle, castleSouth)) {
-
-            sumCastle = addCastles(cardCastle, castleEast, castleSouth);
-
-            if (!(checkPeepsBuilding(sumCastle, Right))) {
-                peepPositions.add(Right);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleWest) && testSameCastle(cardCastle, castleSouth)) {
-
-            sumCastle = addCastles(cardCastle, castleWest, castleSouth);
-
-            if (!(checkPeepsBuilding(sumCastle, Bottom))) {
-                peepPositions.add(Bottom);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleWest) && testSameCastle(cardCastle, castleNorth)) {
-
-            sumCastle = addCastles(cardCastle, castleWest, castleNorth);
-
-            if (!(checkPeepsBuilding(sumCastle, Left))) {
-                peepPositions.add(Left);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleEast) && testSameCastle(cardCastle, castleNorth)) {
-
-            sumCastle = addCastles(cardCastle, castleEast, castleNorth);
-
-            if (!(checkPeepsBuilding(sumCastle, Top))) {
-                peepPositions.add(Top);
-            }
-            sumCastle.clear();
-        }
-        //Wenn nur zwei Teil-Castles miteinander verbunden sind:
-        if(testSameCastle(cardCastle, castleEast)) {
-
-            sumCastle = addCastles(cardCastle, castleEast);
-
-            if (!(checkPeepsBuilding(sumCastle, Right))) {
-                peepPositions.add(Right);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleSouth)) {
-
-            sumCastle = addCastles(cardCastle, castleSouth);
-
-            if (!(checkPeepsBuilding(sumCastle, Bottom))) {
-                peepPositions.add(Bottom);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleWest)) {
-
-            sumCastle = addCastles(cardCastle, castleWest);
-
-            if (!(checkPeepsBuilding(sumCastle, Left))) {
-                peepPositions.add(Left);
-            }
-            sumCastle.clear();
-        }
-        if(testSameCastle(cardCastle, castleNorth)) {
-
-            sumCastle = addCastles(cardCastle, castleNorth);
-
-            if (!(checkPeepsBuilding(sumCastle, Top))) {
-                peepPositions.add(Top);
-            }
-            sumCastle.clear();
-        }
-
-
-        return peepPositions;
-    }
-
-    /*
-    Prüft, ob die übergebenen Teil-Castles gleiche Karten besitzen, also zusammengehören
-     */
-  /*  public boolean testSameCastle(ArrayList<Card> castleA, ArrayList<Card> castleB){
-        for (Card cardA:castleA) {
-            for (Card cardB:castleB) {
-                if(cardA == cardB){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /*
-    Addiert alle Karten der übergebenen Teil-Castles (mit Duplikaten!)
-     */
- /*   public ArrayList<Card> addCastles(ArrayList<Card>... params) {
-        ArrayList<Card> result = new ArrayList<Card>();
-
-        for (ArrayList<Card> obj : params) {
-            result.addAll(obj);
-        }
-
-        return result;
-    }
-*/
