@@ -1,14 +1,21 @@
 package distudios.at.carcassonne.gui.field;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.peak.salut.Salut;
+
+import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.gui.groups.Group2Activity;
+import distudios.at.carcassonne.networking.INetworkController;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +36,7 @@ public class ScoreFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
 
     public ScoreFragment() {
         // Required empty public constructor
@@ -62,10 +70,14 @@ public class ScoreFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_score, container, false);
+        View view = inflater.inflate(R.layout.fragment_score, container, false);
+
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

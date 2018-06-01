@@ -1,13 +1,23 @@
 package distudios.at.carcassonne.engine.logic;
 
-import java.util.List;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import distudios.at.carcassonne.networking.connection.OrientationTypeConverter;
+
 
 public class Card {
 
+    @JsonField
     private int id;
+    @JsonField(typeConverter = OrientationTypeConverter.class)
     private Orientation orientation;
+    @JsonField
     private int xCoordinate;
+    @JsonField
     private int yCoordinate;
+
+    public Card() {}
 
     public Card(int id,  int xCoordinate, int yCoordinate, Orientation orientation) {
         this.id = id;
@@ -52,6 +62,9 @@ public class Card {
     public String toString(){
         return "Id: "+ id + " Coordinates: " + xCoordinate + " | " + yCoordinate;
     }
+
+
+
      public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
         int rotation=0;
         if(offset==Orientation.NORTH){
