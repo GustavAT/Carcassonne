@@ -1,6 +1,7 @@
 package distudios.at.carcassonne.gui.field;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.logic.CState;
 import distudios.at.carcassonne.engine.logic.Card;
+import distudios.at.carcassonne.engine.logic.CardDataBase;
+import distudios.at.carcassonne.engine.logic.ExtendedCard;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
@@ -124,6 +127,7 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
         buttonEndTurn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDrawCard.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_dialog_info));
                 controller.endTurn();
                 updateFromGameState();
             }
@@ -138,6 +142,9 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
                 // open dialog for card drawing
                 Card c = controller.drawCard();
                 controller.setCurrentCard(c);
+
+                ExtendedCard ec = CardDataBase.getCardById(c.getId());
+                buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(), PlayfieldView.cardIdToBitmap(ec.getId())));
 
                 playfieldView.addPossibleLocations();
                 updateFromGameState();
