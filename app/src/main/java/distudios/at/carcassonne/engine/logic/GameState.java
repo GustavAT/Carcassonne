@@ -13,7 +13,7 @@ public class GameState implements Serializable {
     @JsonField
     public ArrayList<Card> cards;
     @JsonField
-    public List<Object> peeps;
+    public ArrayList<Peep> peeps;
     @JsonField
     public ArrayList<Integer> stack;
     @JsonField
@@ -46,8 +46,10 @@ public class GameState implements Serializable {
 
     public ArrayList<Card> getCards() { return cards; }
 
-    public void addPeep(Object peep) {
-        peeps.add(peep);
+    public void addPeep(Peep peep) { peeps.add(peep); }
+
+    public ArrayList<Peep> getPeeps() {
+        return peeps;
     }
 
     public void removePeep(Object peep) {
