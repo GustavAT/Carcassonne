@@ -40,7 +40,7 @@ public class CardDataBase {
         cardDB.add(new ExtendedCard(7, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(7).setCathedral(true);
         // CARD C CASTLE 4 SIDED - 1x
-        cardDB.add(new ExtendedCard(8, CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE));
+        cardDB.add(new ExtendedCard(8, CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CLOSED,CardSide.CLOSED,CardSide.CLOSED,CardSide.CLOSED));
         // CARD D CARRD STREET - 4x
         cardDB.add(new ExtendedCard(9, CardSide.CASTLE, CardSide.STREET, CardSide.STREET, CardSide.GRASS, CardSide.CLOSED, CardSide.CLOSED, CardSide.OPEN, CardSide.OPEN));
         cardDB.add(new ExtendedCard(10, CardSide.CASTLE, CardSide.STREET, CardSide.STREET, CardSide.GRASS, CardSide.CLOSED, CardSide.CLOSED, CardSide.OPEN, CardSide.OPEN));
@@ -186,16 +186,16 @@ public class CardDataBase {
     public CardSide getCardSide(int id, Orientation orientation){
         switch (orientation){
             case NORTH:
-                return cardDB.get(id-1).getTop();
+                return getCardById(id).getTop();
 
             case WEST:
-                return cardDB.get(id-1).getLeft();
+                return getCardById(id).getLeft();
 
             case EAST:
-                return cardDB.get(id-1).getRight();
+                return getCardById(id).getRight();
 
             case SOUTH:
-                return cardDB.get(id-1).getDown();
+                return getCardById(id).getDown();
 
             default:
                 return null;

@@ -159,10 +159,11 @@ public class TestGameEngine {
 
         ge.placeCard(cardI);
         ge.placeCard(cardII);
-        ge.placeCard(cardIII);
         ge.placeCard(cardIV);
-        cardI.setMark(Right);
+        //cardI.setMark(Right);
         cardI.setMark(Top);
+        //ge.markCard(cardI,Top,CASTLE);
+        ge.placeCard(cardIII);
 
         ArrayList<PeepPosition> markedBorders = ge.getMarkedBorders(cardIII, CASTLE);
         Assert.assertTrue(markedBorders.size()==1);
@@ -251,7 +252,7 @@ public class TestGameEngine {
         Card cardIV = new Card(30, -2, 0, EAST);
         Card cardV = new Card(22, 2, 0, WEST);
         Card cardVI = new Card(13, 3, 0, EAST);
-        Card cardVII = new Card(18, -3, 0, NORTH);
+        Card cardVII = new Card(8, -3, 0, NORTH);
         Card cardVIII = new Card(13, -4, 0, WEST);
 
         Card cardIX = new Card(18, 0, 1, EAST);
@@ -291,34 +292,40 @@ public class TestGameEngine {
         ge.placeCard(cardXIV);
         ge.placeCard(cardXV);
         ge.placeCard(cardXVI);
-        //ge.placeCard(cardXVII);
+        ge.placeCard(cardXVII);
         ge.placeCard(cardXVIII);
         ge.placeCard(cardXIX);
         ge.placeCard(cardXX);
         ge.placeCard(cardXXI);
-        ge.placeCard(cardXXII);
+        //ge.placeCard(cardXXII);
         ge.placeCard(cardXXIII);
         ge.placeCard(cardXXIV);
 
-        ge.markCard(cardXX,Left,CASTLE);
+        ge.markCard(cardXXI,Top,STREET);
         ge.markAllCards();
-        ge.placeCard(cardXVII);
+        ge.placeCard(cardXXII);
+        ge.placePeep(cardVII,Center,3);
+        //ge.markAllCards();
+        //ge.placeCard(cardXV);
         //cardXVI.setMark(Left);
         //cardXIV.setMark(Right);
 
         ArrayList<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
-        unmarkedBorders = ge.getUnmarkedBorders(cardXVII, CASTLE);
-        Assert.assertTrue(unmarkedBorders.size()==0);
-        //Assert.assertTrue(unmarkedBorders.contains(Bottom));
-        //Assert.assertTrue(unmarkedBorders.contains(Right));
-        //Assert.assertTrue(unmarkedBorders.contains(Left));
+        ArrayList<Peep> peeps = gs.getPeeps();
+        unmarkedBorders = ge.getUnmarkedBorders(cardXXII, STREET);
+        Assert.assertTrue(unmarkedBorders.size()==3);
+        Assert.assertTrue(unmarkedBorders.contains(Bottom));
+        Assert.assertTrue(unmarkedBorders.contains(Right));
+        Assert.assertTrue(unmarkedBorders.contains(Left));
         //Assert.assertTrue(unmarkedBorders.contains(Top));
         //Assert.assertTrue(unmarkedBorders.contains(Center));
+        //Assert.assertTrue(peeps.size()==1);
     }
 
     @Test
     public void checkGetALLFigurePos(){
         //Settings...
+        Card cardXIII = new Card(60, 0, -1, SOUTH);
         Card cardXIV = new Card(52, 1, -1, EAST);
         Card cardXV = new Card(32, 2, -1, NORTH);
         Card cardIV = new Card(40, 3, -1, WEST);
@@ -327,30 +334,31 @@ public class TestGameEngine {
         Card cardVII = new Card(35, 4, 0, EAST);
 
 
-        ge.placeCard(cardXIV);
-        ge.placeCard(cardXV);
-        ge.placeCard(cardXV);
+        ge.placeCard(cardXIII);
+        //ge.placeCard(cardXIV);
+        //ge.placeCard(cardXV);
         ge.placeCard(cardIV);
         ge.placeCard(cardV);
-        //ge.placeCard(cardVI);
+        ge.placeCard(cardVI);
         ge.placeCard(cardVII);
 
 
-        ge.markCard(cardV,Left,CASTLE);
+        ge.markCard(cardXIII,Right,STREET);
         ge.markAllCards();
-        ge.placeCard(cardVI);
-        //cardXIV.setMark(Right);
+        ge.placeCard(cardXIV);
+        ge.markAllCards();
+        ge.placeCard(cardXV);
 
         ArrayList<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
-        unmarkedBorders = ge.getUnmarkedBorders(cardVI, CASTLE);
+        unmarkedBorders = ge.getUnmarkedBorders(cardXV, STREET);
 
         ArrayList<PeepPosition> allUnmarkedBorders = new ArrayList<PeepPosition>();
-        allUnmarkedBorders = ge.getALLFigurePos(cardVI);
-        Assert.assertTrue(allUnmarkedBorders.size()==0);
-        //Assert.assertTrue(allUnmarkedBorders.contains(Bottom));
-        //Assert.assertTrue(allUnmarkedBorders.contains(Right));
+        allUnmarkedBorders = ge.getALLFigurePos(cardXV);
+        Assert.assertTrue(allUnmarkedBorders.size()==3);
+        Assert.assertTrue(allUnmarkedBorders.contains(Bottom));
+        Assert.assertTrue(allUnmarkedBorders.contains(Right));
         //Assert.assertTrue(allUnmarkedBorders.contains(Left));
-        //Assert.assertTrue(allUnmarkedBorders.contains(Top));
+        Assert.assertTrue(allUnmarkedBorders.contains(Top));
         //Assert.assertTrue(allUnmarkedBorders.contains(Center));
     }
 
@@ -482,7 +490,7 @@ public class TestGameEngine {
         ge.placeCard(cardXXIV);
 
         //ge.markCard(cardXX,Left,CASTLE);
-        ge.markAllCards();
+        //ge.markAllCards();
         ge.placeCard(cardXVII);
 
         ge.placePeep(cardXVII,Bottom,4);

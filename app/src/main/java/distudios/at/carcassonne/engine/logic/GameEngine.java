@@ -414,6 +414,7 @@ public class GameEngine implements IGameEngine {
             markedBorders.remove(Right);
         }
         Orientation oIIy = Card.getAbsoluteOrientation(card.getOrientation(),SOUTH);
+        CardSide cs = cdb.getCardSide(cardID,Card.getAbsoluteOrientation(card.getOrientation(),SOUTH));
         if(markedBorders.contains(Bottom) && cdb.getCardSide(cardID,Card.getAbsoluteOrientation(card.getOrientation(),SOUTH)) != cardSide){
 
             markedBorders.remove(Bottom);
@@ -444,8 +445,6 @@ public class GameEngine implements IGameEngine {
         peepPositions.removeAll(markedBorders);
         unmarkedBorders = peepPositions;
 
-
-
         //Im "Grass-Fall" jetzt fast fertig. Es werden nur die Ecken benötigt
         //todo: Irgendwie prüfen, ob auf einer anderen Karte bereits ein Peep ist der zur gleichen Wiese gehört!!!!
         if (cardSide == GRASS) {
@@ -467,6 +466,9 @@ public class GameEngine implements IGameEngine {
         if (cardSide == CASTLE && buildingOs.size() == 4 && unmarkedBorders.size() == 4) {
             unmarkedBorders.clear();
             unmarkedBorders.add(Center);
+            return unmarkedBorders;
+        }else if(cardSide == CASTLE && buildingOs.size() == 4 && unmarkedBorders.size() != 4){
+            unmarkedBorders.clear();
             return unmarkedBorders;
         }
 
@@ -660,9 +662,16 @@ public class GameEngine implements IGameEngine {
     public boolean placePeep(Card card, PeepPosition chosenMark, int playerID) {
         ArrayList<PeepPosition> unmarkedCastleBorders = getUnmarkedBorders(card, CASTLE);
         ArrayList<PeepPosition> unmarkedStreetBorders = getUnmarkedBorders(card, STREET);
+        int cardID = card.getId();
 
         //Nötige Unterscheidung, um zu wissen welche Seiten markiert werden müssen
         if (unmarkedCastleBorders.contains(chosenMark)) {
+            if(cardID == 8){
+                markCard(card, chosenMark, CASTLE);
+                Peep peep = new Peep(card, Left, playerID);
+                currentState.addPeep(peep);
+                return true;
+            }
             if (markCard(card, chosenMark, CASTLE)) {
                 markCard(card, chosenMark, CASTLE);
                 Peep peep = new Peep(card, chosenMark, playerID);
@@ -699,9 +708,9 @@ public class GameEngine implements IGameEngine {
             return figurePos;
         }
         else {
-            System.out.println("Du hast keine Spieler mehr zum setzen!");
+            System.out.println("Du hast keine Figuren mehr zum Setzen!");
+            return figurePos;
         }
-        return figurePos;
     }
 
     /*
