@@ -18,8 +18,7 @@
         android:lines="6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/menu_background"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -52,7 +51,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_deviceList"
-            android:background="@color/sw_yellow"
             android:textColor="@color/black"
             android:textColorHint="@color/black"/>
 
@@ -63,8 +61,14 @@
             android:layout_weight="0.5"
             android:text="@string/text_send"
             tools:layout_editor_absoluteX="280dp"
-            tools:layout_editor_absoluteY="163dp"
-            android:background="@color/sw_yellow"/>
+            tools:layout_editor_absoluteY="163dp" />
+
+        <Button
+            android:id="@+id/button_startGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/text_start_game" />
     </LinearLayout>
 
     <Button
@@ -78,7 +82,6 @@
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/sw_yellow" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

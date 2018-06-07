@@ -1,17 +1,35 @@
 package distudios.at.carcassonne.engine.logic;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import distudios.at.carcassonne.networking.connection.OrientationTypeConverter;
+
+@JsonObject
 public class Card {
 
+    @JsonField
     private int id;
+    @JsonField(typeConverter = OrientationTypeConverter.class)
     private Orientation orientation;
+    @JsonField
     private int xCoordinate;
+    @JsonField
     private int yCoordinate;
+
+    private ArrayList<PeepPosition> marks;
+
+    public Card() {}
 
     public Card(int id,  int xCoordinate, int yCoordinate, Orientation orientation) {
         this.id = id;
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.marks = new ArrayList<PeepPosition>();
     }
 
     public int getId() {
@@ -46,11 +64,22 @@ public class Card {
         this.yCoordinate = yCoordinate;
     }
 
+    public ArrayList<PeepPosition> getMarks() { return marks; }
+
+    public void setMark(PeepPosition mark) {
+        if(!(this.marks.contains(mark))) {
+            this.marks.add(mark);
+        }
+    }
+
     @Override
     public String toString(){
         return "Id: "+ id + " Coordinates: " + xCoordinate + " | " + yCoordinate;
     }
-     public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
+
+
+
+    public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
         int rotation=0;
         if(offset==Orientation.NORTH){
             rotation=0;
