@@ -4,6 +4,8 @@ import android.graphics.Path;
 
 import java.nio.file.OpenOption;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.TooManyListenersException;
 
 
@@ -152,6 +154,8 @@ public class CardDataBase {
         cardDB.add(new ExtendedCard(29, CardSide.STREET, CardSide.STREET, CardSide.STREET, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(29).setSplitStop(true);
 
+
+
     }
 
     public static CardDataBase getInstance(){
@@ -184,19 +188,28 @@ public class CardDataBase {
 */
     //method orientation + id returns CardSide
 
+    public void sortCardDB(){
+        Collections.sort(cardDB, new Comparator<ExtendedCard>() {
+            @Override
+            public int compare(ExtendedCard o1, ExtendedCard o2) {
+                return (int)(o1.getId()-o2.getId());
+            }
+        });
+    }
+
     public CardSide getCardSide(int id, Orientation orientation){
         switch (orientation){
             case NORTH:
-                return cardDB.get(id-1).getTop();
+                return getCardById(id).getTop();
 
             case WEST:
-                return cardDB.get(id-1).getLeft();
+                return getCardById(id).getLeft();
 
             case EAST:
-                return cardDB.get(id-1).getRight();
+                return getCardById(id).getRight();
 
             case SOUTH:
-                return cardDB.get(id-1).getDown();
+                return getCardById(id).getDown();
 
             default:
                 return null;
@@ -217,3 +230,4 @@ public class CardDataBase {
         return cardSides;
     }
 }
+

@@ -16,6 +16,9 @@ public class PlayerInfo {
     public int color;
     @JsonField
     public String deviceName;
+    //from 1 to 9
+    @JsonField
+    public int raceType;
 
     public PlayerInfo() {
     }
