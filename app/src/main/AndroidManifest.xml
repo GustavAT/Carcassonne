@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="distudios.at.carcassonne">
 
-    <uses-sdk android:minSdkVersion="14" />
+    <uses-sdk android:minSdkVersion="16" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -13,25 +13,64 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true"/>
+
+
+
     <application
         android:name=".CarcassonneApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/appTitle"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
 
-        </activity>
-        <activity
-            android:name=".gui.LobbyActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/title_activity_lobby">
+
+        <!-- Lobby -->
+
+        <activity android:name=".gui.groups.Group2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".gui.groups.GroupOverview"
+            android:label="@string/text_group"
+            android:parentActivityName=".gui.groups.Group2Activity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.groups.Group2Activity" />
+        </activity>
+        <activity
+            android:name=".gui.groups.GroupList"
+            android:label="@string/text_discover_groups"
+            android:parentActivityName=".gui.groups.Group2Activity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.groups.Group2Activity" />
+        </activity>
+
+        <!-- Game -->
+
+        <activity
+            android:name=".gui.field.GameActivity"
+            android:label="@string/title_activity_game">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.groups.Group2Activity" />
+
+        </activity>
+        <activity android:name=".gui.Rules"
+            android:label="@string/text_rules">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.groups.Group2Activity" />
         </activity>
     </application>
 

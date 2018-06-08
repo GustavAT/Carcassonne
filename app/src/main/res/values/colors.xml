@@ -8,4 +8,10 @@
     <color name="colorConnected">#125c0e</color>
     <color name="colorFailed">#a11f42</color>
     <color name="colorUnavailable">#747474</color>
+    <color name="white">#ffffff</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#008000</color>
+    <color name="blue">#0000FF</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="black">#000000</color>
 </resources>

@@ -1,75 +1,153 @@
 package distudios.at.carcassonne.networking;
 
+import android.app.Activity;
+import android.graphics.Color;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.util.Log;
+
+import com.peak.salut.Callbacks.SalutCallback;
+import com.peak.salut.Callbacks.SalutDataCallback;
+import com.peak.salut.Salut;
+import com.peak.salut.SalutDataReceiver;
+import com.peak.salut.SalutDevice;
+import com.peak.salut.SalutServiceData;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import distudios.at.carcassonne.CarcassonneApp;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
+import distudios.at.carcassonne.networking.connection.DataCallback;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public class NetworkController implements INetworkController {
 
-    public NetworkController() {
-        clients = new ArrayList<>();
+    public Salut network;
+    public SalutServiceData serviceData;
+    public SalutDataReceiver dataReceiver;
+    public Map<String, PlayerInfo> playerMappings;
+
+    @Override
+    public void init(Activity activity) {
+        serviceData = new SalutServiceData("CarcassonneService", 60000, CarcassonneApp.getPlayerName());
+        dataReceiver = new SalutDataReceiver(activity, new DataCallback());
+        network = new Salut(dataReceiver, serviceData, null);
+        playerMappings = new HashMap<>();
     }
 
-    private boolean isGroupOwner;
-    public WifiP2pDevice groupOwner;
-    public List<WifiP2pDevice> clients;
-
-    public WifiP2pDevice getGroupOwner() {
-        return groupOwner;
+    public Salut getNetwork() {
+        return network;
     }
 
-    public void setGroupOwner(WifiP2pDevice groupOwner) {
-        this.groupOwner = groupOwner;
+    public boolean isConnected() {
+        if (network == null) return false;
+
+        return network.isConnectedToAnotherDevice || network.isRunningAsHost;
     }
 
     @Override
-    public void reset() {
-        isGroupOwner = false;
-        clients.clear();
-        groupOwner = null;
+    public void sendToAllDevices(CarcassonneMessage data) {
+        network.sendToAllDevices(data, new SalutCallback() {
+            @Override
+            public void call() {
+                Log.e("Carcassonne", "Sending data failed");
+            }
+        });
     }
 
     @Override
-    public boolean canConnect() {
-        if (isGroupOwner) return false;
-
-        if (groupOwner != null) return false;
-        return true;
-    }
-
-    public List<WifiP2pDevice> getClients() {
-        return clients;
-    }
-
-    public void setClients(List<WifiP2pDevice> clients) {
-        this.clients = clients;
-    }
-
-
-    @Override
-    public void createConnection(boolean isGroupOwner) {
-
+    public void sendToHost(CarcassonneMessage data) {
+        network.sendToHost(data, new SalutCallback() {
+            @Override
+            public void call() {
+                Log.e("Carcassonne", "Sending data failed");
+            }
+        });
     }
 
     @Override
-    public void sendData(Object data, int type) {
-
+    public void sendMessage(CarcassonneMessage message) {
+        if (isHost()) {
+            sendToAllDevices(message);
+        } else if (isClient()) {
+            sendToHost(message);
+        }
     }
 
     @Override
-    public Object receiveData(int type) {
-        return null;
+    public boolean isHost() {
+        return network != null && network.isConnectedToAnotherDevice && network.isRunningAsHost;
     }
 
     @Override
-    public boolean isGroupOwner() {
-        return isGroupOwner;
+    public boolean isClient() {
+        return network != null && network.isConnectedToAnotherDevice && !network.isRunningAsHost;
     }
 
-    public void isGroupOwner(boolean isGroupOwner) {
-        this.isGroupOwner = isGroupOwner;
+    /***
+     * Create mappings between salud devices (device mac address) and player numbers (1-5)
+     * Important: call this method before initializing the game
+     */
+    @Override
+    public Map<String, PlayerInfo> createPlayerMappings() {
+        Map<String, PlayerInfo> mappings = new HashMap<>();
+
+        mappings.put(network.thisDevice.readableName + "_" + network.thisDevice.instanceName, createPlayerInfo(network.thisDevice, 0));
+
+        int playerNumber = 1;
+        for (SalutDevice sd : network.registeredClients) {
+            mappings.put(sd.readableName + "_" + sd.instanceName, createPlayerInfo(sd, playerNumber));
+            playerNumber++;
+        }
+
+        playerMappings = mappings;
+        return mappings;
     }
 
+    private PlayerInfo createPlayerInfo(SalutDevice device, int number) {
+        PlayerInfo info = new PlayerInfo();
+        info.deviceName = device.readableName;
+        info.playerNumber = number;
+        info.instanceName = device.instanceName;
+        info.color = Color.RED;
+        return info;
+    }
 
+    @Override
+    public Map<String, PlayerInfo> getPlayerMappings() {
+        return playerMappings;
+    }
+
+    @Override
+    public void setPlayerMappings(Map<String, PlayerInfo> mappings) {
+        playerMappings = mappings;
+    }
+
+    @Override
+    public int getDevicePlayerNumber() {
+        String thisDevice = network.thisDevice.readableName + "_" + network.thisDevice.instanceName;
+        return playerMappings.containsKey(thisDevice) ? playerMappings.get(thisDevice).playerNumber : -1;
+    }
+
+    @Override
+    public PlayerInfo getPlayerInfo(int id) {
+        PlayerInfo info = null;
+        for (PlayerInfo pi : playerMappings.values()) {
+            if (pi.playerNumber == id) {
+                info = pi;
+                break;
+            }
+        }
+        return info;
+    }
+
+    @Override
+    public int getDeviceCount() {
+        if (!isHost()) return -1;
+
+        return 1 + network.registeredClients.size();
+    }
 }
