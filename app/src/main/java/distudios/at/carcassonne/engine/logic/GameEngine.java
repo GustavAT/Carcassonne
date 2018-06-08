@@ -489,7 +489,8 @@ public class GameEngine implements IGameEngine {
             }
         }
         //card hat nur eine Cathedral => nur im Center platzierbar
-        if (cdb.getCardById(cardID).isCathedral()){
+        boolean test = cdb.getCardById(cardID).isCathedral();
+        if (cdb.getCardById(cardID).isCathedral() && (cardSide == CASTLE || cardSide == STREET)){
             unmarkedBorders.clear();
             unmarkedBorders.add(Center);
             return unmarkedBorders;

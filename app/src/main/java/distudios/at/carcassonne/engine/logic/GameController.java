@@ -84,7 +84,7 @@ public class GameController implements IGameController {
             gameEngine.placeCard(card);
             removeFromStack(card);
             // todo change to PLACE_FIGURE
-            cState = CState.END_TURN;
+            cState = CState.PLACE_FIGURE;
             return true;
         }
         return false;
@@ -108,8 +108,8 @@ public class GameController implements IGameController {
         PeepPosition chosenMark = getChosenFigurePos(card);
         if (cState != CState.PLACE_FIGURE) return false;
 
-        if(gameEngine.placePeep(card,chosenMark,playerID)){
-            gameEngine.placePeep(card,chosenMark,playerID);
+        if(gameEngine.placePeep(card,chosenMark,playerID)) {
+            cState = CState.END_TURN;
             return true;
         }
         return false;
