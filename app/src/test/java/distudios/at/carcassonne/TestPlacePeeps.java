@@ -130,7 +130,7 @@ public class TestPlacePeeps {
         Card cardIII = new Card(52, -1, 0, EAST);
         Card cardIV = new Card(30, -2, 0, EAST);
         Card cardV = new Card(21, 2, 0, WEST);
-        Card cardVI = new Card(13, 3, 0, EAST);
+        Card cardVI = new Card(13, 3, 0, NORTH);
         Card cardVII = new Card(18, -3, 0, NORTH);
         Card cardVIII = new Card(13, -4, 0, WEST);
 
@@ -201,7 +201,7 @@ public class TestPlacePeeps {
         Card cardIII = new Card(52, -1, 0, EAST);
         Card cardIV = new Card(30, -2, 0, EAST);
         Card cardV = new Card(22, 2, 0, WEST);
-        Card cardVI = new Card(13, 3, 0, EAST);
+        Card cardVI = new Card(13, 3, 0, NORTH);
         Card cardVII = new Card(8, -3, 0, NORTH);
         Card cardVIII = new Card(13, -4, 0, WEST);
 
