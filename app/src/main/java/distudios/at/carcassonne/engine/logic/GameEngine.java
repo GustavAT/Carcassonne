@@ -100,57 +100,33 @@ public class GameEngine implements IGameEngine {
         return isconnected;
     }
 
+    public GameState getGamestate() {
+        return currentState;
+    }
+
     public void addScore(int point, int player) {
         int oldpoints = currentState.getPoints(player);
         currentState.setPoints(player, point + oldpoints);
     }
 
     @Override
-    public ArrayList<Integer> getScoreChanges(Card card) {
+    public ArrayList<Score> getScoreChanges(Card card) {
+        //todo: dynamische spieleranzahl
+        CardDataBase cdb = CardDataBase.getInstance();
         ArrayList<Card> field = currentState.getCards();
-        ArrayList<Integer> scores = new ArrayList<>(4);
+        ArrayList<Score> scores = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
-            scores.add(getConnectedCards(card, Orientation.valueOf(i)).size());
+            //todo: Schließe Fall aus, dass verbundene Elemnte auf der karte 2 mal gezählt werden
+            Score sc=new Score(cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(Orientation.valueOf(i),card.getOrientation())) ,4);
+            sc.setCardlist(getConnectedCards(card, Orientation.valueOf(i),sc));
+            scores.add(sc);
         }
         return scores;
     }
 
-    private ArrayList<Card> checkBorderCards(Card card, Orientation sborder) {
-        ArrayList<Boolean> checkside = new ArrayList<>(4);
-        ArrayList<Card> itcards = new ArrayList<>(4);
 
-        //todo: implement connections
-        //Füge Connections der aktuellen Karte zusammen
-        if (sborder == Orientation.NORTH) {
-            checkside.set(0, true);
-        } else if (sborder == EAST) {
-            checkside.set(1, true);
-        } else if (sborder == Orientation.SOUTH) {
-            checkside.set(2, true);
-        } else if (sborder == WEST) {
-            checkside.set(3, true);
-        } else ;
 
-        //Iteriere über alle Connections
-        for (int i = 0; i < checkside.size(); i++) {
-            if (checkside.get(i)) {
-                if (checkBorder(card, currentState.getCards(), Orientation.valueOf(i))) {
-                    Card fcard = getFollowedCard(card, currentState.getCards(), Orientation.valueOf(i));
-                    if (fcard != null) {
-                        itcards.set(i, fcard);
-                    } else {
-                        closed = false;
-                    }
-                } else {
-                    itcards.set(i, null);
-                }
-            }
-        }
-
-        return itcards;
-    }
-
-    public ArrayList<Card> getConnectedCards(Card card, Orientation border) {
+    public ArrayList<Card> getConnectedCards(Card card, Orientation border, Score score) {
         ArrayList<Card> itcards = new ArrayList<>();
         ArrayList<Card> finalcards = new ArrayList<>();
         ArrayList<Orientation> oitcard = new ArrayList<>();
@@ -171,7 +147,7 @@ public class GameEngine implements IGameEngine {
                 Orientation actO = oitcard.get(0);
                 oitcard.remove(0);
                 //Methode überprüfe anliegende Karten
-                ArrayList<Card> concards = checkBorderCards(actCard, actO);
+                ArrayList<Card> concards = checkBorderCards(actCard, actO, score);
                 //Füge Cards mit Orientation hinzu
                 for (int i = 0; i < concards.size(); i++) {
                     Card it = concards.get(i);
@@ -192,6 +168,86 @@ public class GameEngine implements IGameEngine {
         return finalcards;
     }
 
+    private ArrayList<Card> checkBorderCards(Card card, Orientation sborder, Score score) {
+        //sboarder=searching boarder, Seite von der aus wir suchen.
+        CardDataBase cdb = CardDataBase.getInstance();
+        ArrayList<Boolean> checkside = new ArrayList<>(4);
+        ArrayList<Card> itcards = new ArrayList<>(4);
+        ArrayList<Orientation> connections=cdb.getMatchingOrientations(card.getId(),cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(sborder,card.getOrientation())));
+
+        //todo: implement connections
+        //Füge Connections der aktuellen Karte finden und peeps zählen
+        for(int i=0;i<connections.size();i++){
+            Orientation con=connections.get(i);
+            if (con == Card.getAbsoluteOrientation(NORTH,card.getOrientation())){
+                checkside.set(0, true);
+                Peep peep=checkForPeep(card, NORTH);
+                if(peep!=null){
+                    score.addPeepCount(peep.getPlayerID(),1);
+                }
+            } else if (con == Card.getAbsoluteOrientation(EAST,card.getOrientation())) {
+                checkside.set(1, true);
+                Peep peep=checkForPeep(card, NORTH);
+                if(peep!=null){
+                    score.addPeepCount(peep.getPlayerID(),1);
+                }
+            } else if (con == Card.getAbsoluteOrientation(SOUTH,card.getOrientation())) {
+                checkside.set(2, true);
+                Peep peep=checkForPeep(card, NORTH);
+                if(peep!=null){
+                    score.addPeepCount(peep.getPlayerID(),1);
+                }
+            } else if (con == Card.getAbsoluteOrientation(WEST,card.getOrientation())) {
+                checkside.set(3, true);
+                Peep peep=checkForPeep(card, NORTH);
+                if(peep!=null){
+                    score.addPeepCount(peep.getPlayerID(),1);
+                }
+            } else ;
+        }
+
+
+        //Iteriere über alle Connections
+        for (int i = 0; i < checkside.size(); i++) {
+            if (checkside.get(i)) {
+                if (checkBorder(card, currentState.getCards(), Orientation.valueOf(i))) {
+                    Card fcard = getFollowedCard(card, currentState.getCards(), Orientation.valueOf(i));
+                    if (fcard != null) {
+                        itcards.set(i, fcard);
+                    } else {
+                        closed = false;
+                    }
+                } else {
+                    itcards.set(i, null);
+                }
+            }
+        }
+
+        return itcards;
+    }
+
+    private Peep checkForPeep(Card card, Orientation sborder){
+        ArrayList<Peep> peeps=getGamestate().getPeeps();
+
+        //Überprüft für jeden Peep ob er auf der Karte steht, und ob er auf der entsprechenden Border steht
+        for(int i=0;i<peeps.size();i++){
+            Peep peep=peeps.get(i);
+            if(card==peep.getCard()){
+                if(sborder==NORTH){
+                    if(peep.getPeepPosition()==Top) return peep;
+                }else if (sborder==EAST){
+                    if(peep.getPeepPosition()==Left) return peep;
+                }else if (sborder==SOUTH){
+                    if(peep.getPeepPosition()==Bottom) return peep;
+                }else if (sborder==WEST){
+                    if(peep.getPeepPosition()==Right) return peep;
+                }
+                else;
+            }
+        }
+        return null;
+    }
+
     private boolean checkIfExists(Card card, ArrayList<Card> field) {
         for (int i = 0; i < field.size(); i++) {
             Card itcard = field.get(i);
@@ -204,9 +260,7 @@ public class GameEngine implements IGameEngine {
         return false;
     }
 
-    public GameState getGamestate() {
-        return currentState;
-    }
+
 
 
     public boolean checkBorder(Card a, ArrayList<Card> field, Orientation oa) {

@@ -5,12 +5,15 @@ import java.util.ArrayList;
 public class Score {
     private boolean closed=true;
     private CardSide base;
-    private ArrayList<Integer> playerscore;
+    private ArrayList<Integer> ppeepcount;
     private ArrayList<Card> cardlist;
 
     public Score(CardSide base, int players) {
         this.base = base;
-        this.playerscore = new ArrayList<>(players);
+        this.ppeepcount = new ArrayList<>(players);
+        for(int i = 0; i< ppeepcount.size(); i++){
+            ppeepcount.set(i,0);
+        }
         this.cardlist = new ArrayList<>();
     }
 
@@ -22,16 +25,16 @@ public class Score {
         this.closed = closed;
     }
 
-    public ArrayList<Integer> getPlayerscore() {
-        return playerscore;
+    public ArrayList<Integer> getPpeepcount() {
+        return ppeepcount;
     }
 
-    public void setPlayerscore(int player, int score) {
-        this.playerscore.set(player,score);
+    public void setPeepCount(int player, int score) {
+        this.ppeepcount.set(player,score);
     }
 
-    public void adcPlayerscore(int player, int score) {
-        this.playerscore.set(player,score+playerscore.get(player));
+    public void addPeepCount(int player, int score) {
+        this.ppeepcount.set(player,score+ ppeepcount.get(player));
     }
 
     public ArrayList<Card> getCardlist() {
