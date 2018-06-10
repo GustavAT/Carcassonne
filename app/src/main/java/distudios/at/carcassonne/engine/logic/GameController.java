@@ -10,6 +10,11 @@ import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
+import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
+import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
+import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
+import static distudios.at.carcassonne.engine.logic.PeepPosition.Left;
+
 public class GameController implements IGameController {
 
     private IGameEngine gameEngine;
@@ -68,6 +73,7 @@ public class GameController implements IGameController {
         return null;
     }
 
+
     //todo: Nachdem Connection auf ExtendedCard gecoded wurden-->implementiere einen Situationellen Punktezähler anhand einer Id oder Koordinate
 
     @Override
@@ -85,13 +91,28 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public boolean placeFigure(Object figure) {
+    public void showPossibleFigurePos(Card card){
+        ArrayList<PeepPosition> figurePos = gameEngine.getALLFigurePos(card);
+        //todo: implement view to schow possible Positions
+    }
+
+    @Override
+    public PeepPosition getChosenFigurePos(Card card) {
+        //todo: get the chosen position from view
+        PeepPosition position = Left;
+        return position;
+    }
+
+    @Override
+    public boolean placeFigure(Card card, int playerID) {
+        PeepPosition chosenMark = getChosenFigurePos(card);
         if (cState != CState.PLACE_FIGURE) return false;
 
-        cState = CState.END_TURN;
-
-        // todo implement
-        return true;
+        if(gameEngine.placePeep(card,chosenMark,playerID)){
+            gameEngine.placePeep(card,chosenMark,playerID);
+            return true;
+        }
+        return false;
     }
 
 
@@ -99,6 +120,7 @@ public class GameController implements IGameController {
     public void endTurn() {
         if (cState != CState.END_TURN || !isMyTurn()) return;
 
+        gameEngine.markAllCards();
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
         GameState state = getGameState();
         state.currentPlayer = state.getNextPlayer();
@@ -126,7 +148,7 @@ public class GameController implements IGameController {
      */
     public List<Pair<Integer, Integer>> getPossibleLocations(Card c) {
         List<Pair<Integer, Integer>> locations = new ArrayList<>();
-        
+
         List<Card> cards = getGameState().cards;
 
         int originalX = c.getxCoordinate();
@@ -163,6 +185,7 @@ public class GameController implements IGameController {
 
         return locations;
     }
+
 
     @Override
     public CState getCState() {

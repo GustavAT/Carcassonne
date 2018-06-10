@@ -41,8 +41,16 @@ public interface IGameController {
      * Place figure on the field
      * @return false if position is invalid
      */
-    boolean placeFigure(Object figure);
+    boolean placeFigure(Card card, int playerID);
 
+
+    PeepPosition getChosenFigurePos(Card card);
+
+    /**
+     * Gets possible positions of a Peep on the current card
+     * @param card the current placed card
+     */
+    void showPossibleFigurePos(Card card);
 
     /**
      * End turn of this player

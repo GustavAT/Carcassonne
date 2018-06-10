@@ -29,7 +29,7 @@ public class CardDataBase {
         cardDB.add(new ExtendedCard(2, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(2).setCathedral(true);
         cardDB.add(new ExtendedCard(3, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
-        getCardById(3).setCathedral(true);
+        getCardById(3).setCathedral(false);
         // CARD B CATHEDRAL - 4x
         cardDB.add(new ExtendedCard(4, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(4).setCathedral(true);
@@ -201,5 +201,18 @@ public class CardDataBase {
                 return null;
 
         }
+    }
+
+    /*
+    Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
+     */
+    public ArrayList<Orientation> getMatchingOrientations(int id, CardSide cardSide){
+        ArrayList<Orientation> cardSides = new ArrayList<Orientation>();
+        if (this.getCardSide(id,Orientation.NORTH)== cardSide) cardSides.add(Orientation.NORTH);
+        if (this.getCardSide(id,Orientation.EAST)==cardSide) cardSides.add(Orientation.EAST);
+        if (this.getCardSide(id,Orientation.SOUTH)==cardSide) cardSides.add(Orientation.SOUTH);
+        if (this.getCardSide(id,Orientation.WEST)==cardSide) cardSides.add(Orientation.WEST);
+
+        return cardSides;
     }
 }
