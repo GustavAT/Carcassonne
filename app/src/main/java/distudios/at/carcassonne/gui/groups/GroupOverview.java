@@ -19,6 +19,7 @@ import java.util.Map;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
+import distudios.at.carcassonne.engine.logic.GameController;
 import distudios.at.carcassonne.gui.field.GameActivity;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
@@ -162,7 +163,7 @@ public class GroupOverview extends AppCompatActivity implements DeviceCallback.I
                 controller.setPlayerMappings(data.playerMappings);
                 CarcassonneApp.getGameController().setState(data.state);
                 Toast.makeText(getApplicationContext(), "Player mappings received", Toast.LENGTH_SHORT).show();
-
+                CarcassonneApp.getGameController().initPlayerMappings();
                 // initial state received from host, start game and wait
                 Intent i = new Intent(getApplicationContext(), GameActivity.class);
                 startActivity(i);
