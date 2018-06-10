@@ -19,7 +19,7 @@ public class Card {
     private int xCoordinate;
     @JsonField
     private int yCoordinate;
-
+    @JsonField
     private ArrayList<PeepPosition> marks;
 
     public Card() {}
@@ -65,6 +65,8 @@ public class Card {
     }
 
     public ArrayList<PeepPosition> getMarks() { return marks; }
+
+    public void setMarks(ArrayList<PeepPosition> marks){ this.marks = marks;}
 
     public void setMark(PeepPosition mark) {
         if(!(this.marks.contains(mark))) {
