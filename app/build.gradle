@@ -21,6 +21,11 @@ android {
     buildToolsVersion '27.0.3'
 }
 
+jacocoAndroidUnitTestReport {
+    excludes += ['**/*networking*',
+                 '**/*gui*']
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
