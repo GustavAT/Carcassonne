@@ -40,6 +40,7 @@ import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
 import distudios.at.carcassonne.engine.logic.Peep;
 import distudios.at.carcassonne.engine.logic.PeepPosition;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public class PlayfieldView extends View {
@@ -253,7 +254,10 @@ public class PlayfieldView extends View {
         for (String key : placedCards.keySet()) {
             CardContainer c = placedCards.get(key);
             drawCardContainer(c, canvas);
-//            canvas.drawText(c.card.getId() + " " +  c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 25), rasterPaint);
+            if (CarcassonneApp.getGameController().isDebug()) {
+                canvas.drawText(c.card.getId() + " " + c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int) (c.pixelY + c.offsetY + 25), rasterPaint);
+                canvas.drawText("X: " + c.fieldX + ", Y " + c.fieldY, (int) (c.pixelX + c.offsetX + c.size / 4), (int) (c.pixelY + c.offsetY + c.size / 2), rasterPaint);
+            }
         }
 
         for (String key: possibleLocations.keySet()) {
@@ -490,24 +494,30 @@ public class PlayfieldView extends View {
         Bitmap bitmap = cardIdToBitmap(ec.getId());
         if (bitmap == null) return;
 
+        Matrix matrix = new Matrix();
+
         float left = (float)(c.pixelX + c.offsetX);
         float top = (float)(c.pixelY + c.offsetY);
         float right = (float)(c.pixelX + c.offsetX + c.size);
         float bottom = (float)(c.pixelY + c.offsetY + c.size);
 
-        Matrix m = new Matrix();
+
+
+        float degree;
         if (c.card.getOrientation() == Orientation.NORTH) {
-            m.postRotate(0);
+            degree = 0;
         } else if (c.card.getOrientation() == Orientation.EAST) {
-            m.postRotate(90);
+            degree = 90;
         } else if (c.card.getOrientation() == Orientation.SOUTH) {
-            m.postRotate(180);
+            degree = 180;
         } else {
-            m.postRotate(270);
+            degree = 270;
         }
 
+        matrix.postRotate(degree);
+
         // todo: matrix
-        Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+        Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         canvas.drawBitmap(rotated, null, new RectF(left, top, right, bottom), null);
 
         List<Peep> pps = CarcassonneApp.getGameController().getPlacedPeeps(c.card);

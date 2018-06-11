@@ -42,6 +42,7 @@ public class SettingsFragment extends Fragment {
     private Button buttonMainMenu;
     private Switch switchMusic;
     private Switch switchEffects;
+    private Switch switchDebug;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -84,6 +85,7 @@ public class SettingsFragment extends Fragment {
 
         switchMusic = view.findViewById(R.id.switch_music);
         switchEffects = view.findViewById(R.id.switch_music);
+        switchDebug = view.findViewById(R.id.switch_debugging);
 
         switchMusic.setChecked(controller.getBackground_music_state());
 
@@ -97,6 +99,13 @@ public class SettingsFragment extends Fragment {
                     controller.stopBackground_music();
                     controller.setBackground_music_state(false);
                 }
+            }
+        });
+
+        switchDebug.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                CarcassonneApp.getGameController().debug(b);
             }
         });
 
@@ -124,4 +133,6 @@ public class SettingsFragment extends Fragment {
 
         return view;
     }
+
+
 }
