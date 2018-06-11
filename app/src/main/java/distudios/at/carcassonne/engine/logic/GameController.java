@@ -4,11 +4,13 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
 import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
@@ -37,6 +39,7 @@ public class GameController implements IGameController {
     private CState cState;
     private Card currentCard;
     private boolean isCheating = false;
+    public HashMap<Integer, Player> playerHashMap;
 
     public GameController() {
         this.init();
@@ -82,32 +85,48 @@ public class GameController implements IGameController {
             gameEngine.placeCard(card);
             removeFromStack(card);
             // todo change to PLACE_FIGURE
-            cState = CState.END_TURN;
+            cState = CState.PLACE_FIGURE;
             return true;
         }
         return false;
     }
 
     @Override
-    public void showPossibleFigurePos(Card card){
-        ArrayList<PeepPosition> figurePos = gameEngine.getALLFigurePos(card);
-        //todo: implement view to schow possible Positions
+    public List<PeepPosition> showPossibleFigurePos(Card card) {
+       return gameEngine.getALLFigurePos(card);
     }
 
     @Override
-    public PeepPosition getChosenFigurePos(Card card) {
-        //todo: get the chosen position from view
-        PeepPosition position = Left;
-        return position;
+    public List<Peep> getPlacedPeeps(Card c) {
+        List<Peep> peeps = new ArrayList<>();
+
+        for (Peep p : getGameState().peeps) {
+            int cardId = p.getCardId();
+            if (cardId == c.getId()) {
+                peeps.add(p);
+            }
+        }
+
+        return peeps;
     }
 
     @Override
-    public boolean placeFigure(Card card, int playerID) {
-        PeepPosition chosenMark = getChosenFigurePos(card);
+    public boolean canPlacePeep() {
+         return peepsLeft() < 10;
+    }
+
+    @Override
+    public int peepsLeft() {
+        return gameEngine.getPlayerPeeps(CarcassonneApp.getNetworkController().getDevicePlayerNumber());
+    }
+
+    @Override
+    public boolean placeFigure(Card card, PeepPosition position) {
         if (cState != CState.PLACE_FIGURE) return false;
 
-        if(gameEngine.placePeep(card,chosenMark,playerID)){
-            gameEngine.placePeep(card,chosenMark,playerID);
+        int playerId = CarcassonneApp.getNetworkController().getDevicePlayerNumber();
+        if(gameEngine.placePeep(card, position, playerId)) {
+            cState = CState.END_TURN;
             return true;
         }
         return false;
@@ -116,7 +135,7 @@ public class GameController implements IGameController {
 
     @Override
     public void endTurn() {
-        if (cState != CState.END_TURN || !isMyTurn()) return;
+        if ((cState != CState.END_TURN && cState != CState.PLACE_FIGURE) || !isMyTurn()) return;
 
         gameEngine.markAllCards();
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
@@ -301,6 +320,8 @@ public class GameController implements IGameController {
         state.currentPlayer = 0;
         state.maxPlayerCount = controller.getDeviceCount();
         message.state = state;
+        initPlayerMappings();
+
 
         cState = CState.DRAW_CARD;
         controller.sendToAllDevices(message);
@@ -329,5 +350,15 @@ public class GameController implements IGameController {
     @Override
     public boolean hasPlacedCard() {
         return cardPlaced;
+    }
+
+    @Override
+    public void initPlayerMappings(){
+        playerHashMap = new HashMap<Integer, Player>();
+        for (PlayerInfo playerInfo: CarcassonneApp.getNetworkController().getPlayerMappings().values()
+             ) {
+            playerHashMap.put(playerInfo.playerNumber, Player.getRaceFromPlayer(playerInfo.raceType, playerInfo.playerNumber));
+        }
+
     }
 }

@@ -29,4 +29,6 @@ public interface IGameEngine {
 
     boolean markAllCards();
 
+    int getPlayerPeeps(int playerID);
+
 }

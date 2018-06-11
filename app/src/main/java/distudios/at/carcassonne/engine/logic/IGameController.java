@@ -18,6 +18,7 @@ public interface IGameController {
     void updateGameState();
     boolean isMyTurn();
     boolean hasPlacedCard();
+    void initPlayerMappings();
     List<Pair<Integer, Integer>> getPossibleLocations(Card c);
 
     /**
@@ -41,16 +42,19 @@ public interface IGameController {
      * Place figure on the field
      * @return false if position is invalid
      */
-    boolean placeFigure(Card card, int playerID);
+    boolean placeFigure(Card card, PeepPosition position);
 
+    List<Peep> getPlacedPeeps(Card c);
 
-    PeepPosition getChosenFigurePos(Card card);
+    boolean canPlacePeep();
+    int peepsLeft();
+
 
     /**
      * Gets possible positions of a Peep on the current card
      * @param card the current placed card
      */
-    void showPossibleFigurePos(Card card);
+    List<PeepPosition> showPossibleFigurePos(Card card);
 
     /**
      * End turn of this player
