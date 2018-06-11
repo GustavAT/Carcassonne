@@ -4,12 +4,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InterruptedIOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.CardDataBase;
 import distudios.at.carcassonne.engine.logic.CardSide;
+import distudios.at.carcassonne.engine.logic.ExtendedCard;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.Orientation;
