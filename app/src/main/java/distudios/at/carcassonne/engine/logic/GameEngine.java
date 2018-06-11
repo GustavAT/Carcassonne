@@ -111,14 +111,34 @@ public class GameEngine implements IGameEngine {
 
     @Override
     public ArrayList<Score> getScoreChanges(Card card) {
-        //todo: dynamische spieleranzahl
         CardDataBase cdb = CardDataBase.getInstance();
         ArrayList<Card> field = currentState.getCards();
+        //Generiere Scores für jede Seite
         ArrayList<Score> scores = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
-            //todo: Schließe Fall aus, dass verbundene Elemnte auf der karte 2 mal gezählt werden
             Score sc=new Score(cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(Orientation.valueOf(i),card.getOrientation())) ,4);
-            sc.setCardlist(getConnectedCards(card, Orientation.valueOf(i),sc));
+
+            //Überprüfe auf Grass->Wenn, dann brauch ich nicht zählen
+            if(sc.getBase()==CardSide.GRASS){
+                //Brauche keine Cardlist generieren
+                sc.setClosed(false);
+            }else{
+                sc.setCardlist(getConnectedCards(card, Orientation.valueOf(i),sc));
+            }
+
+            //Überprüfe, ob bereits Basis behandelt wurde, und über Mitte verbunden sein kann
+            if(CardDataBase.getCardById(card.getId()).isSplitStop()){
+                //Karte ist in der Mitte getrennt->keine Connections, d.h individuelles Zählen
+            }
+            else{
+                for(int j=0;j<scores.size();j++){
+                    //Falls bereits ein Element der gleichen Basis Kalkuliert wurde, und die Mitte nicht closed ist,
+                    //so wird hier das doppeltzählen verhindert
+                    if(scores.get(j).getBase()==sc.getBase()){
+                        sc.setClosed(false);
+                    }
+                }
+            }
             scores.add(sc);
         }
         return scores;
@@ -175,7 +195,6 @@ public class GameEngine implements IGameEngine {
         ArrayList<Card> itcards = new ArrayList<>(4);
         ArrayList<Orientation> connections=cdb.getMatchingOrientations(card.getId(),cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(sborder,card.getOrientation())));
 
-        //todo: implement connections
         //Füge Connections der aktuellen Karte finden und peeps zählen
         for(int i=0;i<connections.size();i++){
             Orientation con=connections.get(i);
@@ -229,6 +248,7 @@ public class GameEngine implements IGameEngine {
     private Peep checkForPeep(Card card, Orientation sborder){
         ArrayList<Peep> peeps=getGamestate().getPeeps();
 
+        //todo: remove Peep
         //Überprüft für jeden Peep ob er auf der Karte steht, und ob er auf der entsprechenden Border steht
         for(int i=0;i<peeps.size();i++){
             Peep peep=peeps.get(i);
