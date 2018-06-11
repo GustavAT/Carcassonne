@@ -15,9 +15,7 @@
 
     <uses-feature
         android:name="android.hardware.sensor.accelerometer"
-        android:required="true"/>
-
-
+        android:required="true" />
 
     <application
         android:name=".CarcassonneApp"
@@ -26,7 +24,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
 
         <!-- Lobby -->
 
@@ -59,19 +56,18 @@
         <activity
             android:name=".gui.field.GameActivity"
             android:label="@string/title_activity_game">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.groups.Group2Activity" />
-
         </activity>
-        <activity android:name=".gui.Rules"
+        <activity
+            android:name=".gui.Rules"
             android:label="@string/text_rules">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.groups.Group2Activity" />
         </activity>
+        <activity android:name=".gui.groups.ChooseRaceActivity"></activity>
     </application>
 
 </manifest>

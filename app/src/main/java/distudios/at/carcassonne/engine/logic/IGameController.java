@@ -18,6 +18,7 @@ public interface IGameController {
     void updateGameState();
     boolean isMyTurn();
     boolean hasPlacedCard();
+    void initPlayerMappings();
     List<Pair<Integer, Integer>> getPossibleLocations(Card c);
 
     /**

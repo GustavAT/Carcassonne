@@ -109,6 +109,7 @@ public class NetworkController implements INetworkController {
 
     private PlayerInfo createPlayerInfo(SalutDevice device, int number) {
         PlayerInfo info = new PlayerInfo();
+        info.raceType = 1;
         info.deviceName = device.readableName;
         info.playerNumber = number;
         info.instanceName = device.instanceName;

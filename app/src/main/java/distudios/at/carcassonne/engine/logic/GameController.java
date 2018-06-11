@@ -4,11 +4,13 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
 import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
@@ -37,6 +39,7 @@ public class GameController implements IGameController {
     private CState cState;
     private Card currentCard;
     private boolean isCheating = false;
+    public HashMap<Integer, Player> playerHashMap;
 
     public GameController() {
         this.init();
@@ -281,6 +284,8 @@ public class GameController implements IGameController {
         state.currentPlayer = 0;
         state.maxPlayerCount = controller.getDeviceCount();
         message.state = state;
+        initPlayerMappings();
+
 
         cState = CState.DRAW_CARD;
         controller.sendToAllDevices(message);
@@ -309,5 +314,15 @@ public class GameController implements IGameController {
     @Override
     public boolean hasPlacedCard() {
         return cardPlaced;
+    }
+
+    @Override
+    public void initPlayerMappings(){
+        playerHashMap = new HashMap<Integer, Player>();
+        for (PlayerInfo playerInfo: CarcassonneApp.getNetworkController().getPlayerMappings().values()
+             ) {
+            playerHashMap.put(playerInfo.playerNumber, Player.getRaceFromPlayer(playerInfo.raceType, playerInfo.playerNumber));
+        }
+
     }
 }
