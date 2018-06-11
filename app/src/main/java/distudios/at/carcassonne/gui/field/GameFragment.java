@@ -4,17 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
@@ -22,12 +19,9 @@ import distudios.at.carcassonne.engine.logic.CState;
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.CardDataBase;
 import distudios.at.carcassonne.engine.logic.ExtendedCard;
-import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
-import distudios.at.carcassonne.engine.logic.PeepPosition;
 import distudios.at.carcassonne.networking.INetworkController;
-import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 /**
@@ -43,13 +37,11 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public PlayfieldView playfieldView;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
-
     private Button buttonEndTurn;
     private Button buttonRotate;
     private Button buttonPeep;
@@ -78,8 +70,6 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
         fragment.setArguments(args);
         return fragment;
     }
-
-    public PlayfieldView playfieldView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -229,7 +219,7 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
         textViewStatus.setText(text);
 
         int peepsPlaced = CarcassonneApp.getGameController().peepsLeft();
-        String peepStatus = "Peeps placed: " + peepsPlaced + ", Peeps left: " + (10-peepsPlaced); // todo remove 10
+        String peepStatus = "Peeps placed: " + peepsPlaced + ", Peeps left: " + (10 - peepsPlaced); // todo remove 10
         textViewStatusPeeps.setText(peepStatus);
 
     }

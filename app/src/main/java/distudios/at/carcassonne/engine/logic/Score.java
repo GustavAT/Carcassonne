@@ -10,9 +10,9 @@ public class Score {
 
     public Score(CardSide base, int players) {
         this.base = base;
-        this.ppeepcount = new ArrayList<>(players);
-        for(int i = 0; i< ppeepcount.size(); i++){
-            ppeepcount.set(i,0);
+        this.ppeepcount = new ArrayList<>();
+        for (int i = 0; i < players; i++) {
+            ppeepcount.add(0);
         }
         this.cardlist = new ArrayList<>();
     }

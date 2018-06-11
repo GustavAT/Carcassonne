@@ -18,6 +18,7 @@ public interface IGameController {
     void updateGameState();
     boolean isMyTurn();
     boolean hasPlacedCard();
+
     void initPlayerMappings();
     List<Pair<Integer, Integer>> getPossibleLocations(Card c);
 
@@ -47,6 +48,7 @@ public interface IGameController {
     List<Peep> getPlacedPeeps(Card c);
 
     boolean canPlacePeep();
+
     int peepsLeft();
 
 

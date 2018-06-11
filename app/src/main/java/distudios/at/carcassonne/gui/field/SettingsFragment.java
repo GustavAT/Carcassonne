@@ -106,7 +106,6 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
 
 
-
                 INetworkController controller = CarcassonneApp.getNetworkController();
 
                 CarcassonneMessage m = new CarcassonneMessage(CarcassonneMessage.PLAYER_EXIT_GAME);

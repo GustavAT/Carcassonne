@@ -12,20 +12,14 @@ import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
-import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
-import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
-import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
-import static distudios.at.carcassonne.engine.logic.PeepPosition.Left;
-
 public class GameController implements IGameController {
 
+    public HashMap<Integer, Player> playerHashMap;
     private IGameEngine gameEngine;
-
     /**
      * True if the player has placed his card in this turn
      */
     private boolean cardPlaced = false;
-
     /**
      * Game state
      *
@@ -39,7 +33,6 @@ public class GameController implements IGameController {
     private CState cState;
     private Card currentCard;
     private boolean isCheating = false;
-    public HashMap<Integer, Player> playerHashMap;
 
     public GameController() {
         this.init();
@@ -93,7 +86,7 @@ public class GameController implements IGameController {
 
     @Override
     public List<PeepPosition> showPossibleFigurePos(Card card) {
-       return gameEngine.getALLFigurePos(card);
+        return gameEngine.getALLFigurePos(card);
     }
 
     @Override
@@ -112,7 +105,7 @@ public class GameController implements IGameController {
 
     @Override
     public boolean canPlacePeep() {
-         return peepsLeft() < 10;
+        return peepsLeft() < 10;
     }
 
     @Override
@@ -125,7 +118,7 @@ public class GameController implements IGameController {
         if (cState != CState.PLACE_FIGURE) return false;
 
         int playerId = CarcassonneApp.getNetworkController().getDevicePlayerNumber();
-        if(gameEngine.placePeep(card, position, playerId)) {
+        if (gameEngine.placePeep(card, position, playerId)) {
             cState = CState.END_TURN;
             return true;
         }
@@ -353,10 +346,10 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public void initPlayerMappings(){
+    public void initPlayerMappings() {
         playerHashMap = new HashMap<Integer, Player>();
-        for (PlayerInfo playerInfo: CarcassonneApp.getNetworkController().getPlayerMappings().values()
-             ) {
+        for (PlayerInfo playerInfo : CarcassonneApp.getNetworkController().getPlayerMappings().values()
+                ) {
             playerHashMap.put(playerInfo.playerNumber, Player.getRaceFromPlayer(playerInfo.raceType, playerInfo.playerNumber));
         }
 

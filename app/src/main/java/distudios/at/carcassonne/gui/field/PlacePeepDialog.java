@@ -12,19 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.util.List;
-
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.CardDataBase;
 import distudios.at.carcassonne.engine.logic.ExtendedCard;
-import distudios.at.carcassonne.engine.logic.GameController;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
 import distudios.at.carcassonne.engine.logic.PeepPosition;
 
-public class PlacePeepDialog extends DialogFragment implements View.OnClickListener{
+public class PlacePeepDialog extends DialogFragment implements View.OnClickListener {
 
     public GameFragment fragment;
 
@@ -118,7 +115,7 @@ public class PlacePeepDialog extends DialogFragment implements View.OnClickListe
                         PlacePeepDialog.this.getDialog().cancel();
                     }
                 })
-        .setTitle(R.string.text_state_place_peep);
+                .setTitle(R.string.text_state_place_peep);
         return builder.create();
     }
 

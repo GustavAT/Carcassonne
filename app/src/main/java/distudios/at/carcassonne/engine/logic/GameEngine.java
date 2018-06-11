@@ -22,9 +22,9 @@ import static distudios.at.carcassonne.engine.logic.PeepPosition.TopRight;
 
 public class GameEngine implements IGameEngine {
 
-    private GameState currentState;
     // 72 Cards including start card leads to STACK SIZE of 71;
     private final int STACK_SIZE = 71;
+    private GameState currentState;
     //private boolean closed = true;
 
     @Override
@@ -87,7 +87,7 @@ public class GameEngine implements IGameEngine {
         //Iteriere über die Seiten
         for (int i = 0; i < 4; i++) {
             //Überprüfe Border an der aktuellen Seite
-            if (!checkBorder(nextCard, cards, Orientation.NORTH)) {
+            if (!checkBorder(nextCard, cards, current)) {
                 //Falls nicht Verbunden-->False
                 return false;
             } else {
@@ -176,7 +176,7 @@ public class GameEngine implements IGameEngine {
                     if (it != null && !checkIfExists(it, finalcards)) {
                         finalcards.add(concards.get(i));
                         itcards.add(concards.get(i));
-                        oitcard.add(Orientation.valueOf(i));
+                        oitcard.add(Card.getAbsoluteOrientation(Orientation.valueOf(i), Orientation.SOUTH));
                     }
                 }
             }
@@ -199,6 +199,7 @@ public class GameEngine implements IGameEngine {
             checkside.add(false);
             itcards.add(null);
         }
+
         ArrayList<Orientation> connections=cdb.getMatchingOrientations(card.getId(),cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(sborder,card.getOrientation())));
 
         //Füge Connections der aktuellen Karte finden und peeps zählen
@@ -212,19 +213,19 @@ public class GameEngine implements IGameEngine {
                 }
             } else if (con == Card.getAbsoluteOrientation(EAST,card.getOrientation())) {
                 checkside.set(1, true);
-                Peep peep=checkForPeep(card, NORTH);
+                Peep peep = checkForPeep(card, EAST);
                 if(peep!=null){
                     score.addPeepCount(peep.getPlayerID(),1);
                 }
             } else if (con == Card.getAbsoluteOrientation(SOUTH,card.getOrientation())) {
                 checkside.set(2, true);
-                Peep peep=checkForPeep(card, NORTH);
+                Peep peep = checkForPeep(card, SOUTH);
                 if(peep!=null){
                     score.addPeepCount(peep.getPlayerID(),1);
                 }
             } else if (con == Card.getAbsoluteOrientation(WEST,card.getOrientation())) {
                 checkside.set(3, true);
-                Peep peep=checkForPeep(card, NORTH);
+                Peep peep = checkForPeep(card, WEST);
                 if(peep!=null){
                     score.addPeepCount(peep.getPlayerID(),1);
                 }
@@ -259,15 +260,15 @@ public class GameEngine implements IGameEngine {
         //Überprüft für jeden Peep ob er auf der Karte steht, und ob er auf der entsprechenden Border steht
         for(int i=0;i<peeps.size();i++){
             Peep peep=peeps.get(i);
-            if(card==peep.getCard()){
+            if (card.getId() == peep.getCardId()) {
                 if(sborder==NORTH){
                     if(peep.getPeepPosition()==Top) return peep;
                 }else if (sborder==EAST){
-                    if(peep.getPeepPosition()==Left) return peep;
+                    if (peep.getPeepPosition() == Right) return peep;
                 }else if (sborder==SOUTH){
                     if(peep.getPeepPosition()==Bottom) return peep;
                 }else if (sborder==WEST){
-                    if(peep.getPeepPosition()==Right) return peep;
+                    if (peep.getPeepPosition() == Left) return peep;
                 }
                 else;
             }
@@ -495,7 +496,7 @@ public class GameEngine implements IGameEngine {
             markedBorders.remove(Right);
         }
         Orientation oIIy = Card.getAbsoluteOrientation(card.getOrientation(),SOUTH);
-        CardSide cs = cdb.getCardSide(cardID,Card.getAbsoluteOrientation(card.getOrientation(),SOUTH));
+        CardSide cs = cdb.getCardSide(cardID, Card.getAbsoluteOrientation(card.getOrientation(), SOUTH));
         if(markedBorders.contains(Bottom) && cdb.getCardSide(cardID,Card.getAbsoluteOrientation(card.getOrientation(),SOUTH)) != cardSide){
 
             markedBorders.remove(Bottom);
@@ -548,7 +549,7 @@ public class GameEngine implements IGameEngine {
             unmarkedBorders.clear();
             unmarkedBorders.add(Center);
             return unmarkedBorders;
-        }else if(cardSide == CASTLE && buildingOs.size() == 4 && unmarkedBorders.size() != 4){
+        } else if (cardSide == CASTLE && buildingOs.size() == 4 && unmarkedBorders.size() != 4) {
             unmarkedBorders.clear();
             return unmarkedBorders;
         }
@@ -571,7 +572,7 @@ public class GameEngine implements IGameEngine {
         }
         //card hat nur eine Cathedral => nur im Center platzierbar
         boolean test = cdb.getCardById(cardID).isCathedral();
-        if (cdb.getCardById(cardID).isCathedral() && (cardSide == CASTLE || cardSide == STREET)){
+        if (cdb.getCardById(cardID).isCathedral() && (cardSide == CASTLE || cardSide == STREET)) {
             unmarkedBorders.clear();
             unmarkedBorders.add(Center);
             return unmarkedBorders;
@@ -748,7 +749,7 @@ public class GameEngine implements IGameEngine {
 
         //Nötige Unterscheidung, um zu wissen welche Seiten markiert werden müssen
         if (unmarkedCastleBorders.contains(chosenMark)) {
-            if(cardID == 8){
+            if (cardID == 8) {
                 markCard(card, chosenMark, CASTLE);
                 Peep peep = new Peep(card, Left, playerID);
                 currentState.addPeep(peep);

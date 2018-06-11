@@ -7,19 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
-import android.media.MediaExtractor;
 import android.support.annotation.Nullable;
-import android.support.constraint.solver.widgets.Rectangle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,10 +25,7 @@ import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.logic.CState;
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.CardDataBase;
-import distudios.at.carcassonne.engine.logic.CardSide;
 import distudios.at.carcassonne.engine.logic.ExtendedCard;
-import distudios.at.carcassonne.engine.logic.GameController;
-import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
@@ -44,24 +35,21 @@ import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public class PlayfieldView extends View {
 
+    public static int CARDS_COUNT_HORIZONTAL = 6;
+    public static HashMap<Integer, Bitmap> ResourceMappings = null;
+    private static Map<Integer, Paint> brushes = new HashMap<>();
     public ICardPlaced callbackCardPlaced;
     public IPeepPlaced callbackPeepPlaced;
-
-    public static int CARDS_COUNT_HORIZONTAL = 6;
-
     private Paint rasterPaint;
     private Paint peepPaint;
     private Paint debugPaint;
     private Paint cardPaint;
-
     private boolean dragging = false;
     private double lastX;
     private double lastY;
     private double diffX;
     private double diffY;
-
     private GameState gameState;
-
     private Map<String, CardContainer> placedCards = new HashMap<>();
     private Map<String, CardContainer> possibleLocations = new HashMap<>();
 
@@ -80,11 +68,67 @@ public class PlayfieldView extends View {
         });
     }
 
+    private static int cardIdToBitmapId(int cardId) {
+        if (cardId == 2 || cardId == 3) {
+            return 1;
+        } else if (cardId == 4 || cardId == 5 || cardId == 6 || cardId == 7) {
+            return 2;
+        } else if (cardId == 8) {
+            return 3;
+        } else if (cardId == 9 || cardId == 10 || cardId == 11 || cardId == 12) {
+            return 4;
+        } else if (cardId == 13 || cardId == 14 || cardId == 15 || cardId == 16 || cardId == 17) {
+            return 5;
+        } else if (cardId == 18 || cardId == 19) {
+            return 6;
+        } else if (cardId == 20) {
+            return 7;
+        } else if (cardId == 21 || cardId == 22 || cardId == 23) {
+            return 8;
+        } else if (cardId == 24 || cardId == 25) {
+            return 9;
+        } else if (cardId == 26 || cardId == 27 || cardId == 28) {
+            return 10;
+        } else if (cardId == 1 || cardId == 30 || cardId == 31) {
+            return 11;
+        } else if (cardId == 32 || cardId == 33 || cardId == 34) {
+            return 12;
+        } else if (cardId == 35 || cardId == 36) {
+            return 13;
+        } else if (cardId == 37 || cardId == 38 || cardId == 39) {
+            return 14;
+        } else if (cardId == 40 || cardId == 41) {
+            return 15;
+        } else if (cardId == 42 || cardId == 43 || cardId == 44) {
+            return 16;
+        } else if (cardId == 45) {
+            return 17;
+        } else if (cardId == 46 || cardId == 47 || cardId == 48) {
+            return 18;
+        } else if (cardId == 49 || cardId == 50) {
+            return 19;
+        } else if (cardId == 51) {
+            return 20;
+        } else if (cardId == 52 || cardId == 53 || cardId == 54 || cardId == 55
+                || cardId == 56 || cardId == 57 || cardId == 58 || cardId == 59) {
+            return 21;
+        } else if (cardId == 60 || cardId == 61 || cardId == 62 || cardId == 63
+                || cardId == 64 || cardId == 65 || cardId == 66 || cardId == 67
+                || cardId == 68) {
+            return 22;
+        } else if (cardId == 69 || cardId == 70 || cardId == 71 || cardId == 72) {
+            return 23;
+        } else if (cardId == 29) {
+            return 24;
+        }
+        return -1;
+    }
 
-
-    public static HashMap<Integer, Bitmap> ResourceMappings = null;
-
-    private static Map<Integer, Paint> brushes = new HashMap<>();
+    public static Bitmap cardIdToBitmap(int cardId) {
+        int bitmapId = cardIdToBitmapId(cardId);
+        if (bitmapId == -1) return null;
+        return ResourceMappings.get(bitmapId);
+    }
 
     private void initPaint() {
         rasterPaint = new Paint();
@@ -375,68 +419,6 @@ public class PlayfieldView extends View {
         invalidate();
     }
 
-    private static int cardIdToBitmapId(int cardId) {
-        if (cardId == 2 || cardId == 3) {
-            return 1;
-        } else if (cardId == 4 || cardId == 5 || cardId == 6 || cardId == 7) {
-            return 2;
-        } else if (cardId == 8) {
-            return 3;
-        } else if (cardId == 9 || cardId == 10 || cardId == 11 || cardId == 12) {
-            return 4;
-        } else if (cardId == 13 || cardId == 14 || cardId ==  15 || cardId == 16 || cardId ==  17) {
-            return 5;
-        } else if (cardId == 18 || cardId ==  19) {
-            return 6;
-        } else if (cardId == 20) {
-            return 7;
-        } else if (cardId == 21 || cardId == 22 || cardId ==  23) {
-            return 8;
-        } else if (cardId ==  24 || cardId == 25) {
-            return 9;
-        } else if (cardId ==  26 || cardId ==  27 || cardId ==  28) {
-            return 10;
-        } else if (cardId ==  1 || cardId == 30 || cardId == 31) {
-            return 11;
-        } else if (cardId == 32 || cardId ==  33 || cardId == 34) {
-            return 12;
-        } else if (cardId == 35 || cardId == 36) {
-            return 13;
-        } else if (cardId == 37 || cardId ==  38 || cardId ==  39) {
-            return 14;
-        } else if (cardId == 40 || cardId ==  41) {
-            return 15;
-        } else if (cardId ==  42 || cardId ==  43 || cardId == 44) {
-            return 16;
-        } else if (cardId ==  45) {
-            return 17;
-        } else if (cardId == 46 || cardId ==  47 || cardId ==  48) {
-            return 18;
-        } else if (cardId == 49 || cardId ==  50) {
-            return 19;
-        } else if (cardId == 51) {
-            return 20;
-        } else if (cardId == 52 || cardId == 53 || cardId == 54 || cardId == 55
-                || cardId == 56 || cardId == 57 || cardId == 58 || cardId == 59) {
-            return 21;
-        } else if (cardId == 60 || cardId == 61 || cardId == 62 || cardId == 63
-                || cardId == 64 || cardId == 65 || cardId == 66 || cardId == 67
-                || cardId == 68) {
-            return 22;
-        } else if (cardId == 69 || cardId == 70 || cardId == 71 || cardId == 72) {
-            return 23;
-        } else if (cardId == 29) {
-            return 24;
-        }
-        return -1;
-    }
-
-    public static Bitmap cardIdToBitmap(int cardId) {
-        int bitmapId = cardIdToBitmapId(cardId);
-        if (bitmapId == -1) return null;
-        return ResourceMappings.get(bitmapId);
-    }
-
     public void clearPossibleLocations() {
         possibleLocations.clear();
         invalidate();
@@ -451,37 +433,6 @@ public class PlayfieldView extends View {
         return width / CARDS_COUNT_HORIZONTAL;
     }
 
-    public class CardContainer {
-        public int id;
-        public double pixelX = 0;
-        public double pixelY = 0;
-        public double size;
-        public double offsetX = 0;
-        public double offsetY = 0;
-
-        public int fieldX;
-        public int fieldY;
-
-        public Card card;
-
-        public String key() {
-            return fieldX + "_" + fieldY;
-        }
-
-        public CardContainer copy() {
-            CardContainer c = new CardContainer();
-            c.pixelX = pixelX;
-            c.pixelY = pixelY;
-            c.size = size;
-            c.offsetX = offsetX;
-            c.offsetY = offsetY;
-            c.fieldX = fieldX;
-            c.fieldY = fieldY;
-            c.card = card;
-            return c;
-        }
-    }
-
     private void drawCardContainer(CardContainer c, Canvas canvas) {
         ExtendedCard ec = CardDataBase.getCardById(c.card.getId());
         if (ec == null) return;
@@ -490,10 +441,10 @@ public class PlayfieldView extends View {
         Bitmap bitmap = cardIdToBitmap(ec.getId());
         if (bitmap == null) return;
 
-        float left = (float)(c.pixelX + c.offsetX);
-        float top = (float)(c.pixelY + c.offsetY);
-        float right = (float)(c.pixelX + c.offsetX + c.size);
-        float bottom = (float)(c.pixelY + c.offsetY + c.size);
+        float left = (float) (c.pixelX + c.offsetX);
+        float top = (float) (c.pixelY + c.offsetY);
+        float right = (float) (c.pixelX + c.offsetX + c.size);
+        float bottom = (float) (c.pixelY + c.offsetY + c.size);
 
         Matrix m = new Matrix();
         if (c.card.getOrientation() == Orientation.NORTH) {
@@ -511,7 +462,6 @@ public class PlayfieldView extends View {
         canvas.drawBitmap(rotated, null, new RectF(left, top, right, bottom), null);
 
         List<Peep> pps = CarcassonneApp.getGameController().getPlacedPeeps(c.card);
-
 
 
         for (Peep p : pps) {
@@ -546,12 +496,43 @@ public class PlayfieldView extends View {
         }
     }
 
-
     public interface ICardPlaced {
         void cardPlaced(int x, int y);
     }
 
+
     public interface IPeepPlaced {
         void peepPlaced();
+    }
+
+    public class CardContainer {
+        public int id;
+        public double pixelX = 0;
+        public double pixelY = 0;
+        public double size;
+        public double offsetX = 0;
+        public double offsetY = 0;
+
+        public int fieldX;
+        public int fieldY;
+
+        public Card card;
+
+        public String key() {
+            return fieldX + "_" + fieldY;
+        }
+
+        public CardContainer copy() {
+            CardContainer c = new CardContainer();
+            c.pixelX = pixelX;
+            c.pixelY = pixelY;
+            c.size = size;
+            c.offsetX = offsetX;
+            c.offsetY = offsetY;
+            c.fieldX = fieldX;
+            c.fieldY = fieldY;
+            c.card = card;
+            return c;
+        }
     }
 }
