@@ -49,4 +49,6 @@ public class CarcassonneMessage {
 
     // some random number lol
     public final static int HOST_START_GAME = 12;
+
+    public final static int PLAYER_EXIT_GAME = 13;
 }
