@@ -91,24 +91,40 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public void showPossibleFigurePos(Card card){
-        ArrayList<PeepPosition> figurePos = gameEngine.getALLFigurePos(card);
-        //todo: implement view to schow possible Positions
+    public List<PeepPosition> showPossibleFigurePos(Card card) {
+       return gameEngine.getALLFigurePos(card);
     }
 
     @Override
-    public PeepPosition getChosenFigurePos(Card card) {
-        //todo: get the chosen position from view
-        PeepPosition position = Left;
-        return position;
+    public List<Peep> getPlacedPeeps(Card c) {
+        List<Peep> peeps = new ArrayList<>();
+
+        for (Peep p : getGameState().peeps) {
+            int cardId = p.getCardId();
+            if (cardId == c.getId()) {
+                peeps.add(p);
+            }
+        }
+
+        return peeps;
     }
 
     @Override
-    public boolean placeFigure(Card card, int playerID) {
-        PeepPosition chosenMark = getChosenFigurePos(card);
+    public boolean canPlacePeep() {
+         return peepsLeft() < 10;
+    }
+
+    @Override
+    public int peepsLeft() {
+        return gameEngine.getPlayerPeeps(CarcassonneApp.getNetworkController().getDevicePlayerNumber());
+    }
+
+    @Override
+    public boolean placeFigure(Card card, PeepPosition position) {
         if (cState != CState.PLACE_FIGURE) return false;
 
-        if(gameEngine.placePeep(card,chosenMark,playerID)) {
+        int playerId = CarcassonneApp.getNetworkController().getDevicePlayerNumber();
+        if(gameEngine.placePeep(card, position, playerId)) {
             cState = CState.END_TURN;
             return true;
         }
@@ -118,7 +134,7 @@ public class GameController implements IGameController {
 
     @Override
     public void endTurn() {
-        if (cState != CState.END_TURN || !isMyTurn()) return;
+        if ((cState != CState.END_TURN && cState != CState.PLACE_FIGURE) || !isMyTurn()) return;
 
         gameEngine.markAllCards();
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
