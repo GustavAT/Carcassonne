@@ -48,4 +48,8 @@ public class Score {
     public void addCardToList(Card card) {
         cardlist.add(card);
     }
+
+    public CardSide getBase() {
+        return base;
+    }
 }

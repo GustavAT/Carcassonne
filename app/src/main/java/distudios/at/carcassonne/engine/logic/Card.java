@@ -1,17 +1,35 @@
 package distudios.at.carcassonne.engine.logic;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import distudios.at.carcassonne.networking.connection.OrientationTypeConverter;
+
+@JsonObject
 public class Card {
 
+    @JsonField
     private int id;
+    @JsonField(typeConverter = OrientationTypeConverter.class)
     private Orientation orientation;
+    @JsonField
     private int xCoordinate;
+    @JsonField
     private int yCoordinate;
+    @JsonField
+    private ArrayList<PeepPosition> marks;
+
+    public Card() {}
 
     public Card(int id,  int xCoordinate, int yCoordinate, Orientation orientation) {
         this.id = id;
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.marks = new ArrayList<PeepPosition>();
     }
 
     public int getId() {
@@ -46,6 +64,16 @@ public class Card {
         this.yCoordinate = yCoordinate;
     }
 
+    public ArrayList<PeepPosition> getMarks() { return marks; }
+
+    public void setMarks(ArrayList<PeepPosition> marks){ this.marks = marks;}
+
+    public void setMark(PeepPosition mark) {
+        if(!(this.marks.contains(mark))) {
+            this.marks.add(mark);
+        }
+    }
+
     @Override
     public String toString(){
         return "Id: "+ id + " Coordinates: " + xCoordinate + " | " + yCoordinate;
@@ -53,10 +81,7 @@ public class Card {
 
 
 
-     public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
-         //Orientation card: die Seite der Karte auf dem Spielfeld
-         //oirentation offset: die Drehung der Karte,
-         //d.h. der Norden der Karte in der Datenbank ist nun auf Seite X
+    public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
         int rotation=0;
         if(offset==Orientation.NORTH){
             rotation=0;
@@ -70,8 +95,6 @@ public class Card {
         else{
             rotation=3;
         }
-
-        //Gedreht wird gegen den Uhrzeigersinn.
 
 
         for(int i=0;i<rotation;i++){
@@ -89,12 +112,6 @@ public class Card {
             }
         }
 
-        //Bsp: Karte, deren DB-Norden nun rechts, also im Osten ist.
-        //Ich möchte nun die Seite der Karte in der Datenbank auslesen, wo im Spielfeld auf der Karte Westen ist.
-        //Drehung um 1 nach links->Westen wird zu Süden.
-
         return card;
-     }
+    }
 }
-
-

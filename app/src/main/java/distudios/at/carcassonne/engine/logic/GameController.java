@@ -74,8 +74,6 @@ public class GameController implements IGameController {
     }
 
 
-    //todo: Nachdem Connection auf ExtendedCard gecoded wurden-->implementiere einen Situationellen Punktezähler anhand einer Id oder Koordinate
-
     @Override
     public boolean placeCard(Card card) {
         if (cState != CState.PLACE_CARD) return false;
@@ -222,18 +220,56 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public void setPoints(ArrayList<Integer> points) {
+    public void setPoints(ArrayList<Integer> points, int multiplier) {
         for(int i=0;i<points.size();i++){
-            gameEngine.addScore(points.get(i),i);
+            gameEngine.addScore(points.get(i)*multiplier,i);
         }
     }
 
     @Override
     public void checkPoints(Card card) {
-        ArrayList<Integer> cardscore= gameEngine.getScoreChanges(card);
-        //todo: Weise scores den Objekten zu
-        //todo: Weise objektscores den Peeps zu
-        //setPoints(pointchanges);
+
+        //todo: Kirchen
+
+        ArrayList<Score> cardscore= gameEngine.getScoreChanges(card);
+        int mult=1;
+        for(int i=0;i<cardscore.size();i++){
+            Score it=cardscore.get(i);
+            if(it.isClosed()){
+                //Bastele Multiplier zusammen
+                if(it.getBase()==CardSide.CASTLE){
+                    mult=2;
+                }
+                else if(it.getBase()== CardSide.STREET){
+                    mult=1;
+                }
+                else{
+                    mult=0;
+                }
+                //todo:dyn playercount
+
+                //Finde most Peep Anzahl
+                int mpoints=0;
+                for(int j=0;j<5;j++){
+                    if(it.getPpeepcount().get(i)>mpoints){
+                        mpoints=it.getPpeepcount().get(i);
+                    }
+                }
+                //Erhöhe Punkte der Spieler, die die meisten Peeps haben
+                ArrayList<Integer> mvps=new ArrayList<>(4);
+                for(int j=0;j<5;j++){
+                    if(it.getPpeepcount().get(i)==mpoints){
+                        mvps.set(i,it.getCardlist().size());
+                    }else{
+                        mvps.set(i,0);
+                    }
+                }
+                setPoints(mvps,mult);
+            }
+            else {
+                //offene Strecken bringen keine Punkte
+            }
+        }
     }
 
     @Override

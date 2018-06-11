@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IGameController {
 
-    void setPoints(ArrayList<Integer> points);
+    void setPoints(ArrayList<Integer> points, int multiplier);
 
     void checkPoints(Card card);
 

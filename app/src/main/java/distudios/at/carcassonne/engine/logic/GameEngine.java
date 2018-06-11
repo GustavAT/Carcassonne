@@ -25,7 +25,7 @@ public class GameEngine implements IGameEngine {
     private GameState currentState;
     // 72 Cards including start card leads to STACK SIZE of 71;
     private final int STACK_SIZE = 71;
-    private boolean closed = true;
+    //private boolean closed = true;
 
     @Override
     public GameState getState() {
@@ -114,9 +114,11 @@ public class GameEngine implements IGameEngine {
         CardDataBase cdb = CardDataBase.getInstance();
         ArrayList<Card> field = currentState.getCards();
         //Generiere Scores für jede Seite
-        ArrayList<Score> scores = new ArrayList<>(4);
+        ArrayList<Score> scores = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            Score sc=new Score(cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(Orientation.valueOf(i),card.getOrientation())) ,4);
+            Score sc=new Score(cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(Orientation.valueOf(i),card.getOrientation())) ,5);
+
+            //System.out.println()
 
             //Überprüfe auf Grass->Wenn, dann brauch ich nicht zählen
             if(sc.getBase()==CardSide.GRASS){
@@ -181,8 +183,8 @@ public class GameEngine implements IGameEngine {
 
 
         }
-        if (!closed) {
-            closed = true;
+        if (!score.isClosed()) {
+            //closed = true;
             return new ArrayList<>();
         }
         return finalcards;
@@ -191,8 +193,12 @@ public class GameEngine implements IGameEngine {
     private ArrayList<Card> checkBorderCards(Card card, Orientation sborder, Score score) {
         //sboarder=searching boarder, Seite von der aus wir suchen.
         CardDataBase cdb = CardDataBase.getInstance();
-        ArrayList<Boolean> checkside = new ArrayList<>(4);
-        ArrayList<Card> itcards = new ArrayList<>(4);
+        ArrayList<Boolean> checkside = new ArrayList<>();
+        ArrayList<Card> itcards = new ArrayList<>();
+        for(int i=0;i<4;i++){
+            checkside.add(false);
+            itcards.add(null);
+        }
         ArrayList<Orientation> connections=cdb.getMatchingOrientations(card.getId(),cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(sborder,card.getOrientation())));
 
         //Füge Connections der aktuellen Karte finden und peeps zählen
@@ -234,7 +240,8 @@ public class GameEngine implements IGameEngine {
                     if (fcard != null) {
                         itcards.set(i, fcard);
                     } else {
-                        closed = false;
+                        score.setClosed(false);
+                        //closed = false;
                     }
                 } else {
                     itcards.set(i, null);
