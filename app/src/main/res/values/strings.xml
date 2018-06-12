@@ -102,5 +102,6 @@
     <string name="text_rotate">Rotate</string>
     <string name="text_peep">Peep</string>
     <string name="text_x">X</string>
+    <string name="text_debugging">Debug</string>
 
 </resources>

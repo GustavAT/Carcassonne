@@ -76,4 +76,7 @@ public interface IGameController {
 
     CState getCState();
 
+    boolean isDebug();
+    void debug(boolean flag);
+
 }
