@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
-import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
 import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
 import static distudios.at.carcassonne.engine.logic.Orientation.EAST;
 import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
@@ -439,26 +438,15 @@ public class GameEngine implements IGameEngine {
         //Seiten mit passender CardSide gemäß cdb
         ArrayList<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, cardSide);
 
-        //unmarkierte Positionen sind alle PeepPositions die nicht markiert sind
-        markedBorders = getMarkedBorders(card, cardSide);
-        peepPositions = PeepPosition.getPeepPositions();
-        peepPositions.removeAll(markedBorders);
-        unmarkedBorders = peepPositions;
+        //Es werden die Borders für Street/Castle geholt
+        unmarkedBorders = getUnmarkedBuildingBorders(card, buildingOs, cardSide);
+        unmarkedBorders.remove(Center);
 
-        //Im "Grass-Fall" jetzt fast fertig. Es werden nur die Ecken benötigt
-        //todo: Irgendwie prüfen, ob auf einer anderen Karte bereits ein Peep ist der zur gleichen Wiese gehört!!!!
-        if (cardSide == GRASS) {
-            unmarkedBorders.remove(Top);
-            unmarkedBorders.remove(Left);
-            unmarkedBorders.remove(Right);
-            unmarkedBorders.remove(Bottom);
-            unmarkedBorders.remove(Center);
+        // Wenn aktuelle Karte 2 Street-Seiten hat und eine besetzt ist => kein Setzen möglich
+        if (cardSide == STREET && buildingOs.size() == 2 && unmarkedBorders.size() < 2) {
+            unmarkedBorders.clear();
             return unmarkedBorders;
         }
-
-        //Nun werden die Borders für Street/Castle geholt
-        unmarkedBorders.clear();
-        unmarkedBorders = getUnmarkedBuildingBorders(card, buildingOs, cardSide);
 
         //Abfangen einiger Sonderfälle für Castles:
 
@@ -652,8 +640,8 @@ public class GameEngine implements IGameEngine {
             return true;
         }
 
-        //Falls Cathedral-Karte mit cardSide Castle überprüft werden sollte aber Center (die Cathedral) gewählt wurde
-        if(cdb.getCardById(cardID).isCathedral() && cardSide == CASTLE && mark == Center){
+        //Falls Cathedral-Karte ohne Straße gewählt wurde
+        if (cdb.getCardById(cardID).isCathedral() && mark == Center) {
             if(!(card.getMarks().contains(Center)))card.setMark(Center);
             return true;
         }
@@ -673,23 +661,17 @@ public class GameEngine implements IGameEngine {
                 currentState.addPeep(peep);
                 return true;
             }
-            if (markCard(card, chosenMark, CASTLE)) {
                 markCard(card, chosenMark, CASTLE);
                 Peep peep = new Peep(card, chosenMark, playerID);
                 currentState.addPeep(peep);
                 return true;
-            }
-            return true;
         }
 
         if (unmarkedStreetBorders.contains(chosenMark)) {
-            if (markCard(card, chosenMark, STREET)) {
                 markCard(card, chosenMark, STREET);
                 Peep peep = new Peep(card, chosenMark, playerID);
                 currentState.addPeep(peep);
                 return true;
-            }
-            return true;
         }
         return false;
     }
