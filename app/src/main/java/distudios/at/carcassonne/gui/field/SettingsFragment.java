@@ -109,6 +109,13 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        switchDebug.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                CarcassonneApp.getGameController().debug(b);
+            }
+        });
+
         buttonMainMenu = view.findViewById(R.id.button_quit);
         buttonMainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
