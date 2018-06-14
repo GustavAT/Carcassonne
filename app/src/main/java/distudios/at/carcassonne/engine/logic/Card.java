@@ -1,10 +1,9 @@
 package distudios.at.carcassonne.engine.logic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import java.util.ArrayList;
 
 import distudios.at.carcassonne.networking.connection.OrientationTypeConverter;
 
@@ -65,6 +64,14 @@ public class Card {
     }
 
     public ArrayList<Integer> getMarks() { return marks; }
+
+    public ArrayList<PeepPosition> getPosMarks() {
+        ArrayList<PeepPosition> posMarks = new ArrayList<PeepPosition>();
+        for (int pos : this.getMarks()) {
+            posMarks.add(PeepPosition.fromInt(pos));
+        }
+        return posMarks;
+    }
 
     public void setMarks(ArrayList<Integer> marks){ this.marks = marks;}
 
