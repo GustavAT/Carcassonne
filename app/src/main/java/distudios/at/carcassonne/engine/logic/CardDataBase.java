@@ -217,6 +217,8 @@ public class CardDataBase {
         }
     }
 
+
+
     /*
     Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
      */
