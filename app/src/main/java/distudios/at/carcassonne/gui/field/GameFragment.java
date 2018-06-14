@@ -1,6 +1,8 @@
 package distudios.at.carcassonne.gui.field;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import distudios.at.carcassonne.engine.logic.ExtendedCard;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
+import distudios.at.carcassonne.engine.logic.PeepPosition;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.PlayerInfo;
@@ -48,9 +51,11 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
     private OnFragmentInteractionListener mListener;
 
     private Button buttonEndTurn;
-    private Button buttonToDo;
+    private Button buttonRotate;
+    private Button buttonPeep;
     private ImageButton buttonDrawCard;
     private TextView textViewStatus;
+    private TextView textViewStatusPeeps;
 
     public GameFragment() {
         // Required empty public constructor
@@ -94,34 +99,6 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
         playfieldView = view.findViewById(R.id.view_playfield);
         playfieldView.callbackCardPlaced = this;
 
-//        Button buttonAction = view.findViewById(R.id.button_doSomething);
-//        buttonAction.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                IGameController controller = CarcassonneApp.getGameController();
-//                controller.drawCard();
-//                controller.removeFromStack(controller.getCurrentCard());
-//                playfieldView.addPossibleLocations();
-//            }
-//        });
-//
-//        Button buttonCenter = view.findViewById(R.id.button_centerField);
-//        buttonCenter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                IGameController controller = CarcassonneApp.getGameController();
-//                Card current = controller.getCurrentCard();
-//                if (current != null && !controller.hasPlacedCard()) {
-//                    Orientation o =current.getOrientation();
-//                    int next = (o.getValue() + 1) % 4;
-//                    Toast.makeText(getContext(), "Orientation " + current.getOrientation() + " " + Orientation.valueOf(next), Toast.LENGTH_SHORT).show();
-//                    current.setOrientation(Orientation.valueOf(next));
-//                    playfieldView.addPossibleLocations();
-//                }
-//            }
-//        });
-
         final IGameController controller = CarcassonneApp.getGameController();
         buttonEndTurn = view.findViewById(R.id.button_endTurn);
         buttonEndTurn.setOnClickListener(new View.OnClickListener() {
@@ -151,8 +128,51 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
             }
         });
 
-        buttonToDo = view.findViewById(R.id.button_otherOptions);
+        final GameFragment thisFrag = this;
+        buttonPeep = view.findViewById(R.id.button_peep);
+        buttonPeep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlacePeepDialog dialog = new PlacePeepDialog();
+                dialog.fragment = thisFrag;
+                dialog.show(thisFrag.getFragmentManager(), "peep");
+            }
+        });
+
+        buttonRotate = view.findViewById(R.id.button_rotate);
+        buttonRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Card c = controller.getCurrentCard();
+                c.rotate();
+
+                ExtendedCard ec = CardDataBase.getCardById(c.getId());
+                //buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(), PlayfieldView.cardIdToBitmap(ec.getId())));
+
+                Bitmap source = PlayfieldView.cardIdToBitmap(ec.getId());
+
+                Matrix m = new Matrix();
+                if (c.getOrientation() == Orientation.NORTH) {
+                    m.postRotate(0);
+                } else if (c.getOrientation() == Orientation.EAST) {
+                    m.postRotate(90);
+                } else if (c.getOrientation() == Orientation.SOUTH) {
+                    m.postRotate(180);
+                } else {
+                    m.postRotate(270);
+                }
+                Bitmap rotated = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), m, true);
+                buttonDrawCard.setImageBitmap(rotated);
+
+                playfieldView.addPossibleLocations();
+            }
+        });
         textViewStatus = view.findViewById(R.id.text_status);
+        textViewStatusPeeps = view.findViewById(R.id.text_status_peeps);
+
+        INetworkController nC = CarcassonneApp.getNetworkController();
+        PlayerInfo pi = nC.getPlayerInfo(nC.getDevicePlayerNumber());
+        textViewStatusPeeps.setTextColor(pi.color);
 
         updateFromGameState();
 
@@ -208,6 +228,10 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
 
         textViewStatus.setText(text);
 
+        int peepsPlaced = CarcassonneApp.getGameController().peepsLeft();
+        String peepStatus = "Peeps placed: " + peepsPlaced + ", Peeps left: " + (10-peepsPlaced); // todo remove 10
+        textViewStatusPeeps.setText(peepStatus);
+
     }
 
     public void updateFromGameState() {
@@ -216,23 +240,28 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
         switch (controller.getCState()) {
             case WAITING:
                 buttonEndTurn.setEnabled(false);
-                buttonToDo.setEnabled(false);
+                buttonPeep.setEnabled(false);
+                buttonRotate.setEnabled(false);
                 break;
             case DRAW_CARD:
                 buttonEndTurn.setEnabled(false);
-                buttonToDo.setEnabled(false);
+                buttonPeep.setEnabled(false);
+                buttonRotate.setEnabled(false);
                 break;
             case PLACE_CARD:
                 buttonEndTurn.setEnabled(false);
-                buttonToDo.setEnabled(false);
+                buttonPeep.setEnabled(false);
+                buttonRotate.setEnabled(true);
                 break;
             case PLACE_FIGURE:
-                buttonEndTurn.setEnabled(false);
-                buttonToDo.setEnabled(false);
+                buttonEndTurn.setEnabled(true);
+                buttonPeep.setEnabled(CarcassonneApp.getGameController().canPlacePeep());
+                buttonRotate.setEnabled(false);
                 break;
             case END_TURN:
                 buttonEndTurn.setEnabled(true);
-                buttonToDo.setEnabled(false);
+                buttonPeep.setEnabled(false);
+                buttonRotate.setEnabled(false);
                 break;
         }
 

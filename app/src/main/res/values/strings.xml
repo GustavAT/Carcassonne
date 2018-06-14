@@ -99,5 +99,9 @@
     <string name="text_state_end_turn">End turn</string>
     <string name="text_main_menu">Return to main menu</string>
     <string name="text_rules">Rules</string>
+    <string name="text_rotate">Rotate</string>
+    <string name="text_peep">Peep</string>
+    <string name="text_x">X</string>
+    <string name="text_debugging">Debug</string>
 
 </resources>

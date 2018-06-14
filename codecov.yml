@@ -3,3 +3,6 @@ coverage:
   round: up
   range: 10..50
   precision: 5
+ignore:
+  - "./app/src/main/java/distudios/at/carcassonne/gui"
+  - "./app/src/main/java/distudios/at/carcassonne/networking"

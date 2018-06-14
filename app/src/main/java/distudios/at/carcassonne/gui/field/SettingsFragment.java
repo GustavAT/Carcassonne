@@ -17,6 +17,7 @@ import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.misc.ISoundController;
 import distudios.at.carcassonne.gui.groups.Group2Activity;
 import distudios.at.carcassonne.networking.INetworkController;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +42,7 @@ public class SettingsFragment extends Fragment {
     private Button buttonMainMenu;
     private Switch switchMusic;
     private Switch switchEffects;
+    private Switch switchDebug;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -74,7 +76,7 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
@@ -83,6 +85,7 @@ public class SettingsFragment extends Fragment {
 
         switchMusic = view.findViewById(R.id.switch_music);
         switchEffects = view.findViewById(R.id.switch_music);
+        switchDebug = view.findViewById(R.id.switch_debugging);
 
         switchMusic.setChecked(controller.getBackground_music_state());
 
@@ -99,11 +102,26 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        switchDebug.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                CarcassonneApp.getGameController().debug(b);
+            }
+        });
+
         buttonMainMenu = view.findViewById(R.id.button_quit);
         buttonMainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
                 INetworkController controller = CarcassonneApp.getNetworkController();
+
+                CarcassonneMessage m = new CarcassonneMessage(CarcassonneMessage.PLAYER_EXIT_GAME);
+                m.other = controller.getPlayerInfo(controller.getDevicePlayerNumber()).deviceName;
+                controller.sendMessage(m);
+
                 if (controller.isHost()) {
                     Salut network = controller.getNetwork();
                     network.stopNetworkService(false);
@@ -115,4 +133,6 @@ public class SettingsFragment extends Fragment {
 
         return view;
     }
+
+
 }

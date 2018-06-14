@@ -42,16 +42,19 @@ public interface IGameController {
      * Place figure on the field
      * @return false if position is invalid
      */
-    boolean placeFigure(Card card, int playerID);
+    boolean placeFigure(Card card, PeepPosition position);
 
+    List<Peep> getPlacedPeeps(Card c);
 
-    PeepPosition getChosenFigurePos(Card card);
+    boolean canPlacePeep();
+    int peepsLeft();
+
 
     /**
      * Gets possible positions of a Peep on the current card
      * @param card the current placed card
      */
-    void showPossibleFigurePos(Card card);
+    List<PeepPosition> showPossibleFigurePos(Card card);
 
     /**
      * End turn of this player
@@ -70,5 +73,8 @@ public interface IGameController {
     void removeFromStack(Card c);
 
     CState getCState();
+
+    boolean isDebug();
+    void debug(boolean flag);
 
 }

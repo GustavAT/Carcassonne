@@ -105,6 +105,21 @@ public class TestGameEngine {
         card = new Card(22, 1, 1, Orientation.NORTH);
         Assert.assertTrue(ge.checkPlaceable(card));     //Test placeable with 2 Connection
         ge.placeCard(card);
+        card=new Card(23,-1,0, NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));
+        ge.placeCard(card);
+        card=new Card(24,-1,-1, NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));
+        ge.placeCard(card);
+        card=new Card(25,0,-1, NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));
+        ge.placeCard(card);
+        card=new Card(26,1,-1, NORTH);
+        Assert.assertTrue(ge.checkPlaceable(card));
+        ge.placeCard(card);
+        //card=new Card(12,-2,0, NORTH);
+        //Assert.assertTrue(ge.checkPlaceable(card));
+        //ge.placeCard(card);
         printCards(gs);
     }
 

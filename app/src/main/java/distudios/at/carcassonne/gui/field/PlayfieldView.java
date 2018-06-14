@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,10 @@ import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.IGameController;
 import distudios.at.carcassonne.engine.logic.Orientation;
+import distudios.at.carcassonne.engine.logic.Peep;
+import distudios.at.carcassonne.engine.logic.PeepPosition;
+import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
+import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public class PlayfieldView extends View {
 
@@ -45,14 +51,9 @@ public class PlayfieldView extends View {
     public static int CARDS_COUNT_HORIZONTAL = 6;
 
     private Paint rasterPaint;
+    private Paint peepPaint;
     private Paint debugPaint;
     private Paint cardPaint;
-
-    // todo remove after graphics for cards are set up
-    private Paint paintStreet;
-    private Paint paintGrass;
-    private Paint paintCastle;
-    private Paint paintSpecial;
 
     private boolean dragging = false;
     private double lastX;
@@ -84,6 +85,8 @@ public class PlayfieldView extends View {
 
     public static HashMap<Integer, Bitmap> ResourceMappings = null;
 
+    private static Map<Integer, Paint> brushes = new HashMap<>();
+
     private void initPaint() {
         rasterPaint = new Paint();
         rasterPaint.setStyle(Paint.Style.STROKE);
@@ -97,26 +100,22 @@ public class PlayfieldView extends View {
         debugPaint.setColor(Color.RED);
         debugPaint.setTextSize(25);
 
+        peepPaint = new Paint();
+        peepPaint.setStyle(Paint.Style.FILL);
+        peepPaint.setColor(Color.YELLOW);
+
         cardPaint = new Paint();
         cardPaint.setStyle(Paint.Style.FILL);
         cardPaint.setColor(getResources().getColor(R.color.white));
 
-        paintCastle = new Paint();
-        paintCastle.setStyle(Paint.Style.FILL);
-        paintCastle.setColor(getResources().getColor(R.color.white));
-
-        paintStreet = new Paint();
-        paintStreet.setStyle(Paint.Style.FILL);
-        paintStreet.setColor(getResources().getColor(R.color.black));
-
-        paintGrass = new Paint();
-        paintGrass.setStyle(Paint.Style.FILL);
-        paintGrass.setColor(getResources().getColor(R.color.colorPrimary));
-
-
-        paintSpecial = new Paint();
-        paintSpecial.setStyle(Paint.Style.FILL);
-        paintSpecial.setColor(getResources().getColor(R.color.yellow));
+        brushes.clear();
+        Collection<PlayerInfo> info = CarcassonneApp.getNetworkController().getPlayerMappings().values();
+        for (PlayerInfo pi : info) {
+            Paint p = new Paint();
+            p.setStyle(Paint.Style.FILL);
+            p.setColor(pi.color);
+            brushes.put(pi.playerNumber, p);
+        }
     }
 
     private void initResourceMappings() {
@@ -255,7 +254,10 @@ public class PlayfieldView extends View {
         for (String key : placedCards.keySet()) {
             CardContainer c = placedCards.get(key);
             drawCardContainer(c, canvas);
-//            canvas.drawText(c.card.getId() + " " +  c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int)(c.pixelY + c.offsetY + 25), rasterPaint);
+            if (CarcassonneApp.getGameController().isDebug()) {
+                canvas.drawText(c.card.getId() + " " + c.card.getOrientation(), (int) (c.pixelX + c.offsetX), (int) (c.pixelY + c.offsetY + 25), rasterPaint);
+                canvas.drawText("X: " + c.fieldX + ", Y " + c.fieldY, (int) (c.pixelX + c.offsetX + c.size / 4), (int) (c.pixelY + c.offsetY + c.size / 2), rasterPaint);
+            }
         }
 
         for (String key: possibleLocations.keySet()) {
@@ -263,6 +265,7 @@ public class PlayfieldView extends View {
             drawCardContainer(c, canvas, rasterPaint);
 //            canvas.drawText("X: " + c.fieldX  + ", Y " + c.fieldY, (int) (c.pixelX + c.offsetX + c.size / 4), (int)(c.pixelY + c.offsetY + c.size / 2), debugPaint);
         }
+
     }
 
     private void drawCardContainer(CardContainer c, Canvas canvas, Paint p) {
@@ -491,56 +494,65 @@ public class PlayfieldView extends View {
         Bitmap bitmap = cardIdToBitmap(ec.getId());
         if (bitmap == null) return;
 
-        // todo add rotation later
+        Matrix matrix = new Matrix();
 
         float left = (float)(c.pixelX + c.offsetX);
         float top = (float)(c.pixelY + c.offsetY);
         float right = (float)(c.pixelX + c.offsetX + c.size);
         float bottom = (float)(c.pixelY + c.offsetY + c.size);
 
-        canvas.drawBitmap(bitmap, null, new RectF(left, top, right, bottom), null);
-
-        if (bitmap == null) {
-
-            Log.d("CARD", " " + ec.getId());
 
 
-            canvas.drawRect(left, top, right, bottom, paintGrass);
+        float degree;
+        if (c.card.getOrientation() == Orientation.NORTH) {
+            degree = 0;
+        } else if (c.card.getOrientation() == Orientation.EAST) {
+            degree = 90;
+        } else if (c.card.getOrientation() == Orientation.SOUTH) {
+            degree = 180;
+        } else {
+            degree = 270;
+        }
 
-            float offset = (float) c.size / 5;
-            float half = (float) c.size / 2;
+        matrix.postRotate(degree);
 
-            if (ec.isCathedral()) {
-                canvas.drawCircle(left + half, top + half, offset, paintSpecial);
-            } else if (ec.isWappen()) {
-                canvas.drawCircle(left + half + 10, top + half + 10, offset, cardPaint);
+        // todo: matrix
+        Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        canvas.drawBitmap(rotated, null, new RectF(left, top, right, bottom), null);
+
+        List<Peep> pps = CarcassonneApp.getGameController().getPlacedPeeps(c.card);
+
+
+
+        for (Peep p : pps) {
+            PeepPosition pp = p.getPeepPosition();
+            float x = left + (float) c.size / 2, y = top + (float) c.size / 2;
+            if (pp == PeepPosition.TopLeft) {
+                x = left + 5;
+                y = top + 5;
+            } else if (pp == PeepPosition.Top) {
+                y = top + 5;
+            } else if (pp == PeepPosition.TopRight) {
+                x = right - 5;
+                y = top + 5;
+            } else if (pp == PeepPosition.Left) {
+                x = left + 5;
+            } else if (pp == PeepPosition.Center) {
+
+            } else if (pp == PeepPosition.Right) {
+                x = right - 5;
+            } else if (pp == PeepPosition.BottomLeft) {
+                x = left + 5;
+                y = bottom - 5;
+            } else if (pp == PeepPosition.Bottom) {
+                y = bottom - 5;
+            } else {
+                x = right - 5;
+                y = bottom - 5;
             }
 
-
-            if (ec.getDown() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
-                canvas.drawRect(left + offset, top, right - half, top + offset, paintCastle);
-            } else if (ec.getTop() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET) {
-                canvas.drawRect(left + half, top, right - offset, top + offset, paintStreet);
-            }
-
-            if (ec.getRight() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE || ec.getBottomRightCorner() == CardSide.CASTLE) {
-                canvas.drawRect(right - offset, top + offset, right, top + half, paintCastle);
-            } else if (ec.getRight() == CardSide.STREET || ec.getTopRightCorner() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET) {
-                canvas.drawRect(right - offset, bottom - half, right, bottom - offset, paintStreet);
-            }
-
-            if (ec.getTop() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE || ec.getTopRightCorner() == CardSide.CASTLE) {
-                canvas.drawRect(left + offset, bottom, right - half, bottom - offset, paintCastle);
-            } else if (ec.getDown() == CardSide.STREET || ec.getBottomRightCorner() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET) {
-                canvas.drawRect(left + half, bottom, right - offset, bottom - offset, paintStreet);
-                Log.d("CARD", "Street down");
-            }
-
-            if (ec.getLeft() == CardSide.CASTLE || ec.getBottomLeftCorner() == CardSide.CASTLE || ec.getTopLeftCorner() == CardSide.CASTLE) {
-                canvas.drawRect(left, top + offset, left + offset, top + half, paintCastle);
-            } else if (ec.getLeft() == CardSide.STREET || ec.getBottomLeftCorner() == CardSide.STREET || ec.getTopLeftCorner() == CardSide.STREET) {
-                canvas.drawRect(left, bottom - half, left + offset, bottom - offset, paintStreet);
-            }
+            Paint paint = brushes.get(p.getPlayerID());
+            canvas.drawCircle(x, y, 10, paint == null ? peepPaint : paint);
         }
     }
 

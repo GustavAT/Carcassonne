@@ -1,11 +1,13 @@
 package distudios.at.carcassonne.gui.field;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,9 +15,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.peak.salut.Salut;
+
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.logic.IGameController;
+import distudios.at.carcassonne.gui.groups.Group2Activity;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.DataCallback;
@@ -38,10 +43,10 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
                     currentFragment = ScoreFragment.newInstance("", "");
                     replaceCurrentFragment();
                     return true;
-                /*case R.id.navigation_settings:
+                case R.id.navigation_settings:
                     currentFragment = SettingsFragment.newInstance("", "");
                     replaceCurrentFragment();
-                    return true;*/
+                    return true;
             }
             return false;
         }
@@ -59,6 +64,11 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
         replaceCurrentFragment();
 
         DataCallback.callback = this;
+
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.hide();
+        }
     }
 
     @Override
@@ -107,6 +117,20 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
                 }
                 endTurnTriggered(message);
                 break;
+            case CarcassonneMessage.PLAYER_EXIT_GAME:
+                if (networkController.isHost()) {
+                    networkController.sendToAllDevices(message);
+                }
+
+                INetworkController controller = CarcassonneApp.getNetworkController();
+                if (controller.isHost()) {
+                    Salut network = controller.getNetwork();
+                    network.stopNetworkService(false);
+                }
+                Intent i = new Intent(getApplicationContext(), Group2Activity.class);
+                startActivity(i);
+
+                Toast.makeText(getApplicationContext(), message.other + " left the game", Toast.LENGTH_LONG);
 
         }
     }
