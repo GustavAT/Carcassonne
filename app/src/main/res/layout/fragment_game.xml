@@ -41,7 +41,7 @@
             android:id="@+id/button_drawCard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.75"
             android:background="@drawable/border_transparent"
             android:padding="0dp"
             android:scaleType="centerInside"
@@ -59,18 +59,27 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button_otherOptions"
+                    android:id="@+id/button_rotate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/text_todo"
-                    android:visibility="gone" />
+                    android:layout_weight="0.25"
+                    android:background="@drawable/border"
+                    android:text="@string/text_rotate"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/button_peep"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="@drawable/border"
+                    android:text="@string/text_peep" />
 
                 <Button
                     android:id="@+id/button_endTurn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.25"
                     android:background="@drawable/border"
                     android:text="@string/text_end_turn" />
 
@@ -84,6 +93,13 @@
                 android:text="@string/text_state_waiting"
                 android:textColor="@color/yellow"
                 tools:text="@string/text_status" />
+
+            <TextView
+                android:id="@+id/text_status_peeps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/text_peep" />
 
         </LinearLayout>
 

@@ -109,10 +109,21 @@ public class NetworkController implements INetworkController {
 
     private PlayerInfo createPlayerInfo(SalutDevice device, int number) {
         PlayerInfo info = new PlayerInfo();
+        info.raceType = 1;
         info.deviceName = device.readableName;
         info.playerNumber = number;
         info.instanceName = device.instanceName;
-        info.color = Color.RED;
+        if (number == 0) {
+            info.color = Color.parseColor("#F6D612");
+        } else if (number == 1) {
+            info.color = Color.parseColor("#E3085D");
+        } else if (number == 2) {
+            info.color = Color.parseColor("#00FFAB");
+        } else if (number == 3) {
+            info.color = Color.parseColor("#7C2494");
+        } else {
+            info.color = Color.parseColor("#6F8BA9");
+        }
         return info;
     }
 

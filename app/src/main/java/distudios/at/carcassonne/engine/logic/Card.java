@@ -19,8 +19,8 @@ public class Card {
     private int xCoordinate;
     @JsonField
     private int yCoordinate;
-
-    private ArrayList<PeepPosition> marks;
+    @JsonField
+    private ArrayList<Integer> marks;
 
     public Card() {}
 
@@ -29,7 +29,7 @@ public class Card {
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        this.marks = new ArrayList<PeepPosition>();
+        this.marks = new ArrayList<>();
     }
 
     public int getId() {
@@ -64,11 +64,14 @@ public class Card {
         this.yCoordinate = yCoordinate;
     }
 
-    public ArrayList<PeepPosition> getMarks() { return marks; }
+    public ArrayList<Integer> getMarks() { return marks; }
+
+    public void setMarks(ArrayList<Integer> marks){ this.marks = marks;}
 
     public void setMark(PeepPosition mark) {
-        if(!(this.marks.contains(mark))) {
-            this.marks.add(mark);
+        int pos = PeepPosition.fromPosition(mark);
+        if(!(this.marks.contains(pos))) {
+            this.marks.add(pos);
         }
     }
 
@@ -111,6 +114,21 @@ public class Card {
         }
 
         return card;
+     }
+
+    /**
+     * Rotate this card clockwise
+     */
+    public void rotate() {
+        if (orientation == Orientation.NORTH) {
+            orientation = Orientation.EAST;
+        } else if (orientation == Orientation.EAST) {
+            orientation = Orientation.SOUTH;
+        } else if (orientation == Orientation.SOUTH) {
+            orientation = Orientation.WEST;
+        } else if (orientation == Orientation.WEST) {
+            orientation = Orientation.NORTH;
+        }
      }
 }
 

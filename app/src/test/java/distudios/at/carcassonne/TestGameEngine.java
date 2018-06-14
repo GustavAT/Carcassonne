@@ -4,31 +4,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InterruptedIOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.CardDataBase;
 import distudios.at.carcassonne.engine.logic.CardSide;
+import distudios.at.carcassonne.engine.logic.ExtendedCard;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.Orientation;
-import distudios.at.carcassonne.engine.logic.Peep;
-import distudios.at.carcassonne.engine.logic.PeepPosition;
+
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
 import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
-import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
-import static distudios.at.carcassonne.engine.logic.Orientation.EAST;
 import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
-import static distudios.at.carcassonne.engine.logic.Orientation.SOUTH;
-import static distudios.at.carcassonne.engine.logic.Orientation.WEST;
-
-import static distudios.at.carcassonne.engine.logic.PeepPosition.Bottom;
-import static distudios.at.carcassonne.engine.logic.PeepPosition.Center;
-import static distudios.at.carcassonne.engine.logic.PeepPosition.Left;
-import static distudios.at.carcassonne.engine.logic.PeepPosition.Right;
-import static distudios.at.carcassonne.engine.logic.PeepPosition.Top;
 
 
 public class TestGameEngine {

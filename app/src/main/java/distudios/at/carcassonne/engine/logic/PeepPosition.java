@@ -28,4 +28,46 @@ public enum PeepPosition {
 
         return peepPositions;
     }
+
+    public static int fromPosition(PeepPosition p) {
+        if (p == TopLeft) {
+            return 0;
+        } else if (p == Top) {
+            return 1;
+        } else if (p == TopRight) {
+            return 2;
+        } else if (p == Left) {
+            return 3;
+        } else if (p == Right) {
+            return 4;
+        } else if (p == Center) {
+            return 5;
+        } else if (p == BottomLeft) {
+            return 6;
+        } else if (p == Bottom) {
+            return 7;
+        }
+        return 8;
+    }
+
+    public static PeepPosition fromInt(int p) {
+        if (p == 0) {
+            return TopLeft;
+        } else if (p == 1) {
+            return Top;
+        } else if (p == 2) {
+            return TopRight;
+        } else if (p == 3) {
+            return Left;
+        } else if (p == 4) {
+            return Right;
+        } else if (p == 5) {
+            return Center;
+        } else if (p == 6) {
+            return BottomLeft;
+        } else if (p == 7) {
+            return Bottom;
+        }
+        return BottomRight;
+    }
 }

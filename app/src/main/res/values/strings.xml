@@ -33,6 +33,17 @@
     <string name="text_no_group_formed">No group formed!</string>
     <string name="text_group_status">Group Status</string>
     <string name="pick_a_color">Pick a color</string>
+    <string name="pick_a_race"> Choose your Race</string>
+    <string name="terran">Terran</string>
+    <string name="protoss">Protoss</string>
+    <string name="zerg">Zerg</string>
+    <string name="goauld">Goa\'Uld</string>
+    <string name="dalek">Dalek</string>
+    <string name="klingon">Klingon</string>
+    <string name="federation">Federation</string>
+    <string name="scientology">Scientology</string>
+    <string name="superSajan">SuperSaiyajin</string>
+
     <string-array name="colors">
         <item name="red">red</item>
         <item name="green">green</item>
@@ -88,5 +99,9 @@
     <string name="text_state_end_turn">End turn</string>
     <string name="text_main_menu">Return to main menu</string>
     <string name="text_rules">Rules</string>
+    <string name="text_rotate">Rotate</string>
+    <string name="text_peep">Peep</string>
+    <string name="text_x">X</string>
+    <string name="text_debugging">Debug</string>
 
 </resources>
