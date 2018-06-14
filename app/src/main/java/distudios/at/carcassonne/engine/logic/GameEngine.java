@@ -23,7 +23,7 @@ import static distudios.at.carcassonne.engine.logic.PeepPosition.TopRight;
 public class GameEngine implements IGameEngine {
 
     private GameState currentState;
-    //  72 Cards including start card leads to STACK SIZE of 71;
+    //   72 Cards including start card leads to STACK SIZE of 71;
     private final int STACK_SIZE = 71;
     private boolean closed = true;
 
