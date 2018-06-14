@@ -210,24 +210,28 @@ public class GameEngine implements IGameEngine {
                 Peep peep=checkForPeep(card, NORTH);
                 if(peep!=null){
                     score.addPeepCount(peep.getPlayerID(),1);
+                    score.addToPeeplist(peep);
                 }
             } else if (con == Card.getAbsoluteOrientation(EAST,card.getOrientation())) {
                 checkside.set(1, true);
                 Peep peep = checkForPeep(card, EAST);
                 if(peep!=null){
                     score.addPeepCount(peep.getPlayerID(),1);
+                    score.addToPeeplist(peep);
                 }
             } else if (con == Card.getAbsoluteOrientation(SOUTH,card.getOrientation())) {
                 checkside.set(2, true);
                 Peep peep = checkForPeep(card, SOUTH);
                 if(peep!=null){
                     score.addPeepCount(peep.getPlayerID(),1);
+                    score.addToPeeplist(peep);
                 }
             } else if (con == Card.getAbsoluteOrientation(WEST,card.getOrientation())) {
                 checkside.set(3, true);
                 Peep peep = checkForPeep(card, WEST);
                 if(peep!=null){
                     score.addPeepCount(peep.getPlayerID(),1);
+                    score.addToPeeplist(peep);
                 }
             } else ;
         }
@@ -305,7 +309,7 @@ public class GameEngine implements IGameEngine {
             yb = nextCard.getyCoordinate();
             Orientation ha, hb;
 
-            if (oa == Orientation.NORTH && xa == xb && ya + 1 == yb) {
+            if (oa == Orientation.NORTH && xa == xb && ya - 1 == yb) {
                 ha = Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb = Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
@@ -313,7 +317,7 @@ public class GameEngine implements IGameEngine {
                     return false;
                 }
                 break;
-            } else if (oa == EAST && xa + 1 == xb && ya + 1 == yb) {
+            } else if (oa == EAST && xa + 1 == xb && ya == yb) {
                 ha = Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb = Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
@@ -321,7 +325,7 @@ public class GameEngine implements IGameEngine {
                     return false;
                 }
                 break;
-            } else if (oa == Orientation.SOUTH && xa == xb && ya - 1 == yb) {
+            } else if (oa == Orientation.SOUTH && xa == xb && ya + 1 == yb) {
                 ha = Card.getAbsoluteOrientation(oa, a.getOrientation());
                 hb = Card.getAbsoluteOrientation(ob, nextCard.getOrientation());
 
@@ -357,9 +361,9 @@ public class GameEngine implements IGameEngine {
             yb = nextCard.getyCoordinate();
 
             //Falls Seite und aktuelle Karte übereintreffen-->returne aktuelle Karte
-            if (oa == Orientation.NORTH && xa == xb && ya + 1 == yb) {
+            if (oa == Orientation.NORTH && xa == xb && ya - 1 == yb) {
                 return nextCard;
-            } else if (oa == Orientation.SOUTH && xa == xb && ya - 1 == yb) {
+            } else if (oa == Orientation.SOUTH && xa == xb && ya + 1 == yb) {
                 return nextCard;
             } else if (oa == EAST && xa + 1 == xb && ya == yb) {
                 return nextCard;

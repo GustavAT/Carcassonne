@@ -26,10 +26,10 @@ public class TestScoreGain {
         ge.init(Orientation.NORTH);
         gs = ge.getGamestate();
         Card c1 = new Card(4, -1, 0, Orientation.NORTH);
-        Card c2 = new Card(13, -1, 1, Orientation.EAST);
-        Card c3 = new Card(37, 0, 1, Orientation.WEST); //Grass/Grass/Burg/Burg
-        Card c4 = new Card(46, 0, 1, Orientation.WEST); //Burg/Grass/Burg/Burg
-        Card c5 = new Card(24, 0, 1, Orientation.SOUTH); //Burg/Grass/Burg/Burg
+        Card c2 = new Card(13, -1, -1, Orientation.EAST);
+        Card c3 = new Card(37, 0, -1, Orientation.WEST); //Grass/Grass/Burg/Burg
+        Card c4 = new Card(46, 0, -1, Orientation.WEST); //Burg/Grass/Burg/Burg
+        Card c5 = new Card(24, 0, -1, Orientation.SOUTH); //Burg/Grass/Burg/Burg
 
 
         ge.placeCard(c1);
@@ -43,14 +43,16 @@ public class TestScoreGain {
 
     @Test
     public void testCardScores() {
-        ArrayList<Score> sc = ge.getScoreChanges(new Card(37, 0, 1, Orientation.WEST));
+        ArrayList<Score> sc = ge.getScoreChanges(new Card(37, 0, -1, Orientation.WEST));
         for (int i = 0; i < 4; i++) {
             System.out.println("Felder: " + sc.get(i).getCardlist().size());
             for (int j = 0; j < 5; j++) {
                 System.out.println("Peeps: " + sc.get(i).getPpeepcount().get(j) + " of Player: " + (j + 1));
             }
             System.out.println("Closed: " + sc.get(i).isClosed());
+            System.out.println("Peepcount: " + sc.get(i).getPeeplist().size());
         }
+
     }
 
     @Test

@@ -7,6 +7,7 @@ public class Score {
     private CardSide base;
     private ArrayList<Integer> ppeepcount;
     private ArrayList<Card> cardlist;
+    private ArrayList<Peep> peeplist;
 
     public Score(CardSide base, int players) {
         this.base = base;
@@ -15,6 +16,7 @@ public class Score {
             ppeepcount.add(0);
         }
         this.cardlist = new ArrayList<>();
+        this.peeplist = new ArrayList<>();
     }
 
     public boolean isClosed() {
@@ -51,5 +53,13 @@ public class Score {
 
     public CardSide getBase() {
         return base;
+    }
+
+    public ArrayList<Peep> getPeeplist() {
+        return peeplist;
+    }
+
+    public void addToPeeplist(Peep peep) {
+        this.peeplist.add(peep);
     }
 }

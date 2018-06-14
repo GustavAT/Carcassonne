@@ -289,11 +289,21 @@ public class GameController implements IGameController {
                     }
                 }
                 setPoints(mvps,mult);
+
+                //entferne gezählte Peeps
+                for (int j = 0; j < it.getPeeplist().size(); j++) {
+                    removePeep(it.getPeeplist().get(j));
+                }
             }
             else {
                 //offene Strecken bringen keine Punkte
             }
         }
+    }
+
+    public void removePeep(Peep peep) {
+        GameState gs = getGameState();
+        gs.getPeeps().remove(peep);
     }
 
     @Override
