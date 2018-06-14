@@ -20,6 +20,8 @@ public class GameController implements IGameController {
      * True if the player has placed his card in this turn
      */
     private boolean cardPlaced = false;
+    private boolean isDebug = false;
+
     /**
      * Game state
      *
@@ -200,6 +202,16 @@ public class GameController implements IGameController {
     @Override
     public CState getCState() {
         return cState;
+    }
+
+    @Override
+    public boolean isDebug() {
+        return isDebug;
+    }
+
+    @Override
+    public void debug(boolean flag) {
+        isDebug = flag;
     }
 
     @Override
