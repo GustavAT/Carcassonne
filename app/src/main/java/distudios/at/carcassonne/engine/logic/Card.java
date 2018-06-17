@@ -1,10 +1,9 @@
 package distudios.at.carcassonne.engine.logic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import java.util.ArrayList;
 
 import distudios.at.carcassonne.networking.connection.OrientationTypeConverter;
 
@@ -24,12 +23,40 @@ public class Card {
 
     public Card() {}
 
-    public Card(int id,  int xCoordinate, int yCoordinate, Orientation orientation) {
+    public Card(int id, int xCoordinate, int yCoordinate, Orientation orientation) {
         this.id = id;
         this.orientation = orientation;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.marks = new ArrayList<>();
+    }
+
+    public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset) {
+        int rotation = 0;
+        if (offset == Orientation.NORTH) {
+            rotation = 0;
+        } else if (offset == Orientation.EAST) {
+            rotation = 1;
+        } else if (offset == Orientation.SOUTH) {
+            rotation = 2;
+        } else {
+            rotation = 3;
+        }
+
+
+        for (int i = 0; i < rotation; i++) {
+            if (card == Orientation.NORTH) {
+                card = Orientation.WEST;
+            } else if (card == Orientation.EAST) {
+                card = Orientation.NORTH;
+            } else if (card == Orientation.SOUTH) {
+                card = Orientation.EAST;
+            } else {
+                card = Orientation.SOUTH;
+            }
+        }
+
+        return card;
     }
 
     public int getId() {
@@ -64,57 +91,25 @@ public class Card {
         this.yCoordinate = yCoordinate;
     }
 
-    public ArrayList<Integer> getMarks() { return marks; }
+    public ArrayList<Integer> getMarks() {
+        return marks;
+    }
 
-    public void setMarks(ArrayList<Integer> marks){ this.marks = marks;}
+    public void setMarks(ArrayList<Integer> marks) {
+        this.marks = marks;
+    }
 
     public void setMark(PeepPosition mark) {
         int pos = PeepPosition.fromPosition(mark);
-        if(!(this.marks.contains(pos))) {
+        if (!(this.marks.contains(pos))) {
             this.marks.add(pos);
         }
     }
 
     @Override
-    public String toString(){
-        return "Id: "+ id + " Coordinates: " + xCoordinate + " | " + yCoordinate;
+    public String toString() {
+        return "Id: " + id + " Coordinates: " + xCoordinate + " | " + yCoordinate;
     }
-
-
-
-    public static Orientation getAbsoluteOrientation(Orientation card, Orientation offset){
-        int rotation=0;
-        if(offset==Orientation.NORTH){
-            rotation=0;
-        }
-        else if(offset==Orientation.EAST){
-            rotation=1;
-        }
-        else if(offset==Orientation.SOUTH){
-            rotation=2;
-        }
-        else{
-            rotation=3;
-        }
-
-
-        for(int i=0;i<rotation;i++){
-            if(card==Orientation.NORTH){
-                card=Orientation.WEST;
-            }
-            else if(card==Orientation.EAST){
-                card=Orientation.NORTH;
-            }
-            else if(card==Orientation.SOUTH){
-                card=Orientation.EAST;
-            }
-            else{
-                card=Orientation.SOUTH;
-            }
-        }
-
-        return card;
-     }
 
     /**
      * Rotate this card clockwise
@@ -129,7 +124,7 @@ public class Card {
         } else if (orientation == Orientation.WEST) {
             orientation = Orientation.NORTH;
         }
-     }
+    }
 }
 
 

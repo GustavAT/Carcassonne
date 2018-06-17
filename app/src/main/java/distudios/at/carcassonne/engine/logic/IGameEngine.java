@@ -15,7 +15,7 @@ public interface IGameEngine {
 
     void addScore(int point, int player);
 
-    ArrayList<Integer> getScoreChanges(Card card);
+    ArrayList<Score> getScoreChanges(Card card);
 
     ArrayList<PeepPosition> getMarkedBorders(Card card, CardSide cardSide);
 

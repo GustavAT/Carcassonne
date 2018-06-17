@@ -31,8 +31,8 @@ public class Player {
         this.playerID = playerID;
     }
 
-    public static Player getRaceFromPlayer(int race, int playerID){
-        switch (race){
+    public static Player getRaceFromPlayer(int race, int playerID) {
+        switch (race) {
             case 1:
                 return new Player(playerID);
 
