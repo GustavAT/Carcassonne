@@ -43,7 +43,7 @@ import distudios.at.carcassonne.engine.logic.PeepPosition;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
-public class PlayfieldView extends View {
+public class PlayfieldView extends View implements CheatDialog.DialogListener{
 
     public ICardPlaced callbackCardPlaced;
     public IPeepPlaced callbackPeepPlaced;
@@ -63,6 +63,11 @@ public class PlayfieldView extends View {
 
     private GameState gameState;
 
+    @Override
+    public void getBitmapInteger(Integer bitmapInteger) {
+
+    }
+
     private Map<String, CardContainer> placedCards = new HashMap<>();
     private Map<String, CardContainer> possibleLocations = new HashMap<>();
 
@@ -80,7 +85,6 @@ public class PlayfieldView extends View {
             }
         });
     }
-
 
 
     public static HashMap<Integer, Bitmap> ResourceMappings = null;
@@ -308,6 +312,8 @@ public class PlayfieldView extends View {
 
     }
 
+
+
     public void initFieldFromGameState() {
         IGameController controller = CarcassonneApp.getGameController();
         gameState = controller.getGameState();
@@ -455,6 +461,8 @@ public class PlayfieldView extends View {
         return width / CARDS_COUNT_HORIZONTAL;
     }
 
+
+
     public class CardContainer {
         public int id;
         public double pixelX = 0;
@@ -485,6 +493,7 @@ public class PlayfieldView extends View {
             return c;
         }
     }
+
 
     private void drawCardContainer(CardContainer c, Canvas canvas) {
         ExtendedCard ec = CardDataBase.getCardById(c.card.getId());

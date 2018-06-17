@@ -1,18 +1,25 @@
 package distudios.at.carcassonne.gui.field;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +45,7 @@ import distudios.at.carcassonne.networking.connection.PlayerInfo;
  * Use the {@link GameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced {
+public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced , CheatDialog.DialogListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -53,9 +60,21 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
     private Button buttonEndTurn;
     private Button buttonRotate;
     private Button buttonPeep;
-    private ImageButton buttonDrawCard;
+    public ImageButton buttonDrawCard;
     private TextView textViewStatus;
     private TextView textViewStatusPeeps;
+
+    Bitmap source;
+
+    @Override
+    public void getBitmapInteger(Integer i) {
+
+        buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(),PlayfieldView.cardIdToBitmap(i)));
+        playfieldView.addPossibleLocations();
+        updateFromGameState();
+        source=PlayfieldView.cardIdToBitmap(i);
+
+    }
 
     public GameFragment() {
         // Required empty public constructor
@@ -90,6 +109,7 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -115,18 +135,19 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
             @Override
             public void onClick(View view) {
                 if (controller.getCState() != CState.DRAW_CARD) return;
-
                 // open dialog for card drawing
-                Card c = controller.drawCard();
-                controller.setCurrentCard(c);
 
-                ExtendedCard ec = CardDataBase.getCardById(c.getId());
-                buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(), PlayfieldView.cardIdToBitmap(ec.getId())));
+                CheatDialog cheatDialog = new CheatDialog();
+                cheatDialog.setTargetFragment(GameFragment.this,1);
+                cheatDialog.show(getFragmentManager(),"Choose Card Dialog");
 
-                playfieldView.addPossibleLocations();
-                updateFromGameState();
             }
         });
+
+
+
+
+
 
         final GameFragment thisFrag = this;
         buttonPeep = view.findViewById(R.id.button_peep);
@@ -149,7 +170,6 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
                 ExtendedCard ec = CardDataBase.getCardById(c.getId());
                 //buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(), PlayfieldView.cardIdToBitmap(ec.getId())));
 
-                Bitmap source = PlayfieldView.cardIdToBitmap(ec.getId());
 
                 Matrix m = new Matrix();
                 if (c.getOrientation() == Orientation.NORTH) {
@@ -178,6 +198,7 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
 
         return view;
     }
+
 
     @Override
     public void onAttach(Context context) {

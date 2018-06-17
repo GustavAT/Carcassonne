@@ -4,7 +4,10 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import distudios.at.carcassonne.CarcassonneApp;
@@ -39,6 +42,15 @@ public class GameController implements IGameController {
      */
     private CState cState;
     private Card currentCard;
+
+    public boolean isCheating() {
+        return isCheating;
+    }
+
+    public void setCheating(boolean cheating) {
+        isCheating = cheating;
+    }
+
     private boolean isCheating = false;
     public HashMap<Integer, Player> playerHashMap;
 
@@ -68,7 +80,7 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public List<Card> drawCards() {
+    public List<Integer> drawCards() {
         if (cState == CState.DRAW_CARD) {
             cState = CState.PLACE_CARD;
             isCheating = true;

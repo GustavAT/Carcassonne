@@ -3,6 +3,7 @@ package distudios.at.carcassonne.engine.logic;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public interface IGameController {
@@ -30,7 +31,11 @@ public interface IGameController {
      * Draw three cards from stack (do not remove from stack -> call remove from stack)
      * @return
      */
-    List<Card> drawCards();
+    List<Integer> drawCards();
+
+
+    boolean isCheating();
+    void setCheating(boolean cheating);
 
     /**
      * Place single card on the field

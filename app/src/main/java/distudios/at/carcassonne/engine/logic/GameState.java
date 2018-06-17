@@ -5,6 +5,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @JsonObject
@@ -97,7 +99,14 @@ public class GameState implements Serializable {
      * Draw cards from stack without removing it
      * @return
      */
-    public List<Card> drawCards() {
+    public List<Integer> drawCards() {
+        ArrayList<Integer> listOfCards = new ArrayList<>();
+
+            for(int i = stack.size()-3;i<=stack.size();i++){
+                listOfCards.add(stack.get(i));
+                //stack.remove(i);
+            }
+
         return null;
     }
 
