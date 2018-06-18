@@ -27,17 +27,20 @@ public class GameState implements Serializable {
         cards = new ArrayList<>();
         peeps = new ArrayList<>();
         stack = new ArrayList<>();
-        points = new ArrayList<>(5);
-        maxPlayerCount = 0;
+        points = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            points.add(0);
+        }
+        maxPlayerCount = 5;
         currentPlayer = 0;
-    }
-
-    public void setStack(ArrayList<Integer> stack) {
-        this.stack = stack;
     }
 
     public ArrayList<Integer> getStack() {
         return stack;
+    }
+
+    public void setStack(ArrayList<Integer> stack) {
+        this.stack = stack;
     }
 
     public void addCard(Card card) {
