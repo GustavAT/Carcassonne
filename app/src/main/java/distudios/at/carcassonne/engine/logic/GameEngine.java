@@ -260,7 +260,7 @@ public class GameEngine implements IGameEngine {
     }
 
     private Peep checkForPeep(Card card, Orientation sborder){
-        ArrayList<Peep> peeps=getGamestate().getPeeps();
+        ArrayList<Peep> peeps= currentState.getPeeps();
 
         //todo: remove Peep
         //Überprüft für jeden Peep ob er auf der Karte steht, und ob er auf der entsprechenden Border steht

@@ -10,9 +10,69 @@
     <!-- TODO: Update blank fragment layout -->
 
 
-    <TextView
-        android:id="@+id/text_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="520dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_score1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8px"
+            android:paddingTop="8px"
+            android:text="@string/text_player_in_group"
+            android:textColor="#F6D612"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/text_score2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8px"
+            android:paddingTop="8px"
+            android:text="@string/text_player_in_group"
+            android:textColor="#E3085D"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/text_score3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8px"
+            android:paddingTop="8px"
+            android:text="@string/text_player_in_group"
+            android:textColor="#00FFAB"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/text_score4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8px"
+            android:paddingTop="8px"
+            android:text="@string/text_player_in_group"
+            android:textColor="#7C2494"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/text_score5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8px"
+            android:paddingTop="8px"
+            android:text="@string/text_player_in_group"
+            android:textColor="#6F8BA9"
+            android:textSize="30sp" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
