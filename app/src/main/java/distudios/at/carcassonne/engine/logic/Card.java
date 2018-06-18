@@ -95,9 +95,15 @@ public class Card {
         return marks;
     }
 
-    public void setMarks(ArrayList<Integer> marks) {
-        this.marks = marks;
+    public ArrayList<PeepPosition> getPosMarks() {
+        ArrayList<PeepPosition> posMarks = new ArrayList<PeepPosition>();
+        for (int pos : this.getMarks()) {
+            posMarks.add(PeepPosition.fromInt(pos));
+        }
+        return posMarks;
     }
+
+    public void setMarks(ArrayList<Integer> marks){ this.marks = marks;}
 
     public void setMark(PeepPosition mark) {
         int pos = PeepPosition.fromPosition(mark);

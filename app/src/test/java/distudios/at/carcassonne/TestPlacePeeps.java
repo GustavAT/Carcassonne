@@ -2,7 +2,6 @@ package distudios.at.carcassonne;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,69 +37,9 @@ public class TestPlacePeeps {
         ge = new GameEngine();
         ge.init(Orientation.NORTH);
         gs = ge.getGamestate();
-
-        //Settings...
-       /* Card cardI = new Card(4, 1, 0, NORTH);
-        Card cardII = new Card(21, 2, 0, WEST);
-        Card cardIII = new Card(13, 3, 0, NORTH);
-
-        Card cardIV = new Card(52, -1, 0, EAST);
-        Card cardV = new Card(30, -2, 0, EAST);
-        Card cardVI = new Card(18, -3, 0, NORTH);
-        Card cardVII = new Card(13, -4, 0, WEST);
-
-        Card cardVIII = new Card(18, 0, 1, EAST);
-        Card cardIX = new Card(35, 2, 1, WEST);
-        Card cardX = new Card(24, 3, 1, SOUTH);
-
-        Card cardXI = new Card(24, 0, 2, SOUTH);
-
-        Card cardXII = new Card(60, 0, -1, SOUTH);
-        Card cardXIII = new Card(52, 1, -1, EAST);
-        Card cardXIV = new Card(32, 2, -1, NORTH);
-        Card cardXV = new Card(2, 3, -1, WEST);
-
-        Card cardXVI = new Card(24, 0, -2, WEST);
-        Card cardXVII = new Card(35, 1, -2, EAST);
-        Card cardXVIII = new Card(52, 2, -2, NORTH);
-
-        Card cardXIX = new Card(40, 0, -3, WEST);
-        Card cardXX = new Card(35, 1, -3, NORTH);
-
-        Card cardXXI = new Card(52, 0, -4, NORTH);
-
-        Card cardXXII = new Card(29, 0, -5, NORTH);
-        Card cardXXIII = new Card(69, 1, -5, SOUTH);
-
-
-        ge.placeCard(cardI);
-        ge.placeCard(cardII);
-        ge.placeCard(cardIII);
-        ge.placeCard(cardIV);
-        ge.placeCard(cardV);
-        ge.placeCard(cardVI);
-        ge.placeCard(cardVII);
-        ge.placeCard(cardVIII);
-        ge.placeCard(cardIX);
-        ge.placeCard(cardX);
-        ge.placeCard(cardXI);
-        ge.placeCard(cardXII);
-        ge.placeCard(cardXIII);
-        ge.placeCard(cardXIV);
-        ge.placeCard(cardXV);
-        ge.placeCard(cardXVI);
-        ge.placeCard(cardXVII);
-        ge.placeCard(cardXVIII);
-        ge.placeCard(cardXIX);
-        ge.placeCard(cardXX);
-        ge.placeCard(cardXXI);
-        ge.placeCard(cardXXII);
-        ge.placeCard(cardXXIII);
-        ge.placeCard(cardXXIII);*/
     }
 
     @Test
-    @Ignore
     public void checkGetMarkedBorders() {
         //Settings...
         Card cardI = new Card(40, 3, -1, WEST);
@@ -194,7 +133,6 @@ public class TestPlacePeeps {
     }
 
     @Test
-    @Ignore
     public void checkGetUnmarkedBorders() {
         //Settings...
         Card cardI = new Card(4, 1, 0, NORTH);
@@ -267,6 +205,7 @@ public class TestPlacePeeps {
         Assert.assertTrue(unmarkedBorders.contains(Bottom));
         Assert.assertTrue(unmarkedBorders.contains(Right));
         Assert.assertTrue(unmarkedBorders.contains(Left));
+        //Assert.assertTrue(unmarkedBorders.contains(Left));
         //Assert.assertTrue(unmarkedBorders.contains(Top));
         //Assert.assertTrue(unmarkedBorders.contains(Center));
         //Assert.assertTrue(peeps.size()==1);
@@ -317,8 +256,7 @@ public class TestPlacePeeps {
     }
 
     @Test
-    @Ignore
-    public void checkMarkCards() {
+    public void checkMarkCards(){
         //Settings...
         Card cardI = new Card(4, 1, 0, NORTH);
         Card cardIII = new Card(52, -1, 0, EAST);
@@ -469,8 +407,7 @@ public class TestPlacePeeps {
     }
 
     @Test
-    @Ignore
-    public void checkMarkAllCards() {
+    public void checkMarkAllCards(){
         //Settings...
         Card cardI = new Card(60, 0, -1, SOUTH);
         Card cardII = new Card(52, 1, -1, EAST);
@@ -489,7 +426,7 @@ public class TestPlacePeeps {
         ge.placeCard(cardVII);
 
         //cardI.setMark(Right);
-        ge.markCard(cardI, Right, STREET);
+        ge.markCard(cardI,Right,STREET);
 
         ge.markAllCards();
         ArrayList<Integer> marksI = cardI.getMarks();
@@ -517,5 +454,38 @@ public class TestPlacePeeps {
         //Assert.assertTrue(marksIII.contains(Top));
         //Assert.assertTrue(marksIII.contains(Center));
 
+    }
+
+    @Test
+    public void checkDoubleStreet() {
+        Card cardI = new Card(57, -3, 1, NORTH);
+        Card cardII = new Card(54, -3, 2, NORTH);
+
+        ge.placeCard(cardII);
+        ge.markCard(cardII, Top, STREET);
+        ge.markAllCards();
+        ge.placeCard(cardI);
+        ArrayList<PeepPosition> marks = ge.getALLFigurePos(cardI);
+        Assert.assertTrue(marks.size() == 0);
+    }
+
+    @Test
+    public void test() {
+        Card cardI = new Card(2, -3, 1, WEST);
+        Card cardII = new Card(52, -4, 1, EAST);
+
+        ge.placeCard(cardII);
+        //ge.markCard(cardII, Right,STREET);
+        ge.markAllCards();
+        ge.placeCard(cardI);
+        ArrayList<PeepPosition> pos = ge.getALLFigurePos(cardI);
+        Assert.assertTrue(pos.size() == 2);
+        Assert.assertTrue(pos.contains(Center));
+        Assert.assertTrue(pos.contains(Left));
+        //ge.placePeep(cardI, Center, 2);
+        /*ArrayList<PeepPosition> marks = cardI.getPosMarks();
+        Assert.assertTrue(marks.size() == 1);
+        Assert.assertTrue(marks.contains(Center));
+        ArrayList<Peep> peeps = gs.getPeeps();*/
     }
 }
