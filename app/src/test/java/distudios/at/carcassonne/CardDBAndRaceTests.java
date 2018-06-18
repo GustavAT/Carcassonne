@@ -30,7 +30,7 @@ public class CardDBAndRaceTests {
     public void setUp() {
         ge = new GameEngine();
         ge.init(Orientation.NORTH);
-        gs = ge.getGamestate();
+        gs = ge.getState();
 
     }
 

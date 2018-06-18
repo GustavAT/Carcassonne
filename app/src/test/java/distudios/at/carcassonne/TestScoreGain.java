@@ -37,7 +37,7 @@ public class TestScoreGain {
     public void testCardScores1() {
         ge = new GameEngine();
         ge.init(Orientation.NORTH);
-        gs = ge.getGamestate();
+        gs = ge.getState();
 
         ge.placeCard(c1);
         ge.placeCard(c2);
@@ -55,7 +55,7 @@ public class TestScoreGain {
     public void testCardScores2() {
         ge = new GameEngine();
         ge.init(Orientation.NORTH);
-        gs = ge.getGamestate();
+        gs = ge.getState();
 
         ge.placeCard(c1);
         ge.placeCard(c2);
@@ -73,7 +73,7 @@ public class TestScoreGain {
     public void testCardScores3() {
         ge = new GameEngine();
         ge.init(Orientation.NORTH);
-        gs = ge.getGamestate();
+        gs = ge.getState();
 
         ge.placeCard(c1);
         ge.placeCard(c2);
