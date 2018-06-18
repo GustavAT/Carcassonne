@@ -36,9 +36,9 @@ public class CardDataBase {
                     return ec;
                 }
             }
-            return null;
+            return new ExtendedCard();
         } else {
-            return null;
+            return new ExtendedCard();
         }
     }
 

@@ -2,7 +2,6 @@ package distudios.at.carcassonne.engine.logic;
 
 public class Player {
 
-    public PlayerColors playerColor;
     public int peeps = 10;
     public int playerID;
 

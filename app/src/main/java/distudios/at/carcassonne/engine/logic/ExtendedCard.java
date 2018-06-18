@@ -31,6 +31,8 @@ public class ExtendedCard {
         @Param      bottomRightCorner
          */
 
+    public ExtendedCard() {}
+
     public ExtendedCard(int id, CardSide top, CardSide left, CardSide right, CardSide down, CardSide topLeftCorner, CardSide topRightCorner, CardSide bottomLeftCorner, CardSide bottomRightCorner) {
         this.id = id;
         this.top = top;
