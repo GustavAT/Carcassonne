@@ -77,6 +77,26 @@ public class TestGameEngine {
     }
 
     @Test
+    public void testGameEngineInit() {
+        Assert.assertTrue(ge.getGamestate() != null);
+    }
+
+    @Test
+    public void testGameEngineChangeGS() {
+        GameState newgs = new GameState();
+        GameState oldgs = ge.getGamestate();
+        ge.setState(newgs);
+        Assert.assertTrue(oldgs != ge.getGamestate());
+        ge.setState(oldgs);
+    }
+
+    @Test
+    public void testAddScore() {
+        ge.addScore(1, 0);
+        Assert.assertTrue(gs.getPoints(0) == 1);
+    }
+
+    @Test
     public void shuffleWorks() {
         ArrayList<Integer> al = gs.getStack();
         for (int i = 0; i < al.size(); i++) {
