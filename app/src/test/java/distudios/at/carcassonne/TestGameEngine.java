@@ -34,10 +34,6 @@ public class TestGameEngine {
         cdb.cardDB.get(19).setLeft(CardSide.GRASS);
         cdb.cardDB.get(19).setRight(CASTLE);   //Anpassung Neue Karte Check
 
-        cdb.cardDB.get(20).setTop(CardSide.GRASS);
-        cdb.cardDB.get(20).setDown(CardSide.GRASS);
-        cdb.cardDB.get(20).setLeft(CardSide.GRASS);
-        cdb.cardDB.get(20).setRight(CardSide.STREET);
 
         cdb.cardDB.get(21).setDown(CardSide.GRASS);     //Anpassung Neue Karte Check
         cdb.cardDB.get(21).setLeft(CASTLE);
@@ -91,7 +87,7 @@ public class TestGameEngine {
     @Test
     public void checkPlaceableMethod() {
         System.out.println("\nPlatziere 3 Karten und überprüfe auf Platzierbarkeit");
-        Card card = new Card(20, 0, -1, Orientation.NORTH);
+        Card card = new Card(2, 0, -1, Orientation.WEST);
 //        Assert.assertTrue(ge.checkPlaceable(card));     //Test Placeable
         ge.placeCard(card);
         Assert.assertFalse(ge.checkPlaceable(card));    //Test reflexive Placeable false

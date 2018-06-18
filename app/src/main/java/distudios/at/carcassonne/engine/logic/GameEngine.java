@@ -200,7 +200,13 @@ public class GameEngine implements IGameEngine {
             itcards.add(null);
         }
 
-        ArrayList<Orientation> connections=cdb.getMatchingOrientations(card.getId(),cdb.getCardSide(card.getId(),Card.getAbsoluteOrientation(sborder,card.getOrientation())));
+        ArrayList<Orientation> connections = new ArrayList<>();
+        if (CardDataBase.getCardById(card.getId()).isSplitStop()) {
+            connections.add(Card.getAbsoluteOrientation(sborder, card.getOrientation()));
+        } else {
+            connections = cdb.getMatchingOrientations(card.getId(), cdb.getCardSide(card.getId(), Card.getAbsoluteOrientation(sborder, card.getOrientation())));
+        }
+
 
         //Füge Connections der aktuellen Karte finden und peeps zählen
         for(int i=0;i<connections.size();i++){
