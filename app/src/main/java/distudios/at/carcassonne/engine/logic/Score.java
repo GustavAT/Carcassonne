@@ -1,13 +1,14 @@
 package distudios.at.carcassonne.engine.logic;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Score {
     private boolean closed=true;
     private CardSide base;
-    private ArrayList<Integer> ppeepcount;
-    private ArrayList<Card> cardlist;
-    private ArrayList<Peep> peeplist;
+    private List<Integer> ppeepcount;
+    private List<Card> cardlist;
+    private List<Peep> peeplist;
 
     public Score(CardSide base, int players) {
         this.base = base;
@@ -27,7 +28,7 @@ public class Score {
         this.closed = closed;
     }
 
-    public ArrayList<Integer> getPpeepcount() {
+    public List<Integer> getPpeepcount() {
         return ppeepcount;
     }
 
@@ -39,11 +40,11 @@ public class Score {
         this.ppeepcount.set(player,score+ ppeepcount.get(player));
     }
 
-    public ArrayList<Card> getCardlist() {
+    public List<Card> getCardlist() {
         return cardlist;
     }
 
-    public void setCardlist(ArrayList<Card> cardlist) {
+    public void setCardlist(List<Card> cardlist) {
         this.cardlist = cardlist;
     }
 
@@ -55,7 +56,7 @@ public class Score {
         return base;
     }
 
-    public ArrayList<Peep> getPeeplist() {
+    public List<Peep> getPeeplist() {
         return peeplist;
     }
 

@@ -5,9 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import distudios.at.carcassonne.engine.logic.CardDataBase;
 import distudios.at.carcassonne.engine.logic.DalekRace;
+import distudios.at.carcassonne.engine.logic.ExtendedCard;
 import distudios.at.carcassonne.engine.logic.FederationRace;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
@@ -92,20 +94,22 @@ public class CardDBAndRaceTests {
         int theAMAZINGCounter = 0;
         int theSystemCounter = 0;
 
+        List<ExtendedCard> cardDB = cdb.getCardDb();
+
         for (int j = 0; j < cardTypeArray.size() - 1; j++) {
             if (cardTypeArray.get(j) > 1) {
                 System.out.println("Folgende " + cardTypeArray.get(j) + " Karten sind ident:");
             }
             for (int i = 0; i < cardTypeArray.get(j) - 1; i++) {
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getTop().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getTop()));
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getLeft().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getLeft()));
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getRight().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getRight()));
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getDown().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getDown()));
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getTopLeftCorner().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getTopLeftCorner()));
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getTopRightCorner().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getTopRightCorner()));
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getBottomLeftCorner().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getBottomLeftCorner()));
-                Assert.assertTrue(cdb.cardDB.get(i + theAMAZINGCounter).getBottomRightCorner().equals(cdb.cardDB.get(i + theAMAZINGCounter + 1).getBottomRightCorner()));
-                System.out.println("Card with ID: " + cdb.cardDB.get(i + theAMAZINGCounter).getId() + " is equal to CARD with ID: " + cdb.cardDB.get(i + theAMAZINGCounter + 1).getId());
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getTop().equals(cardDB.get(i + theAMAZINGCounter + 1).getTop()));
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getLeft().equals(cardDB.get(i + theAMAZINGCounter + 1).getLeft()));
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getRight().equals(cardDB.get(i + theAMAZINGCounter + 1).getRight()));
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getDown().equals(cardDB.get(i + theAMAZINGCounter + 1).getDown()));
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getTopLeftCorner().equals(cardDB.get(i + theAMAZINGCounter + 1).getTopLeftCorner()));
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getTopRightCorner().equals(cardDB.get(i + theAMAZINGCounter + 1).getTopRightCorner()));
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getBottomLeftCorner().equals(cardDB.get(i + theAMAZINGCounter + 1).getBottomLeftCorner()));
+                Assert.assertTrue(cardDB.get(i + theAMAZINGCounter).getBottomRightCorner().equals(cardDB.get(i + theAMAZINGCounter + 1).getBottomRightCorner()));
+                System.out.println("Card with ID: " + cardDB.get(i + theAMAZINGCounter).getId() + " is equal to CARD with ID: " + cardDB.get(i + theAMAZINGCounter + 1).getId());
             }
             theAMAZINGCounter = theAMAZINGCounter + cardTypeArray.get(j);
             System.out.println();

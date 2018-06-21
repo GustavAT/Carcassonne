@@ -35,14 +35,12 @@ public class GameController implements IGameController {
      */
     private CState cState;
     private Card currentCard;
-    private boolean isCheating = false;
 
     public GameController() {
         this.init();
     }
 
     private void init() {
-        // init game engine;
         gameEngine = new GameEngine();
         gameEngine.init(Orientation.NORTH);
         cState = CState.WAITING;
@@ -66,12 +64,10 @@ public class GameController implements IGameController {
     public List<Card> drawCards() {
         if (cState == CState.DRAW_CARD) {
             cState = CState.PLACE_CARD;
-            isCheating = true;
             return getGameState().drawCards();
         }
-        return null;
+        return new ArrayList<>();
     }
-
 
     @Override
     public boolean placeCard(Card card) {
@@ -80,7 +76,6 @@ public class GameController implements IGameController {
         if(gameEngine.checkPlaceable(card)){
             gameEngine.placeCard(card);
             removeFromStack(card);
-            // todo change to PLACE_FIGURE
             cState = CState.PLACE_FIGURE;
             return true;
         }
@@ -144,7 +139,6 @@ public class GameController implements IGameController {
         Log.d("CARDS", "send: " + state.cards.size());
 
         cState = CState.WAITING;
-        isCheating = false;
         currentCard = null;
         CarcassonneApp.getNetworkController().sendMessage(message);
     }
@@ -154,7 +148,6 @@ public class GameController implements IGameController {
         if (cState != CState.WAITING) return;
 
         cState = CState.DRAW_CARD;
-        isCheating = false;
         currentCard = null;
     }
 
@@ -248,7 +241,7 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public void setPoints(ArrayList<Integer> points, int multiplier) {
+    public void setPoints(List<Integer> points, int multiplier) {
         for(int i=0;i<points.size();i++){
             gameEngine.addScore(points.get(i)*multiplier,i);
         }
@@ -259,7 +252,7 @@ public class GameController implements IGameController {
 
         //todo: Kirchen
 
-        ArrayList<Score> cardscore= gameEngine.getScoreChanges(card);
+        List<Score> cardscore = gameEngine.getScoreChanges(card);
         int mult=1;
         for(int i=0;i<cardscore.size();i++){
             Score it=cardscore.get(i);
@@ -274,7 +267,6 @@ public class GameController implements IGameController {
                 else{
                     mult=0;
                 }
-                //todo:dyn playercount
 
                 //Finde most Peep Anzahl
                 int mpoints=0;
@@ -305,7 +297,7 @@ public class GameController implements IGameController {
         }
     }
 
-    public void removePeep(Peep peep) {
+    private void removePeep(Peep peep) {
         GameState gs = getGameState();
         gs.getPeeps().remove(peep);
     }
@@ -373,7 +365,7 @@ public class GameController implements IGameController {
 
     @Override
     public void initPlayerMappings() {
-        playerHashMap = new HashMap<Integer, Player>();
+        playerHashMap = new HashMap<>();
         for (PlayerInfo playerInfo : CarcassonneApp.getNetworkController().getPlayerMappings().values()
                 ) {
             playerHashMap.put(playerInfo.playerNumber, Player.getRaceFromPlayer(playerInfo.raceType, playerInfo.playerNumber));

@@ -11,11 +11,11 @@ import java.util.List;
 public class GameState implements Serializable {
 
     @JsonField
-    public ArrayList<Card> cards;
+    public List<Card> cards;
     @JsonField
-    public ArrayList<Peep> peeps;
+    public List<Peep> peeps;
     @JsonField
-    public ArrayList<Integer> stack;
+    public List<Integer> stack;
     @JsonField
     public List<Integer> points;
     @JsonField
@@ -35,11 +35,11 @@ public class GameState implements Serializable {
         currentPlayer = 0;
     }
 
-    public ArrayList<Integer> getStack() {
+    public List<Integer> getStack() {
         return stack;
     }
 
-    public void setStack(ArrayList<Integer> stack) {
+    public void setStack(List<Integer> stack) {
         this.stack = stack;
     }
 
@@ -47,11 +47,13 @@ public class GameState implements Serializable {
         cards.add(card);
     }
 
-    public ArrayList<Card> getCards() { return cards; }
+    public List<Card> getCards() {
+        return cards;
+    }
 
     public void addPeep(Peep peep) { peeps.add(peep); }
 
-    public ArrayList<Peep> getPeeps() {
+    public List<Peep> getPeeps() {
         return peeps;
     }
 
@@ -89,7 +91,7 @@ public class GameState implements Serializable {
      * @return
      */
     public Card drawCard() {
-        if (stack.size() > 0) {
+        if (!stack.isEmpty()) {
             return new Card(stack.get(0), -1, -1, Orientation.NORTH);
         } else {
             return null;
@@ -101,7 +103,7 @@ public class GameState implements Serializable {
      * @return
      */
     public List<Card> drawCards() {
-        return null;
+        return new ArrayList<>();
     }
 
     /**

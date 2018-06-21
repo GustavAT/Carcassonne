@@ -11,22 +11,23 @@ public class CardDataBase {
     //Singleton Class CardDataBase that currently generates a full stack of cards to choose from
 
 
-    private static CardDataBase INSTANCE;
-    // 72 Cards including start card leads to STACK SIZE of 71;
-    private final int STACK_SIZE=71;
+    private static CardDataBase instance;
     private List<ExtendedCard> cardDB;
 
+    public static CardDataBase getInstance() {
+        if (instance == null) {
+            instance = new CardDataBase();
+            instance.init();
+        }
+        return instance;
+    }
 
     private CardDataBase(){
         cardDB = new ArrayList<>();
     }
 
-    public static CardDataBase getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new CardDataBase();
-            INSTANCE.init();
-        }
-        return INSTANCE;
+    public List<ExtendedCard> getCardDb() {
+        return cardDB;
     }
 
     public static ExtendedCard getCardById(int id) {
@@ -175,18 +176,11 @@ public class CardDataBase {
 
     }
 
-    /*
-    private ExtendedCard generateRandomCard(int id){
-        return new ExtendedCard(id, CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide());
-    }
-*/
-    //method orientation + id returns CardSide
-
     public void sortCardDB() {
         Collections.sort(cardDB, new Comparator<ExtendedCard>() {
             @Override
             public int compare(ExtendedCard o1, ExtendedCard o2) {
-                return (int) (o1.getId() - o2.getId());
+                return o1.getId() - o2.getId();
             }
         });
     }
@@ -211,13 +205,14 @@ public class CardDataBase {
         }
     }
 
-
-
-    /*
-    Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
+    /**
+     * Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
+     * @param id
+     * @param cardSide
+     * @return
      */
-    public ArrayList<Orientation> getMatchingOrientations(int id, CardSide cardSide){
-        ArrayList<Orientation> cardSides = new ArrayList<Orientation>();
+    public List<Orientation> getMatchingOrientations(int id, CardSide cardSide) {
+        List<Orientation> cardSides = new ArrayList<>();
         if (this.getCardSide(id,Orientation.NORTH)== cardSide) cardSides.add(Orientation.NORTH);
         if (this.getCardSide(id,Orientation.EAST)==cardSide) cardSides.add(Orientation.EAST);
         if (this.getCardSide(id,Orientation.SOUTH)==cardSide) cardSides.add(Orientation.SOUTH);

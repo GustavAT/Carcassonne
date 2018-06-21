@@ -4,6 +4,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import distudios.at.carcassonne.networking.connection.OrientationTypeConverter;
 
@@ -19,7 +20,7 @@ public class Card {
     @JsonField
     private int yCoordinate;
     @JsonField
-    private ArrayList<Integer> marks;
+    private List<Integer> marks;
 
     public Card() {}
 
@@ -91,19 +92,21 @@ public class Card {
         this.yCoordinate = yCoordinate;
     }
 
-    public ArrayList<Integer> getMarks() {
+    public List<Integer> getMarks() {
         return marks;
     }
 
-    public ArrayList<PeepPosition> getPosMarks() {
-        ArrayList<PeepPosition> posMarks = new ArrayList<PeepPosition>();
+    public void setMarks(List<Integer> marks) {
+        this.marks = marks;
+    }
+
+    public List<PeepPosition> getPosMarks() {
+        List<PeepPosition> posMarks = new ArrayList<PeepPosition>();
         for (int pos : this.getMarks()) {
             posMarks.add(PeepPosition.fromInt(pos));
         }
         return posMarks;
     }
-
-    public void setMarks(ArrayList<Integer> marks){ this.marks = marks;}
 
     public void setMark(PeepPosition mark) {
         int pos = PeepPosition.fromPosition(mark);

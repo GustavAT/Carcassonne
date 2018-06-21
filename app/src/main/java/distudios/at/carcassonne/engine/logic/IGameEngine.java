@@ -1,6 +1,6 @@
 package distudios.at.carcassonne.engine.logic;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface IGameEngine {
 
@@ -15,17 +15,17 @@ public interface IGameEngine {
 
     void addScore(int point, int player);
 
-    ArrayList<Score> getScoreChanges(Card card);
+    List<Score> getScoreChanges(Card card);
 
-    ArrayList<PeepPosition> getMarkedBorders(Card card, CardSide cardSide);
+    List<PeepPosition> getMarkedBorders(Card card, CardSide cardSide);
 
-    ArrayList<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide);
+    List<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide);
 
     boolean markCard(Card card, PeepPosition mark, CardSide cardSide);
 
     boolean placePeep(Card card, PeepPosition mark, int playerID );
 
-    ArrayList<PeepPosition> getALLFigurePos(Card card);
+    List<PeepPosition> getALLFigurePos(Card card);
 
     boolean markAllCards();
 

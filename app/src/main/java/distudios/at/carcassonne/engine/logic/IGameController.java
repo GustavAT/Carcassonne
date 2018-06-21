@@ -2,12 +2,11 @@ package distudios.at.carcassonne.engine.logic;
 
 import android.util.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IGameController {
 
-    void setPoints(ArrayList<Integer> points, int multiplier);
+    void setPoints(List<Integer> points, int multiplier);
 
     void checkPoints(Card card);
 

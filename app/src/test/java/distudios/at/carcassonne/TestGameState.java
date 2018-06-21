@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.GameEngine;
@@ -67,7 +68,7 @@ public class TestGameState {
     //Sinnloser Test, simuliert volle Coverage
     @Test
     public void TestDrawCard() {
-        ArrayList<Integer> stack = gs.getStack();
+        List<Integer> stack = gs.getStack();
         Assert.assertTrue(gs.drawCard() != null);
         gs.setStack(new ArrayList<Integer>());
         Assert.assertTrue(gs.drawCard() == null);
@@ -78,7 +79,7 @@ public class TestGameState {
     @Test
     public void TestRemoveFromStack() {
         int count = gs.getStack().size();
-        ArrayList<Integer> stack = gs.getStack();
+        List<Integer> stack = gs.getStack();
         for (int i = 2; i < 73; i++) {
             Card c = new Card(i, 0, 0, Orientation.NORTH);
             gs.removeFromStack(c);
