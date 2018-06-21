@@ -31,7 +31,7 @@ public interface IGameController {
      * Draw three cards from stack (do not remove from stack -> call remove from stack)
      * @return
      */
-    List<Integer> drawCards();
+    List<Card> drawCards();
 
 
     boolean isCheating();

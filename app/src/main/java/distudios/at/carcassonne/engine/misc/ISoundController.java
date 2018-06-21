@@ -9,7 +9,7 @@ public interface ISoundController {
     void stopBackground_music();
     void resumeMusic();
 
-    void bildSound();
+    void buildSound();
     Boolean getSound_state();
     void setSound_state(Boolean sound_state);
     void loadSound();

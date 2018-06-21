@@ -43,16 +43,17 @@ public class GameController implements IGameController {
     private CState cState;
     private Card currentCard;
 
-    public boolean isCheating() {
-        return isCheating;
-    }
 
-    public void setCheating(boolean cheating) {
-        isCheating = cheating;
-    }
 
     private boolean isCheating = false;
     public HashMap<Integer, Player> playerHashMap;
+
+    public boolean isCheating() {
+        return isCheating;
+    }
+    public void setCheating(boolean cheating) {
+        isCheating = cheating;
+    }
 
     public GameController() {
         this.init();
@@ -73,16 +74,14 @@ public class GameController implements IGameController {
     @Override
     public Card drawCard() {
         if (cState == CState.DRAW_CARD) {
-            cState = CState.PLACE_CARD;
             return getGameState().drawCard();
         }
         return null;
     }
 
     @Override
-    public List<Integer> drawCards() {
+    public List<Card> drawCards() {
         if (cState == CState.DRAW_CARD) {
-            cState = CState.PLACE_CARD;
             isCheating = true;
             return getGameState().drawCards();
         }
@@ -242,6 +241,7 @@ public class GameController implements IGameController {
     @Override
     public void setCurrentCard(Card c) {
         currentCard = c;
+        cState = CState.PLACE_CARD;
     }
 
     /**

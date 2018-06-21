@@ -1,6 +1,7 @@
 package distudios.at.carcassonne.gui.field;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,6 +71,7 @@ public class GameActivity extends AppCompatActivity implements OnFragmentInterac
             bar.hide();
         }
     }
+
 
     @Override
     public void onBackPressed() {

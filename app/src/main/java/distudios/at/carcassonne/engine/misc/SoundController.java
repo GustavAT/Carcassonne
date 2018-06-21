@@ -29,7 +29,7 @@ public class SoundController implements ISoundController {
     public SoundController(Context context) {
         background_music=new MediaPlayer();
         this.context=context;
-        bildSound();
+        buildSound();
         loadSound();
     }
 
@@ -80,7 +80,7 @@ public class SoundController implements ISoundController {
     }
 
     @Override
-    public void bildSound() {
+    public void buildSound() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             attributesBuilder = new AudioAttributes.Builder();
             attributesBuilder.setUsage(AudioAttributes.USAGE_GAME);

@@ -20,7 +20,7 @@ public class ShakeListener extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shake_listener);
+        setContentView(R.layout.cheat_function);
 
         sensorManager =(SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorManager.registerListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
@@ -46,7 +46,6 @@ public class ShakeListener extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(),"shake it shake it",Toast.LENGTH_LONG);
                 toast.show();
             }
-
         }
 
         @Override

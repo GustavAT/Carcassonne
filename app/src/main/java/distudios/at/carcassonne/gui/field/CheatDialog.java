@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.logic.Card;
@@ -38,15 +41,18 @@ public class CheatDialog extends DialogFragment {
     private float accelLast;
     private float shake;
 
+    List<Card> drawnCards = new ArrayList<>();
+    private Card card;
     final IGameController controller = CarcassonneApp.getGameController();
-
-    Integer x= controller.getGameState().getStack().get(controller.getGameState().getStack().size()-1);
-    Integer y= controller.getGameState().getStack().get(controller.getGameState().getStack().size()-2);
-    Integer z= controller.getGameState().getStack().get(controller.getGameState().getStack().size()-3);
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+       drawnCards = new ArrayList<>();
+       drawnCards = controller.drawCards();
+       card=controller.drawCard();
+
 
 
         //Dialog build
@@ -67,53 +73,58 @@ public class CheatDialog extends DialogFragment {
         builder.setView(view);
 
         //Current card
-        Card c = controller.drawCard();
-        controller.setCurrentCard(c);
-        final ExtendedCard ec = CardDataBase.getCardById(c.getId());
-        CreateBitmap(currentimg,ec.getId());
+
+
+        CreateBitmap(currentimg,card.getId());
 
         currentimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bitmapInteger= ec.getId();
-                listener.getBitmapInteger(bitmapInteger);
+                listener.getBitmapInteger(card);
                 getDialog().dismiss();
             }
         });
 
+        if (drawnCards.size()>2){
+            CreateBitmap(thirdimg,drawnCards.get(2).getId());
 
 
-        //cheat options
-        CreateBitmap(firstimg,x);
-        CreateBitmap(secondimg,y);
-        CreateBitmap(thirdimg,z);
 
-       firstimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bitmapInteger=x;
-                listener.getBitmapInteger(bitmapInteger);
-                getDialog().dismiss();
-            }
-        });
+            thirdimg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.getBitmapInteger(drawnCards.get(2));
+                    getDialog().dismiss();
+                }
+            });
+        }
 
-        secondimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bitmapInteger=y;
-                listener.getBitmapInteger(bitmapInteger);
-                getDialog().dismiss();
-            }
-        });
+        if (drawnCards.size()>1){
+            CreateBitmap(secondimg,drawnCards.get(1).getId());
+            secondimg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.getBitmapInteger(drawnCards.get(1));
+                    getDialog().dismiss();
+                }
+            });
+        }
 
-        thirdimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bitmapInteger=z;
-                listener.getBitmapInteger(bitmapInteger);
-                getDialog().dismiss();
-            }
-        });
+        if (drawnCards.size()>0){
+            CreateBitmap(firstimg,drawnCards.get(0).getId());
+            firstimg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.getBitmapInteger(drawnCards.get(0));
+                    getDialog().dismiss();
+                }
+            });
+
+        }
+
+
+
+
 
         //Catch the cheater
         cheater.setOnClickListener(new View.OnClickListener() {
@@ -156,8 +167,9 @@ public class CheatDialog extends DialogFragment {
     }
 
     public interface DialogListener{
-        void getBitmapInteger(Integer bitmapInteger);
+        void getBitmapInteger( Card choosenCard);
     }
+
 
 
     private final SensorEventListener sensorListener = new SensorEventListener() {

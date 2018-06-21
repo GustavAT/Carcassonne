@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -64,15 +65,15 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
     private TextView textViewStatus;
     private TextView textViewStatusPeeps;
 
-    Bitmap source;
 
     @Override
-    public void getBitmapInteger(Integer i) {
+    public void getBitmapInteger(Card card) {
 
-        buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(),PlayfieldView.cardIdToBitmap(i)));
+        IGameController controller = CarcassonneApp.getGameController();
+        buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(),PlayfieldView.cardIdToBitmap(card.getId())));
+        controller.setCurrentCard(card);
         playfieldView.addPossibleLocations();
         updateFromGameState();
-        source=PlayfieldView.cardIdToBitmap(i);
 
     }
 
@@ -140,7 +141,6 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
                 CheatDialog cheatDialog = new CheatDialog();
                 cheatDialog.setTargetFragment(GameFragment.this,1);
                 cheatDialog.show(getFragmentManager(),"Choose Card Dialog");
-
             }
         });
 
@@ -170,6 +170,7 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
                 ExtendedCard ec = CardDataBase.getCardById(c.getId());
                 //buttonDrawCard.setImageDrawable(new BitmapDrawable(getResources(), PlayfieldView.cardIdToBitmap(ec.getId())));
 
+                Bitmap source=PlayfieldView.cardIdToBitmap(c.getId());
 
                 Matrix m = new Matrix();
                 if (c.getOrientation() == Orientation.NORTH) {
@@ -289,6 +290,7 @@ public class GameFragment extends Fragment implements PlayfieldView.ICardPlaced 
         updateStatusText();
         playfieldView.initFieldFromGameState();
     }
+
 
     @Override
     public void cardPlaced(int x, int y) {

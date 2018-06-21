@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaExtractor;
 import android.support.annotation.Nullable;
 import android.support.constraint.solver.widgets.Rectangle;
+import android.telephony.CarrierConfigManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -43,7 +44,7 @@ import distudios.at.carcassonne.engine.logic.PeepPosition;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
-public class PlayfieldView extends View implements CheatDialog.DialogListener{
+public class PlayfieldView extends View {
 
     public ICardPlaced callbackCardPlaced;
     public IPeepPlaced callbackPeepPlaced;
@@ -63,10 +64,6 @@ public class PlayfieldView extends View implements CheatDialog.DialogListener{
 
     private GameState gameState;
 
-    @Override
-    public void getBitmapInteger(Integer bitmapInteger) {
-
-    }
 
     private Map<String, CardContainer> placedCards = new HashMap<>();
     private Map<String, CardContainer> possibleLocations = new HashMap<>();
@@ -496,11 +493,11 @@ public class PlayfieldView extends View implements CheatDialog.DialogListener{
 
 
     private void drawCardContainer(CardContainer c, Canvas canvas) {
+        IGameController controller = CarcassonneApp.getGameController();
         ExtendedCard ec = CardDataBase.getCardById(c.card.getId());
+
         if (ec == null) return;
-
-
-        Bitmap bitmap = cardIdToBitmap(ec.getId());
+        Bitmap bitmap=cardIdToBitmap(ec.getId());
         if (bitmap == null) return;
 
         Matrix matrix = new Matrix();

@@ -99,15 +99,14 @@ public class GameState implements Serializable {
      * Draw cards from stack without removing it
      * @return
      */
-    public List<Integer> drawCards() {
-        ArrayList<Integer> listOfCards = new ArrayList<>();
+    public List<Card> drawCards() {
+        ArrayList<Card> listOfCards = new ArrayList<>();
 
-            for(int i = stack.size()-3;i<=stack.size();i++){
-                listOfCards.add(stack.get(i));
+            for(int i = 0;i<=Math.min(3,stack.size());i++){
+                listOfCards.add(new Card(stack.get(i), -1, -1, Orientation.NORTH));
                 //stack.remove(i);
             }
-
-        return null;
+        return listOfCards;
     }
 
     /**
