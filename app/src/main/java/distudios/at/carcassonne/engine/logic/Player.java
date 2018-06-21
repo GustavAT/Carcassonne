@@ -2,29 +2,29 @@ package distudios.at.carcassonne.engine.logic;
 
 public class Player {
 
-    public int peeps = 10;
-    public int playerID;
+    private int peeps = 10;
+    private int playerID;
 
     //TODO: MICHI AUSWERTUNG VON SCORE KLASSE
-    public float scoreMultiplierTotal = 1;
-    public float scoreMultiplierCathedral = 1;
-    public float scoreMultiplierCastles = 1;
-    public float scoreMultiplierStreets = 1;
-    public float peepStrength = 1;
-    public Boolean gainsStrengthFromOtherPeeps = false;
-    public float peepStrengthMultiplierPerOtherPeep = 1;
+    private float scoreMultiplierTotal = 1;
+    private float scoreMultiplierCathedral = 1;
+    private float scoreMultiplierCastles = 1;
+    private float scoreMultiplierStreets = 1;
+    private float peepStrength = 1;
+    private Boolean gainsStrengthFromOtherPeeps = false;
+    private float peepStrengthMultiplierPerOtherPeep = 1;
 
     //TODO: SIMON EINBAU IN MEEPLE SET
     // Kann mehrere Bauwerke auf einer Karte besetzen
-    public Boolean canSetMultiplePeeps = false;
+    private Boolean canSetMultiplePeeps = false;
     // Ignorieren von marks
-    public Boolean canSetOnExistingPeeps = false;
+    private Boolean canSetOnExistingPeeps = false;
     // Setzen nur auf markierte Seiten
-    public Boolean canOnlySetOnExisitingPeeps = false;
+    private Boolean canOnlySetOnExisitingPeeps = false;
     // Bei geteilten Bauwerken einen Gegner-Peep in eigenen Umwandeln
-    public Boolean canConvertPeeps = false;
+    private Boolean canConvertPeeps = false;
     //CONVERTS A peep when they have multiples of his strength
-    public float convertsPeepsOnMultipleOf = 1;
+    private float convertsPeepsOnMultipleOf = 1;
 
     public Player(int playerID) {
         this.playerID = playerID;

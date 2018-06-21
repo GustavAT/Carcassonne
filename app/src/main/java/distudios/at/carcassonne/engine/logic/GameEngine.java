@@ -2,6 +2,7 @@ package distudios.at.carcassonne.engine.logic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
 import static distudios.at.carcassonne.engine.logic.CardSide.STREET;

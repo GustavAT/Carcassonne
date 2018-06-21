@@ -3,6 +3,7 @@ package distudios.at.carcassonne.engine.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 
 public class CardDataBase {
@@ -13,7 +14,7 @@ public class CardDataBase {
     private static CardDataBase INSTANCE;
     // 72 Cards including start card leads to STACK SIZE of 71;
     private final int STACK_SIZE=71;
-    public ArrayList<ExtendedCard> cardDB;
+    private List<ExtendedCard> cardDB;
 
 
     private CardDataBase(){

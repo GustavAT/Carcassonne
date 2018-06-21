@@ -6,6 +6,7 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.INetworkController;
@@ -14,7 +15,7 @@ import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
 public class GameController implements IGameController {
 
-    public HashMap<Integer, Player> playerHashMap;
+    private Map<Integer, Player> playerHashMap;
     private IGameEngine gameEngine;
     /**
      * True if the player has placed his card in this turn
@@ -133,6 +134,9 @@ public class GameController implements IGameController {
         if ((cState != CState.END_TURN && cState != CState.PLACE_FIGURE) || !isMyTurn()) return;
 
         gameEngine.markAllCards();
+
+        checkPoints(currentCard);
+
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
         GameState state = getGameState();
         state.currentPlayer = state.getNextPlayer();
