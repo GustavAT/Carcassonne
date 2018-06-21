@@ -2,6 +2,7 @@ package distudios.at.carcassonne.engine.logic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
 import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
@@ -298,8 +299,8 @@ public class GameEngine implements IGameEngine {
      * @param orientation
      * @return
      */
-    public ArrayList<PeepPosition> getBordersByOrientation(Card card, Card testCard, Orientation orientation){
-        ArrayList<PeepPosition> markedBorders = new ArrayList<PeepPosition>();
+    public List<PeepPosition> getBordersByOrientation(Card card, Card testCard, Orientation orientation) {
+        ArrayList<PeepPosition> markedBorders = new ArrayList<>();
 
         if (Card.getAbsoluteOrientation(orientation, card.getOrientation()) == NORTH) {//Folgekarte befindet sich im Norden
             if (testCard.getPosMarks().contains(Bottom) && !(markedBorders.contains(Top))) {
@@ -352,15 +353,14 @@ public class GameEngine implements IGameEngine {
     /*
     Gibt für übergebene Karte und übergebene CardSide die markierten Seiten (gemäß Spielfeld) an
      */
-    public ArrayList<PeepPosition> getMarkedBorders(Card card, CardSide cardSide) {
+    public List<PeepPosition> getMarkedBorders(Card card, CardSide cardSide) {
         ArrayList<PeepPosition> markedBorders = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> pBorders = new ArrayList<PeepPosition>();
+        List<PeepPosition> pBorders;
         ArrayList<Card> field = currentState.getCards();
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID = card.getId();
         Card testCard;
 
-        Orientation oIV = Card.getAbsoluteOrientation(NORTH, card.getOrientation());
         if (getFollowedCard(card, field, Card.getAbsoluteOrientation(NORTH, card.getOrientation())) != null) {
             testCard = getFollowedCard(card, field, Card.getAbsoluteOrientation(NORTH, card.getOrientation())); //passende Folgekarte gemäß Spielfeld
 
@@ -372,7 +372,6 @@ public class GameEngine implements IGameEngine {
             }
 
         }
-            Orientation o = Card.getAbsoluteOrientation(EAST, card.getOrientation());
             if (getFollowedCard(card, field, Card.getAbsoluteOrientation(EAST, card.getOrientation())) != null) {
                 testCard = getFollowedCard(card, field, Card.getAbsoluteOrientation(EAST, card.getOrientation())); //passende Folgekarte gemäß Spielfeld
 
@@ -383,7 +382,6 @@ public class GameEngine implements IGameEngine {
                     }
                 }
             }
-                Orientation oII = Card.getAbsoluteOrientation(SOUTH, card.getOrientation());
             if (getFollowedCard(card, field, Card.getAbsoluteOrientation(SOUTH, card.getOrientation())) != null) {
                 testCard = getFollowedCard(card, field, Card.getAbsoluteOrientation(SOUTH, card.getOrientation())); //passende Folgekarte gemäß Spielfeld
 
@@ -394,7 +392,6 @@ public class GameEngine implements IGameEngine {
                     }
                 }
             }
-            Orientation oIII = Card.getAbsoluteOrientation(WEST, card.getOrientation());
                 if (getFollowedCard(card, field, Card.getAbsoluteOrientation(WEST, card.getOrientation())) != null) {
                     testCard = getFollowedCard(card, field, Card.getAbsoluteOrientation(WEST, card.getOrientation())); //passende Folgekarte gemäß Spielfeld
 
@@ -408,16 +405,14 @@ public class GameEngine implements IGameEngine {
 
         if(markedBorders.contains(Top) && cdb.getCardSide(cardID,card.getOrientation()) != cardSide){
             markedBorders.remove(Top);
-        } Orientation oI = getRightSide(card.getOrientation());
+        }
         if(markedBorders.contains(Right) && cdb.getCardSide(cardID,getRightSide(card.getOrientation())) != cardSide){
             markedBorders.remove(Right);
         }
-        Orientation oIIy = Card.getAbsoluteOrientation(card.getOrientation(),SOUTH);
-        CardSide cs = cdb.getCardSide(cardID,Card.getAbsoluteOrientation(card.getOrientation(),SOUTH));
         if(markedBorders.contains(Bottom) && cdb.getCardSide(cardID,Card.getAbsoluteOrientation(card.getOrientation(),SOUTH)) != cardSide){
 
             markedBorders.remove(Bottom);
-        }Orientation oIVz = getLeftSide(card.getOrientation());
+        }
         if(markedBorders.contains(Left) && cdb.getCardSide(cardID,getLeftSide(card.getOrientation())) != cardSide){
 
             markedBorders.remove(Left);
@@ -429,14 +424,12 @@ public class GameEngine implements IGameEngine {
     /*
  Gibt für übergebene Karte und übergebene CardSide die freien Seiten (gemäß Spielfeld) an
   */
-    public ArrayList<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide) {
-        ArrayList<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> markedBorders = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
+    public List<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide) {
+        ArrayList<PeepPosition> unmarkedBorders;
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID = card.getId();
         //Seiten mit passender CardSide gemäß cdb
-        ArrayList<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, cardSide);
+        List<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, cardSide);
 
         //Es werden die Borders für Street/Castle geholt
         unmarkedBorders = getUnmarkedBuildingBorders(card, buildingOs, cardSide);
@@ -462,7 +455,7 @@ public class GameEngine implements IGameEngine {
 
         //Wenn für zwei Seiten weniger Seiten mit Castle frei sind als CardSides da sind
         // Das Castle auf card darf nicht rechtwinklig VERBUNDEN sein (splitStop == false)
-        if (cardSide == CASTLE && buildingOs.size() == 2 && buildingOs.size() > unmarkedBorders.size() && cdb.getCardById(cardID).isSplitStop() == false) {
+        if (cardSide == CASTLE && buildingOs.size() == 2 && buildingOs.size() > unmarkedBorders.size() && !cdb.getCardById(cardID).isSplitStop()) {
                 unmarkedBorders.clear();
                 return unmarkedBorders;
         }
@@ -470,7 +463,7 @@ public class GameEngine implements IGameEngine {
         //Sonderfall Cathedral abfangen:
 
         //Wenn card eine Cathedral ist und auch eine Straße hat -> auch im Center platzierbar
-        if (cdb.getCardById(cardID).isCathedral() && cardSide == STREET && buildingOs.size() > 0) {
+        if (cdb.getCardById(cardID).isCathedral() && cardSide == STREET && !(buildingOs.isEmpty())) {
             if(!(unmarkedBorders.contains(Center))) {
                 unmarkedBorders.add(Center);
                 return unmarkedBorders;
@@ -491,10 +484,10 @@ public class GameEngine implements IGameEngine {
      * @param card
      * @return
      */
-    public ArrayList<PeepPosition> getUnmarkedBuildingBorders(Card card, ArrayList<Orientation> buildingOs, CardSide cardSide){
+    public ArrayList<PeepPosition> getUnmarkedBuildingBorders(Card card, List<Orientation> buildingOs, CardSide cardSide) {
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID = card.getId();
-        ArrayList<PeepPosition> markedBuildingBorders = new ArrayList<PeepPosition>();
+        List<PeepPosition> markedBuildingBorders = new ArrayList<>();
         ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
         ArrayList<PeepPosition> unmarkedBuildingBorders = new ArrayList<PeepPosition>();
 
@@ -568,8 +561,8 @@ public class GameEngine implements IGameEngine {
      * @param card
      */
     public void markMarkedBorders(Card card){
-        ArrayList<PeepPosition> markedCastleBorders = getMarkedBorders(card, CASTLE); //Markierte Castle-Stellen holen
-        ArrayList<PeepPosition> markedStreetBorders = getMarkedBorders(card, STREET); //Markierte Street-Stellen holen
+        List<PeepPosition> markedCastleBorders = getMarkedBorders(card, CASTLE); //Markierte Castle-Stellen holen
+        List<PeepPosition> markedStreetBorders = getMarkedBorders(card, STREET); //Markierte Street-Stellen holen
 
         for (PeepPosition pos:markedCastleBorders) {
             if (!(card.getPosMarks().contains(pos))) {
@@ -588,10 +581,10 @@ public class GameEngine implements IGameEngine {
    @Param mark: die vom Spieler gewählte Markiereung (indirekt Position von Peep)
     */
     public boolean markCard(Card card, PeepPosition mark, CardSide cardSide) {
-        ArrayList<PeepPosition> unmarkedBorders = getUnmarkedBorders(card, cardSide); //Unmarkierte Stellen holen
+        List<PeepPosition> unmarkedBorders = getUnmarkedBorders(card, cardSide); //Unmarkierte Stellen holen
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID = card.getId();
-        ArrayList<Orientation> sideOs= cdb.getMatchingOrientations(cardID, cardSide);
+        List<Orientation> sideOs = cdb.getMatchingOrientations(cardID, cardSide);
 
         //Wichtig: "belegte" Seiten gegenmarkieren
        markMarkedBorders(card);
@@ -606,7 +599,7 @@ public class GameEngine implements IGameEngine {
         }
 
         //Wenn card die "Vierer-Castle-Karte" ist müssen alle vier Seiten (nicht die Ecken) markiert werden
-        ArrayList<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, cardSide);
+        List<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, cardSide);
         if (cardSide == CASTLE && cdb.getMatchingOrientations(cardID, cardSide).size() == 4) {
             if (!(card.getPosMarks().contains(Top))) card.setMark(Top);
             if (!(card.getPosMarks().contains(Bottom))) card.setMark(Bottom);
@@ -649,8 +642,8 @@ public class GameEngine implements IGameEngine {
     }
 
     public boolean placePeep(Card card, PeepPosition chosenMark, int playerID) {
-        ArrayList<PeepPosition> unmarkedCastleBorders = getUnmarkedBorders(card, CASTLE);
-        ArrayList<PeepPosition> unmarkedStreetBorders = getUnmarkedBorders(card, STREET);
+        List<PeepPosition> unmarkedCastleBorders = getUnmarkedBorders(card, CASTLE);
+        List<PeepPosition> unmarkedStreetBorders = getUnmarkedBorders(card, STREET);
         int cardID = card.getId();
 
         //Nötige Unterscheidung, um zu wissen welche Seiten markiert werden müssen
@@ -678,8 +671,8 @@ public class GameEngine implements IGameEngine {
 
     public ArrayList<PeepPosition> getALLFigurePos(Card card) {
         ArrayList<PeepPosition> figurePos = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> unmarkedCastleBorders = getUnmarkedBorders(card, CASTLE);
-        ArrayList<PeepPosition> unmarkedStreetBorders = getUnmarkedBorders(card, STREET);
+        List<PeepPosition> unmarkedCastleBorders = getUnmarkedBorders(card, CASTLE);
+        List<PeepPosition> unmarkedStreetBorders = getUnmarkedBorders(card, STREET);
 
         if(getPlayerPeeps(currentState.currentPlayer) < 10) {
             figurePos.addAll(unmarkedCastleBorders);
@@ -702,10 +695,10 @@ public class GameEngine implements IGameEngine {
      */
     public boolean markAllCards() {
         ArrayList<Card> field = currentState.getCards();
-        ArrayList<Orientation> castleOs = new ArrayList<Orientation>();
-        ArrayList<Orientation> streetOs = new ArrayList<Orientation>();
-        ArrayList<PeepPosition> markedCastleBorders = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> markedStreetBorders = new ArrayList<PeepPosition>();
+        List<Orientation> castleOs = new ArrayList<>();
+        List<Orientation> streetOs = new ArrayList<>();
+        List<PeepPosition> markedCastleBorders = new ArrayList<>();
+        List<PeepPosition> markedStreetBorders = new ArrayList<>();
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID;
 

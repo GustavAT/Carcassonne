@@ -1,12 +1,9 @@
 package distudios.at.carcassonne.engine.logic;
 
-import android.graphics.Path;
-
-import java.nio.file.OpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.TooManyListenersException;
+import java.util.List;
 
 
 public class CardDataBase {
@@ -31,7 +28,7 @@ public class CardDataBase {
         cardDB.add(new ExtendedCard(2, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(2).setCathedral(true);
         cardDB.add(new ExtendedCard(3, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.STREET, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
-        getCardById(3).setCathedral(false);
+        getCardById(3).setCathedral(true);
         // CARD B CATHEDRAL - 4x
         cardDB.add(new ExtendedCard(4, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(4).setCathedral(true);
@@ -222,7 +219,7 @@ public class CardDataBase {
     /*
     Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
      */
-    public ArrayList<Orientation> getMatchingOrientations(int id, CardSide cardSide){
+    public List<Orientation> getMatchingOrientations(int id, CardSide cardSide) {
         ArrayList<Orientation> cardSides = new ArrayList<Orientation>();
         if (this.getCardSide(id,Orientation.NORTH)== cardSide) cardSides.add(Orientation.NORTH);
         if (this.getCardSide(id,Orientation.EAST)==cardSide) cardSides.add(Orientation.EAST);
