@@ -326,6 +326,27 @@ public class GameEngine implements IGameEngine {
         return markedBorders;
     }
 
+    /**
+     * Gibt alle markierten Sreiten einer übergebenen Karte zurück
+     * benötigt wenn nur auf markierte Bauwerke gesetzt werden darf
+     *
+     * @param card
+     * @return markierte Seiten von card
+     */
+    public List<PeepPosition> getAllMarkedBorders(Card card) {
+        List<PeepPosition> allMarkedBorders = new ArrayList<PeepPosition>();
+        List<PeepPosition> markedStreetBorders = getMarkedBorders(card, STREET);
+        List<PeepPosition> markedCastleBorders = getMarkedBorders(card, CASTLE);
+
+        allMarkedBorders.addAll(markedStreetBorders);
+        for (PeepPosition pos : markedCastleBorders) {
+            if (!allMarkedBorders.contains(pos)) {
+                allMarkedBorders.add(pos);
+            }
+        }
+        return allMarkedBorders;
+    }
+
     /*
     Gibt für übergebene Karte und übergebene CardSide die markierten Seiten (gemäß Spielfeld) an
      */
