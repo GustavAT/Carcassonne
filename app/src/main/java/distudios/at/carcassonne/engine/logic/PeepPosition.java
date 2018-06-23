@@ -7,67 +7,51 @@ import java.util.ArrayList;
  */
 
 public enum PeepPosition {
-    TopLeft, Top, TopRight,
+    Top,
     Left,
     Right,
     Center,
-    BottomLeft, Bottom, BottomRight;
+    Bottom;
 
 
     public static ArrayList<PeepPosition> getPeepPositions(){
         ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
-        peepPositions.add(TopLeft);
         peepPositions.add(Top);
-        peepPositions.add(TopRight);
         peepPositions.add(Left);
         peepPositions.add(Right);
         peepPositions.add(Center);
-        peepPositions.add(BottomLeft);
         peepPositions.add(Bottom);
-        peepPositions.add(BottomRight);
 
         return peepPositions;
     }
 
     public static int fromPosition(PeepPosition p) {
-        if (p == TopLeft) {
+        if (p == Top) {
             return 0;
-        } else if (p == Top) {
-            return 1;
-        } else if (p == TopRight) {
-            return 2;
         } else if (p == Left) {
-            return 3;
+            return 1;
         } else if (p == Right) {
-            return 4;
+            return 2;
         } else if (p == Center) {
-            return 5;
-        } else if (p == BottomLeft) {
-            return 6;
+            return 3;
         } else if (p == Bottom) {
-            return 7;
+            return 4;
         }
         return 8;
     }
 
     public static PeepPosition fromInt(int p) {
         if (p == 0) {
-            return TopLeft;
-        } else if (p == 1) {
             return Top;
-        } else if (p == 2) {
-            return TopRight;
-        } else if (p == 3) {
+        } else if (p == 1) {
             return Left;
-        } else if (p == 4) {
+        } else if (p == 2) {
             return Right;
-        } else if (p == 5) {
+        } else if (p == 3) {
             return Center;
-        } else if (p == 6) {
-            return BottomLeft;
-        } else if (p == 7) {
+        } else if (p == 4) {
             return Bottom;
         }
-        return BottomRight;
+        return Top;
     }
 }

@@ -126,7 +126,7 @@ public class TestPlacePeeps {
         List<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, STREET);
 
         ArrayList<PeepPosition> unmarkedBuildingBorders = new ArrayList<PeepPosition>();
-        unmarkedBuildingBorders = ge.getUnmarkedBuildingBorders(cardXV, buildingOs, STREET);
+        unmarkedBuildingBorders = ge.getUnmarkedBuildingBorders(cardXV, STREET);
         Assert.assertTrue(unmarkedBuildingBorders.size() == 3);
         Assert.assertTrue(unmarkedBuildingBorders.contains(Bottom));
         Assert.assertTrue(unmarkedBuildingBorders.contains(Right));
