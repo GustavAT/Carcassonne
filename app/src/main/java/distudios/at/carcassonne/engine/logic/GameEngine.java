@@ -402,7 +402,7 @@ public class GameEngine implements IGameEngine {
  Gibt für übergebene Karte und übergebene CardSide die freien Seiten (gemäß Spielfeld) an
   */
     public List<PeepPosition> getUnmarkedBorders(Card card, CardSide cardSide) {
-        ArrayList<PeepPosition> unmarkedBorders;
+        List<PeepPosition> unmarkedBorders;
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID = card.getId();
         //Seiten mit passender CardSide gemäß cdb
@@ -461,12 +461,12 @@ public class GameEngine implements IGameEngine {
      * @param card
      * @return
      */
-    public ArrayList<PeepPosition> getUnmarkedBuildingBorders(Card card, CardSide cardSide) {
+    public List<PeepPosition> getUnmarkedBuildingBorders(Card card, CardSide cardSide) {
         CardDataBase cdb = CardDataBase.getInstance();
         int cardID = card.getId();
-        List<PeepPosition> markedBuildingBorders = new ArrayList<>();
-        ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
-        ArrayList<PeepPosition> unmarkedBuildingBorders = new ArrayList<PeepPosition>();
+        List<PeepPosition> markedBuildingBorders;
+        List<PeepPosition> peepPositions;
+        List<PeepPosition> unmarkedBuildingBorders;
 
         markedBuildingBorders = getMarkedBorders(card, cardSide);
 
@@ -686,7 +686,6 @@ public class GameEngine implements IGameEngine {
 
                 //Wenn die aktuelle Karte zwei verbundene Castle-Seiten hat und eine markiert ist,
                 // muss die andere auch markiert werden
-                ArrayList<PeepPosition> testII = getUnmarkedBuildingBorders(card, CASTLE);
                 if(!(cdb.getCardById(cardID).isSplitStop()) && markedCastleBorders.size() > 0 && markedCastleBorders.size() < castleOs.size()){
                     for (PeepPosition pos : getUnmarkedBuildingBorders(card, CASTLE)) {
                         if (!(card.getPosMarks().contains(pos))) {
@@ -694,7 +693,6 @@ public class GameEngine implements IGameEngine {
                         }
                     }
                 }
-                ArrayList<PeepPosition> test = getUnmarkedBuildingBorders(card, STREET);
                 if(streetOs.size() == 2 && markedStreetBorders.size() > 0 && markedStreetBorders.size() < streetOs.size()){
                     for (PeepPosition pos : getUnmarkedBuildingBorders(card, STREET)) {
                         if (!(card.getPosMarks().contains(pos))) {
