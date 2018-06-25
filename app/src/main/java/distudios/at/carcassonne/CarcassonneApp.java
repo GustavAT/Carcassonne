@@ -34,12 +34,12 @@ public class CarcassonneApp extends Application implements Application.ActivityL
         //Save switch State
 
         SharedPreferences sharedPref = getSharedPreferences("myPreff",0 );
-        soundController.setBackground_music_state(sharedPref.getBoolean("music_switch_state",false));
-        soundController.setSound_state(sharedPref.getBoolean("sound_switch_state",false));
+        soundController.setBackgroundMusicState(sharedPref.getBoolean("music_switch_state",false));
+        soundController.setSoundState(sharedPref.getBoolean("sound_switch_state",false));
         registerActivityLifecycleCallbacks(this);
 
 
-        if(!soundController.getSound_state()) {
+        if(!soundController.getSoundState()) {
             soundController.stopSound();
         }
     }
@@ -66,7 +66,7 @@ public class CarcassonneApp extends Application implements Application.ActivityL
     @Override
     public void onActivityResumed(Activity activity) {
         count.cancel();
-        if(soundController.getBackground_music_state()){
+        if(soundController.getBackgroundMusicState()){
             soundController.resumeMusic();
         }
     }
@@ -82,8 +82,8 @@ public class CarcassonneApp extends Application implements Application.ActivityL
         SharedPreferences sharedPref = getSharedPreferences("myPreff",0 );
 
         SharedPreferences.Editor editor =sharedPref.edit();
-        editor.putBoolean("music_switch_state",soundController.getBackground_music_state());
-        editor.putBoolean("sound_switch_state",soundController.getSound_state());
+        editor.putBoolean("music_switch_state",soundController.getBackgroundMusicState());
+        editor.putBoolean("sound_switch_state",soundController.getSoundState());
         editor.commit();
     }
 

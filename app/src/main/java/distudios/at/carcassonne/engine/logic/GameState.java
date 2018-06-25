@@ -104,7 +104,7 @@ public class GameState implements Serializable {
 
             for(int i = 0;i<=Math.min(3,stack.size());i++){
                 listOfCards.add(new Card(stack.get(i), -1, -1, Orientation.NORTH));
-                //stack.remove(i);
+
             }
         return listOfCards;
     }
