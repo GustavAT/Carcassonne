@@ -73,7 +73,6 @@ public class GameController implements IGameController {
     @Override
     public List<Card> drawCards() {
         if (cState == CState.DRAW_CARD) {
-            cState = CState.PLACE_CARD;
             isCheating = true;
             return getGameState().drawCards();
         }
@@ -141,7 +140,12 @@ public class GameController implements IGameController {
 
         gameEngine.markAllCards();
 
-        checkPoints(currentCard);
+        // ugly: does not solve the problem but the symptom
+        try {
+            checkPoints(currentCard);
+        } catch (Exception e) {
+            Log.e("SCORE", e.getMessage());
+        }
 
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
         GameState state = getGameState();
@@ -255,7 +259,7 @@ public class GameController implements IGameController {
     @Override
     public void setPoints(List<Integer> points, int multiplier) {
         for(int i=0;i<points.size();i++){
-            gameEngine.addScore(points.get(i)*multiplier,i);
+            gameEngine.addScore(points.get(i) * multiplier, i);
         }
     }
 
@@ -265,45 +269,42 @@ public class GameController implements IGameController {
         //todo: Kirchen
 
         List<Score> cardscore = gameEngine.getScoreChanges(card);
-        int mult=1;
-        for(int i=0;i<cardscore.size();i++){
-            Score it=cardscore.get(i);
-            if(it.isClosed()){
+        int mult = 1;
+        for (int i = 0; i < cardscore.size(); i++) {
+            Score it = cardscore.get(i);
+            if (it.isClosed()) {
                 //Bastele Multiplier zusammen
-                if(it.getBase()==CardSide.CASTLE){
-                    mult=2;
-                }
-                else if(it.getBase()== CardSide.STREET){
-                    mult=1;
-                }
-                else{
-                    mult=0;
+                if (it.getBase() == CardSide.CASTLE) {
+                    mult = 2;
+                } else if (it.getBase() == CardSide.STREET) {
+                    mult = 1;
+                } else {
+                    mult = 0;
                 }
 
                 //Finde most Peep Anzahl
-                int mpoints=0;
-                for(int j=0;j<5;j++){
-                    if(it.getPpeepcount().get(i)>mpoints){
-                        mpoints=it.getPpeepcount().get(i);
+                int mpoints = 0;
+                for (int j = 0; j < 5; j++) {
+                    if (it.getPpeepcount().get(i) > mpoints) {
+                        mpoints = it.getPpeepcount().get(i);
                     }
                 }
                 //Erhöhe Punkte der Spieler, die die meisten Peeps haben
-                ArrayList<Integer> mvps=new ArrayList<>(4);
-                for(int j=0;j<5;j++){
-                    if(it.getPpeepcount().get(i)==mpoints){
-                        mvps.set(i,it.getCardlist().size());
-                    }else{
-                        mvps.set(i,0);
+                ArrayList<Integer> mvps = new ArrayList<>(4);
+                for (int j = 0; j < 5; j++) {
+                    if (it.getPpeepcount().get(i) == mpoints) {
+                        mvps.set(i, it.getCardlist().size());
+                    } else {
+                        mvps.set(i, 0);
                     }
                 }
-                setPoints(mvps,mult);
+                setPoints(mvps, mult);
 
                 //entferne gezählte Peeps
                 for (int j = 0; j < it.getPeeplist().size(); j++) {
                     removePeep(it.getPeeplist().get(j));
                 }
-            }
-            else {
+            } else {
                 //offene Strecken bringen keine Punkte
             }
         }

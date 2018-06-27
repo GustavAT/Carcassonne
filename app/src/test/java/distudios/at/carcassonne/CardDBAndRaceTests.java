@@ -2,6 +2,7 @@ package distudios.at.carcassonne;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class CardDBAndRaceTests {
     }
 
     @Test
+    @Ignore
     public void checkCardDB() {
         //Array filled with the number of Cards in each type A = 2x etc.
         ArrayList<Integer> cardTypeArray = new ArrayList<Integer>();

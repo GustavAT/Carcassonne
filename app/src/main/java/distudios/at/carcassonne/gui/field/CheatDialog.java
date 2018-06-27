@@ -24,8 +24,6 @@ import java.util.List;
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.R;
 import distudios.at.carcassonne.engine.logic.Card;
-import distudios.at.carcassonne.engine.logic.CardDataBase;
-import distudios.at.carcassonne.engine.logic.ExtendedCard;
 import distudios.at.carcassonne.engine.logic.IGameController;
 
 public class CheatDialog extends DialogFragment {
@@ -75,7 +73,7 @@ public class CheatDialog extends DialogFragment {
         //Current card
 
 
-        CreateBitmap(currentimg,card.getId());
+        CreateBitmap(currentimg, card.getId());
 
         currentimg.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -26,10 +26,6 @@ public class CardDataBase {
         cardDB = new ArrayList<>();
     }
 
-    public List<ExtendedCard> getCardDb() {
-        return cardDB;
-    }
-
     public static ExtendedCard getCardById(int id) {
         if (id > 0) {
             for (ExtendedCard ec :
@@ -42,6 +38,10 @@ public class CardDataBase {
         } else {
             return new ExtendedCard();
         }
+    }
+
+    public List<ExtendedCard> getCardDb() {
+        return cardDB;
     }
 
     private void init() {

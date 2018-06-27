@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Score {
-    private boolean closed=true;
+    private boolean closed = true;
     private CardSide base;
     private List<Integer> ppeepcount;
     private List<Card> cardlist;
@@ -33,11 +33,11 @@ public class Score {
     }
 
     public void setPeepCount(int player, int score) {
-        this.ppeepcount.set(player,score);
+        this.ppeepcount.set(player, score);
     }
 
     public void addPeepCount(int player, int score) {
-        this.ppeepcount.set(player,score+ ppeepcount.get(player));
+        this.ppeepcount.set(player, score + ppeepcount.get(player));
     }
 
     public List<Card> getCardlist() {
