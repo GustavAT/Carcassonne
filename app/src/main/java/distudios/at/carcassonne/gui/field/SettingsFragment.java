@@ -87,17 +87,17 @@ public class SettingsFragment extends Fragment {
         switchEffects = view.findViewById(R.id.switch_music);
         switchDebug = view.findViewById(R.id.switch_debugging);
 
-        switchMusic.setChecked(controller.getBackground_music_state());
+        switchMusic.setChecked(controller.getBackgroundMusicState());
 
         switchMusic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    controller.setBackground_music_state(true);
+                    controller.setBackgroundMusicState(true);
                     controller.startBackground_music();
                 } else {
                     controller.stopBackground_music();
-                    controller.setBackground_music_state(false);
+                    controller.setBackgroundMusicState(false);
                 }
             }
         });

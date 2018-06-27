@@ -15,22 +15,23 @@ import distudios.at.carcassonne.R;
 
 public class SoundController implements ISoundController {
     private MediaPlayer background_music;
-    private Boolean Background_music_state;
+    private Boolean backgroundMusicState;
     private Context context;
 
     private SoundPool soundPool;
-    private SoundPool.Builder soundPoolBilder;
+    private SoundPool.Builder soundPoolBuilder;
     private AudioAttributes attributes;
     private AudioAttributes.Builder attributesBuilder;
     private int soundID;
-    private Boolean sound_state;
+    private Boolean soundState;
+
 
 
 
     public SoundController(Context context) {
         background_music=new MediaPlayer();
         this.context=context;
-        bildSound();
+        buildSound();
         loadSound();
     }
 
@@ -39,13 +40,13 @@ public class SoundController implements ISoundController {
     }
 
     @Override
-    public void setBackground_music_state(boolean background_music_state) {
-        Background_music_state = background_music_state;
+    public void setBackgroundMusicState(boolean backgroundMusicState) {
+        this.backgroundMusicState = backgroundMusicState;
     }
 
     @Override
-    public Boolean getBackground_music_state() {
-        return Background_music_state;
+    public Boolean getBackgroundMusicState() {
+        return backgroundMusicState;
     }
 
     @Override
@@ -82,29 +83,29 @@ public class SoundController implements ISoundController {
     }
 
     @Override
-    public void bildSound() {
+    public void buildSound() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             attributesBuilder = new AudioAttributes.Builder();
             attributesBuilder.setUsage(AudioAttributes.USAGE_GAME);
             attributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION);
             attributes=attributesBuilder.build();
 
-            soundPoolBilder = new SoundPool.Builder();
-            soundPoolBilder.setAudioAttributes(attributes);
-            soundPool=soundPoolBilder.build();
+            soundPoolBuilder = new SoundPool.Builder();
+            soundPoolBuilder.setAudioAttributes(attributes);
+            soundPool= soundPoolBuilder.build();
         }else{
             soundPool= new SoundPool(1, AudioManager.STREAM_MUSIC,0);
         }
     }
 
     @Override
-    public Boolean getSound_state() {
-        return sound_state;
+    public Boolean getSoundState() {
+        return soundState;
     }
 
     @Override
-    public void setSound_state(Boolean sound_state) {
-        this.sound_state = sound_state;
+    public void setSoundState(Boolean soundState) {
+        this.soundState = soundState;
     }
 
     public void playSound(){

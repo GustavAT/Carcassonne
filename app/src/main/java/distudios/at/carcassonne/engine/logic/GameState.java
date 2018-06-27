@@ -103,7 +103,13 @@ public class GameState implements Serializable {
      * @return
      */
     public List<Card> drawCards() {
-        return new ArrayList<>();
+        List<Card> listOfCards = new ArrayList<>();
+
+            for(int i = 0;i<=Math.min(3,stack.size());i++){
+                listOfCards.add(new Card(stack.get(i), -1, -1, Orientation.NORTH));
+
+            }
+        return listOfCards;
     }
 
     /**

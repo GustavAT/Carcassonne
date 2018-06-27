@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/menu_background"
+    tools:layout_editor_absoluteY="56dp">
+
+    <LinearLayout
+        android:id="@+id/current_Card_Layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/currentimg"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_transparent"
+            app:srcCompat="?attr/actionModeBackground" />
+
+        <Button
+            android:id="@+id/cheaterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cheater" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cheater_Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/firstChoice"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu_background"
+            app:srcCompat="?attr/actionModeBackground" />
+
+        <ImageButton
+            android:id="@+id/secondChoice"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu_background"
+            app:srcCompat="?attr/actionModeBackground" />
+
+        <ImageButton
+            android:id="@+id/thirdChoice"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu_background"
+            app:srcCompat="?attr/actionModeBackground" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

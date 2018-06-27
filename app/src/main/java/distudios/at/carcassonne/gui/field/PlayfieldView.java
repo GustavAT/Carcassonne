@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaExtractor;
 import android.support.annotation.Nullable;
 import android.support.constraint.solver.widgets.Rectangle;
+import android.telephony.CarrierConfigManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -63,6 +64,7 @@ public class PlayfieldView extends View {
 
     private GameState gameState;
 
+
     private Map<String, CardContainer> placedCards = new HashMap<>();
     private Map<String, CardContainer> possibleLocations = new HashMap<>();
 
@@ -80,7 +82,6 @@ public class PlayfieldView extends View {
             }
         });
     }
-
 
 
     public static HashMap<Integer, Bitmap> ResourceMappings = null;
@@ -308,6 +309,8 @@ public class PlayfieldView extends View {
 
     }
 
+
+
     public void initFieldFromGameState() {
         IGameController controller = CarcassonneApp.getGameController();
         gameState = controller.getGameState();
@@ -455,6 +458,8 @@ public class PlayfieldView extends View {
         return width / CARDS_COUNT_HORIZONTAL;
     }
 
+
+
     public class CardContainer {
         public int id;
         public double pixelX = 0;
@@ -486,12 +491,13 @@ public class PlayfieldView extends View {
         }
     }
 
+
     private void drawCardContainer(CardContainer c, Canvas canvas) {
+        IGameController controller = CarcassonneApp.getGameController();
         ExtendedCard ec = CardDataBase.getCardById(c.card.getId());
+
         if (ec == null) return;
-
-
-        Bitmap bitmap = cardIdToBitmap(ec.getId());
+        Bitmap bitmap=cardIdToBitmap(ec.getId());
         if (bitmap == null) return;
 
         Matrix matrix = new Matrix();
