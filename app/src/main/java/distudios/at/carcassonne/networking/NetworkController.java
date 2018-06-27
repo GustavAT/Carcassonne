@@ -2,20 +2,15 @@ package distudios.at.carcassonne.networking;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.util.Log;
 
 import com.peak.salut.Callbacks.SalutCallback;
-import com.peak.salut.Callbacks.SalutDataCallback;
 import com.peak.salut.Salut;
 import com.peak.salut.SalutDataReceiver;
 import com.peak.salut.SalutDevice;
 import com.peak.salut.SalutServiceData;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import distudios.at.carcassonne.CarcassonneApp;

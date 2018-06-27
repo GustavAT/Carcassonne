@@ -53,6 +53,22 @@
             android:layout_weight="0.25"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/text_state_waiting"
+                android:textColor="@color/yellow"
+                tools:text="@string/text_status" />
+
+            <TextView
+                android:id="@+id/text_status_peeps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/text_peep" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -84,22 +100,6 @@
                     android:text="@string/text_end_turn" />
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/text_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:text="@string/text_state_waiting"
-                android:textColor="@color/yellow"
-                tools:text="@string/text_status" />
-
-            <TextView
-                android:id="@+id/text_status_peeps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:text="@string/text_peep" />
 
         </LinearLayout>
 

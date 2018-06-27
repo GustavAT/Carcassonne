@@ -1,12 +1,9 @@
 package distudios.at.carcassonne.engine.logic;
 
-import android.graphics.Path;
-
-import java.nio.file.OpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.TooManyListenersException;
+import java.util.List;
 
 
 public class CardDataBase {
@@ -14,16 +11,37 @@ public class CardDataBase {
     //Singleton Class CardDataBase that currently generates a full stack of cards to choose from
 
 
+    private static CardDataBase instance;
+    private List<ExtendedCard> cardDB;
 
-    public ArrayList<ExtendedCard> cardDB;
-    // 72 Cards including start card leads to STACK SIZE of 71;
-    private final int STACK_SIZE=71;
-
-    private static CardDataBase INSTANCE;
-
+    public static CardDataBase getInstance() {
+        if (instance == null) {
+            instance = new CardDataBase();
+            instance.init();
+        }
+        return instance;
+    }
 
     private CardDataBase(){
         cardDB = new ArrayList<>();
+    }
+
+    public List<ExtendedCard> getCardDb() {
+        return cardDB;
+    }
+
+    public static ExtendedCard getCardById(int id) {
+        if (id > 0) {
+            for (ExtendedCard ec :
+                    getInstance().cardDB) {
+                if (ec.getId() == id) {
+                    return ec;
+                }
+            }
+            return new ExtendedCard();
+        } else {
+            return new ExtendedCard();
+        }
     }
 
     private void init() {
@@ -42,7 +60,7 @@ public class CardDataBase {
         cardDB.add(new ExtendedCard(7, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.GRASS, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN, CardSide.OPEN));
         getCardById(7).setCathedral(true);
         // CARD C CASTLE 4 SIDED - 1x
-        cardDB.add(new ExtendedCard(8, CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CASTLE,CardSide.CLOSED,CardSide.CLOSED,CardSide.CLOSED,CardSide.CLOSED));
+        cardDB.add(new ExtendedCard(8, CardSide.CASTLE, CardSide.CASTLE, CardSide.CASTLE, CardSide.CASTLE, CardSide.CLOSED, CardSide.CLOSED, CardSide.CLOSED, CardSide.CLOSED));
         // CARD D CARRD STREET - 4x
         cardDB.add(new ExtendedCard(9, CardSide.CASTLE, CardSide.STREET, CardSide.STREET, CardSide.GRASS, CardSide.CLOSED, CardSide.CLOSED, CardSide.OPEN, CardSide.OPEN));
         cardDB.add(new ExtendedCard(10, CardSide.CASTLE, CardSide.STREET, CardSide.STREET, CardSide.GRASS, CardSide.CLOSED, CardSide.CLOSED, CardSide.OPEN, CardSide.OPEN));
@@ -158,41 +176,11 @@ public class CardDataBase {
 
     }
 
-    public static CardDataBase getInstance(){
-        if (INSTANCE == null) {
-            INSTANCE = new CardDataBase();
-            INSTANCE.init();
-        }
-        return INSTANCE;
-    }
-
-
-    public static ExtendedCard getCardById (int id){
-        if (id>0) {
-            for (ExtendedCard ec :
-                    getInstance().cardDB) {
-                if (ec.getId() == id) {
-                    return ec;
-                }
-            }
-            return null;
-        } else {
-            return null;
-        }
-    }
-
-    /*
-    private ExtendedCard generateRandomCard(int id){
-        return new ExtendedCard(id, CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide(), CardSide.randomCarSide());
-    }
-*/
-    //method orientation + id returns CardSide
-
-    public void sortCardDB(){
+    public void sortCardDB() {
         Collections.sort(cardDB, new Comparator<ExtendedCard>() {
             @Override
             public int compare(ExtendedCard o1, ExtendedCard o2) {
-                return (int)(o1.getId()-o2.getId());
+                return o1.getId() - o2.getId();
             }
         });
     }
@@ -217,11 +205,14 @@ public class CardDataBase {
         }
     }
 
-    /*
-    Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
+    /**
+     * Returns an Array with Orientations where CardSides match the parameter CardSide of a given Card (by ID)
+     * @param id
+     * @param cardSide
+     * @return
      */
-    public ArrayList<Orientation> getMatchingOrientations(int id, CardSide cardSide){
-        ArrayList<Orientation> cardSides = new ArrayList<Orientation>();
+    public List<Orientation> getMatchingOrientations(int id, CardSide cardSide) {
+        List<Orientation> cardSides = new ArrayList<>();
         if (this.getCardSide(id,Orientation.NORTH)== cardSide) cardSides.add(Orientation.NORTH);
         if (this.getCardSide(id,Orientation.EAST)==cardSide) cardSides.add(Orientation.EAST);
         if (this.getCardSide(id,Orientation.SOUTH)==cardSide) cardSides.add(Orientation.SOUTH);

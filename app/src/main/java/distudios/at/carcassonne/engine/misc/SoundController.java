@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -59,6 +60,7 @@ public class SoundController implements ISoundController {
             background_music.start();
         }catch (IOException e){
             e.printStackTrace();
+            Log.e("SOUNDCONTROLLER", e.getMessage());
         }
     }
 

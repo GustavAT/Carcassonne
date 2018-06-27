@@ -5,19 +5,17 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 @JsonObject
 public class GameState implements Serializable {
 
     @JsonField
-    public ArrayList<Card> cards;
+    public List<Card> cards;
     @JsonField
-    public ArrayList<Peep> peeps;
+    public List<Peep> peeps;
     @JsonField
-    public ArrayList<Integer> stack;
+    public List<Integer> stack;
     @JsonField
     public List<Integer> points;
     @JsonField
@@ -29,28 +27,33 @@ public class GameState implements Serializable {
         cards = new ArrayList<>();
         peeps = new ArrayList<>();
         stack = new ArrayList<>();
-        points = new ArrayList<>(5);
-        maxPlayerCount = 0;
+        points = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            points.add(0);
+        }
+        maxPlayerCount = 5;
         currentPlayer = 0;
     }
 
-    public void setStack(ArrayList<Integer> stack) {
-        this.stack = stack;
+    public List<Integer> getStack() {
+        return stack;
     }
 
-    public ArrayList<Integer> getStack() {
-        return stack;
+    public void setStack(List<Integer> stack) {
+        this.stack = stack;
     }
 
     public void addCard(Card card) {
         cards.add(card);
     }
 
-    public ArrayList<Card> getCards() { return cards; }
+    public List<Card> getCards() {
+        return cards;
+    }
 
     public void addPeep(Peep peep) { peeps.add(peep); }
 
-    public ArrayList<Peep> getPeeps() {
+    public List<Peep> getPeeps() {
         return peeps;
     }
 
@@ -88,7 +91,7 @@ public class GameState implements Serializable {
      * @return
      */
     public Card drawCard() {
-        if (stack.size() > 0) {
+        if (!stack.isEmpty()) {
             return new Card(stack.get(0), -1, -1, Orientation.NORTH);
         } else {
             return null;
@@ -100,7 +103,7 @@ public class GameState implements Serializable {
      * @return
      */
     public List<Card> drawCards() {
-        ArrayList<Card> listOfCards = new ArrayList<>();
+        List<Card> listOfCards = new ArrayList<>();
 
             for(int i = 0;i<=Math.min(3,stack.size());i++){
                 listOfCards.add(new Card(stack.get(i), -1, -1, Orientation.NORTH));

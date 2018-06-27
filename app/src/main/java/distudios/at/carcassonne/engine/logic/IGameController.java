@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IGameController {
 
-    void setPoints(ArrayList<Integer> points);
+    void setPoints(List<Integer> points, int multiplier);
 
     void checkPoints(Card card);
 
@@ -19,6 +19,7 @@ public interface IGameController {
     void updateGameState();
     boolean isMyTurn();
     boolean hasPlacedCard();
+
     void initPlayerMappings();
     List<Pair<Integer, Integer>> getPossibleLocations(Card c);
 
@@ -52,6 +53,7 @@ public interface IGameController {
     List<Peep> getPlacedPeeps(Card c);
 
     boolean canPlacePeep();
+
     int peepsLeft();
 
 

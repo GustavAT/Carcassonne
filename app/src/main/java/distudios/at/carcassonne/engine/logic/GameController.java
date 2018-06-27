@@ -4,26 +4,19 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import distudios.at.carcassonne.CarcassonneApp;
 import distudios.at.carcassonne.networking.INetworkController;
 import distudios.at.carcassonne.networking.connection.CarcassonneMessage;
 import distudios.at.carcassonne.networking.connection.PlayerInfo;
 
-import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
-import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
-import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
-import static distudios.at.carcassonne.engine.logic.PeepPosition.Left;
-
 public class GameController implements IGameController {
 
+    private Map<Integer, Player> playerHashMap;
     private IGameEngine gameEngine;
-
     /**
      * True if the player has placed his card in this turn
      */
@@ -46,7 +39,6 @@ public class GameController implements IGameController {
 
 
     private boolean isCheating = false;
-    public HashMap<Integer, Player> playerHashMap;
 
     public boolean isCheating() {
         return isCheating;
@@ -60,7 +52,6 @@ public class GameController implements IGameController {
     }
 
     private void init() {
-        // init game engine;
         gameEngine = new GameEngine();
         gameEngine.init(Orientation.NORTH);
         cState = CState.WAITING;
@@ -82,14 +73,12 @@ public class GameController implements IGameController {
     @Override
     public List<Card> drawCards() {
         if (cState == CState.DRAW_CARD) {
+            cState = CState.PLACE_CARD;
             isCheating = true;
             return getGameState().drawCards();
         }
-        return null;
+        return new ArrayList<>();
     }
-
-
-    //todo: Nachdem Connection auf ExtendedCard gecoded wurden-->implementiere einen Situationellen Punktezähler anhand einer Id oder Koordinate
 
     @Override
     public boolean placeCard(Card card) {
@@ -98,7 +87,6 @@ public class GameController implements IGameController {
         if(gameEngine.checkPlaceable(card)){
             gameEngine.placeCard(card);
             removeFromStack(card);
-            // todo change to PLACE_FIGURE
             cState = CState.PLACE_FIGURE;
             return true;
         }
@@ -107,7 +95,7 @@ public class GameController implements IGameController {
 
     @Override
     public List<PeepPosition> showPossibleFigurePos(Card card) {
-       return gameEngine.getALLFigurePos(card);
+        return gameEngine.getALLFigurePos(card);
     }
 
     @Override
@@ -126,7 +114,7 @@ public class GameController implements IGameController {
 
     @Override
     public boolean canPlacePeep() {
-         return peepsLeft() < 10;
+        return peepsLeft() < 10;
     }
 
     @Override
@@ -139,7 +127,7 @@ public class GameController implements IGameController {
         if (cState != CState.PLACE_FIGURE) return false;
 
         int playerId = CarcassonneApp.getNetworkController().getDevicePlayerNumber();
-        if(gameEngine.placePeep(card, position, playerId)) {
+        if (gameEngine.placePeep(card, position, playerId)) {
             cState = CState.END_TURN;
             return true;
         }
@@ -152,6 +140,9 @@ public class GameController implements IGameController {
         if ((cState != CState.END_TURN && cState != CState.PLACE_FIGURE) || !isMyTurn()) return;
 
         gameEngine.markAllCards();
+
+        checkPoints(currentCard);
+
         CarcassonneMessage message = new CarcassonneMessage(CarcassonneMessage.END_TURN);
         GameState state = getGameState();
         state.currentPlayer = state.getNextPlayer();
@@ -159,7 +150,6 @@ public class GameController implements IGameController {
         Log.d("CARDS", "send: " + state.cards.size());
 
         cState = CState.WAITING;
-        isCheating = false;
         currentCard = null;
         CarcassonneApp.getNetworkController().sendMessage(message);
     }
@@ -169,7 +159,6 @@ public class GameController implements IGameController {
         if (cState != CState.WAITING) return;
 
         cState = CState.DRAW_CARD;
-        isCheating = false;
         currentCard = null;
     }
 
@@ -264,18 +253,65 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public void setPoints(ArrayList<Integer> points) {
+    public void setPoints(List<Integer> points, int multiplier) {
         for(int i=0;i<points.size();i++){
-            gameEngine.addScore(points.get(i),i);
+            gameEngine.addScore(points.get(i)*multiplier,i);
         }
     }
 
     @Override
     public void checkPoints(Card card) {
-        ArrayList<Integer> cardscore= gameEngine.getScoreChanges(card);
-        //todo: Weise scores den Objekten zu
-        //todo: Weise objektscores den Peeps zu
-        //setPoints(pointchanges);
+
+        //todo: Kirchen
+
+        List<Score> cardscore = gameEngine.getScoreChanges(card);
+        int mult=1;
+        for(int i=0;i<cardscore.size();i++){
+            Score it=cardscore.get(i);
+            if(it.isClosed()){
+                //Bastele Multiplier zusammen
+                if(it.getBase()==CardSide.CASTLE){
+                    mult=2;
+                }
+                else if(it.getBase()== CardSide.STREET){
+                    mult=1;
+                }
+                else{
+                    mult=0;
+                }
+
+                //Finde most Peep Anzahl
+                int mpoints=0;
+                for(int j=0;j<5;j++){
+                    if(it.getPpeepcount().get(i)>mpoints){
+                        mpoints=it.getPpeepcount().get(i);
+                    }
+                }
+                //Erhöhe Punkte der Spieler, die die meisten Peeps haben
+                ArrayList<Integer> mvps=new ArrayList<>(4);
+                for(int j=0;j<5;j++){
+                    if(it.getPpeepcount().get(i)==mpoints){
+                        mvps.set(i,it.getCardlist().size());
+                    }else{
+                        mvps.set(i,0);
+                    }
+                }
+                setPoints(mvps,mult);
+
+                //entferne gezählte Peeps
+                for (int j = 0; j < it.getPeeplist().size(); j++) {
+                    removePeep(it.getPeeplist().get(j));
+                }
+            }
+            else {
+                //offene Strecken bringen keine Punkte
+            }
+        }
+    }
+
+    private void removePeep(Peep peep) {
+        GameState gs = getGameState();
+        gs.getPeeps().remove(peep);
     }
 
     @Override
@@ -340,10 +376,10 @@ public class GameController implements IGameController {
     }
 
     @Override
-    public void initPlayerMappings(){
-        playerHashMap = new HashMap<Integer, Player>();
-        for (PlayerInfo playerInfo: CarcassonneApp.getNetworkController().getPlayerMappings().values()
-             ) {
+    public void initPlayerMappings() {
+        playerHashMap = new HashMap<>();
+        for (PlayerInfo playerInfo : CarcassonneApp.getNetworkController().getPlayerMappings().values()
+                ) {
             playerHashMap.put(playerInfo.playerNumber, Player.getRaceFromPlayer(playerInfo.raceType, playerInfo.playerNumber));
         }
 

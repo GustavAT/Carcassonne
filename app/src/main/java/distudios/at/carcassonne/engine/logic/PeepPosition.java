@@ -1,6 +1,7 @@
 package distudios.at.carcassonne.engine.logic;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Simon on 26.04.2018.
@@ -14,8 +15,8 @@ public enum PeepPosition {
     BottomLeft, Bottom, BottomRight;
 
 
-    public static ArrayList<PeepPosition> getPeepPositions(){
-        ArrayList<PeepPosition> peepPositions = new ArrayList<PeepPosition>();
+    public static List<PeepPosition> getPeepPositions() {
+        List<PeepPosition> peepPositions = new ArrayList<>();
         peepPositions.add(TopLeft);
         peepPositions.add(Top);
         peepPositions.add(TopRight);

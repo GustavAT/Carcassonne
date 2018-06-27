@@ -6,10 +6,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import distudios.at.carcassonne.engine.logic.Card;
 import distudios.at.carcassonne.engine.logic.CardDataBase;
-import distudios.at.carcassonne.engine.logic.CardSide;
 import distudios.at.carcassonne.engine.logic.GameEngine;
 import distudios.at.carcassonne.engine.logic.GameState;
 import distudios.at.carcassonne.engine.logic.Orientation;
@@ -17,13 +17,11 @@ import distudios.at.carcassonne.engine.logic.Peep;
 import distudios.at.carcassonne.engine.logic.PeepPosition;
 
 import static distudios.at.carcassonne.engine.logic.CardSide.CASTLE;
-import static distudios.at.carcassonne.engine.logic.CardSide.GRASS;
 import static distudios.at.carcassonne.engine.logic.CardSide.STREET;
 import static distudios.at.carcassonne.engine.logic.Orientation.EAST;
 import static distudios.at.carcassonne.engine.logic.Orientation.NORTH;
 import static distudios.at.carcassonne.engine.logic.Orientation.SOUTH;
 import static distudios.at.carcassonne.engine.logic.Orientation.WEST;
-
 import static distudios.at.carcassonne.engine.logic.PeepPosition.Bottom;
 import static distudios.at.carcassonne.engine.logic.PeepPosition.Center;
 import static distudios.at.carcassonne.engine.logic.PeepPosition.Left;
@@ -40,66 +38,7 @@ public class TestPlacePeeps {
     public void setUp() {
         ge = new GameEngine();
         ge.init(Orientation.NORTH);
-        gs = ge.getGamestate();
-
-        //Settings...
-       /* Card cardI = new Card(4, 1, 0, NORTH);
-        Card cardII = new Card(21, 2, 0, WEST);
-        Card cardIII = new Card(13, 3, 0, NORTH);
-
-        Card cardIV = new Card(52, -1, 0, EAST);
-        Card cardV = new Card(30, -2, 0, EAST);
-        Card cardVI = new Card(18, -3, 0, NORTH);
-        Card cardVII = new Card(13, -4, 0, WEST);
-
-        Card cardVIII = new Card(18, 0, 1, EAST);
-        Card cardIX = new Card(35, 2, 1, WEST);
-        Card cardX = new Card(24, 3, 1, SOUTH);
-
-        Card cardXI = new Card(24, 0, 2, SOUTH);
-
-        Card cardXII = new Card(60, 0, -1, SOUTH);
-        Card cardXIII = new Card(52, 1, -1, EAST);
-        Card cardXIV = new Card(32, 2, -1, NORTH);
-        Card cardXV = new Card(2, 3, -1, WEST);
-
-        Card cardXVI = new Card(24, 0, -2, WEST);
-        Card cardXVII = new Card(35, 1, -2, EAST);
-        Card cardXVIII = new Card(52, 2, -2, NORTH);
-
-        Card cardXIX = new Card(40, 0, -3, WEST);
-        Card cardXX = new Card(35, 1, -3, NORTH);
-
-        Card cardXXI = new Card(52, 0, -4, NORTH);
-
-        Card cardXXII = new Card(29, 0, -5, NORTH);
-        Card cardXXIII = new Card(69, 1, -5, SOUTH);
-
-
-        ge.placeCard(cardI);
-        ge.placeCard(cardII);
-        ge.placeCard(cardIII);
-        ge.placeCard(cardIV);
-        ge.placeCard(cardV);
-        ge.placeCard(cardVI);
-        ge.placeCard(cardVII);
-        ge.placeCard(cardVIII);
-        ge.placeCard(cardIX);
-        ge.placeCard(cardX);
-        ge.placeCard(cardXI);
-        ge.placeCard(cardXII);
-        ge.placeCard(cardXIII);
-        ge.placeCard(cardXIV);
-        ge.placeCard(cardXV);
-        ge.placeCard(cardXVI);
-        ge.placeCard(cardXVII);
-        ge.placeCard(cardXVIII);
-        ge.placeCard(cardXIX);
-        ge.placeCard(cardXX);
-        ge.placeCard(cardXXI);
-        ge.placeCard(cardXXII);
-        ge.placeCard(cardXXIII);
-        ge.placeCard(cardXXIII);*/
+        gs = ge.getState();
     }
 
     @Test
@@ -119,13 +58,14 @@ public class TestPlacePeeps {
         //ge.markCard(cardI,Top,CASTLE);
         ge.placeCard(cardIII);
 
-        ArrayList<PeepPosition> markedBorders = ge.getMarkedBorders(cardIII, CASTLE);
-        Assert.assertTrue(markedBorders.size()==1);
+        List<PeepPosition> markedBorders = ge.getMarkedBorders(cardIII, CASTLE);
+        Assert.assertTrue(markedBorders.size() == 1);
         Assert.assertTrue(markedBorders.contains(Bottom));
         //Assert.assertTrue(markedBorders.contains(Top));
     }
 
     @Test
+
     public void checkGetUnmarkedBuildingBorders() {
         //Settings...
         Card cardI = new Card(4, 1, 0, NORTH);
@@ -185,10 +125,10 @@ public class TestPlacePeeps {
         //cardXVII.setMark(Top );
         //cardXVI.setMark(Left);
         int cardID = cardXV.getId();
-        ArrayList<Orientation> buildingOs = cdb.getMatchingOrientations(cardID,STREET);
+        List<Orientation> buildingOs = cdb.getMatchingOrientations(cardID, STREET);
 
-        ArrayList<PeepPosition> unmarkedBuildingBorders = new ArrayList<PeepPosition>();
-        unmarkedBuildingBorders = ge.getUnmarkedBuildingBorders(cardXV, buildingOs, STREET);
+        List<PeepPosition> unmarkedBuildingBorders = new ArrayList<PeepPosition>();
+        unmarkedBuildingBorders = ge.getUnmarkedBuildingBorders(cardXV, STREET);
         Assert.assertTrue(unmarkedBuildingBorders.size() == 3);
         Assert.assertTrue(unmarkedBuildingBorders.contains(Bottom));
         Assert.assertTrue(unmarkedBuildingBorders.contains(Right));
@@ -254,29 +194,30 @@ public class TestPlacePeeps {
         ge.placeCard(cardXXIII);
         ge.placeCard(cardXXIV);
 
-        ge.markCard(cardXXI,Top,STREET);
+        ge.markCard(cardXXI, Top, STREET);
         ge.markAllCards();
         ge.placeCard(cardXXII);
-        ge.placePeep(cardVII,Center,3);
+        ge.placePeep(cardVII, Center, 3);
         //ge.markAllCards();
         //ge.placeCard(cardXV);
         //cardXVI.setMark(Left);
         //cardXIV.setMark(Right);
 
-        ArrayList<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
-        ArrayList<Peep> peeps = gs.getPeeps();
+        List<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
+        List<Peep> peeps = gs.getPeeps();
         unmarkedBorders = ge.getUnmarkedBorders(cardXXII, STREET);
-        Assert.assertTrue(unmarkedBorders.size()==3);
+        Assert.assertTrue(unmarkedBorders.size() == 3);
         Assert.assertTrue(unmarkedBorders.contains(Bottom));
         Assert.assertTrue(unmarkedBorders.contains(Right));
         Assert.assertTrue(unmarkedBorders.contains(Left));
+        //Assert.assertTrue(unmarkedBorders.contains(Left));
         //Assert.assertTrue(unmarkedBorders.contains(Top));
         //Assert.assertTrue(unmarkedBorders.contains(Center));
         //Assert.assertTrue(peeps.size()==1);
     }
 
     @Test
-    public void checkGetALLFigurePos(){
+    public void checkGetALLFigurePos() {
         //Settings...
         Card cardI = new Card(5, 1, 0, NORTH);
         Card cardXIII = new Card(60, 0, -1, SOUTH);
@@ -306,12 +247,12 @@ public class TestPlacePeeps {
         ge.markAllCards();
         ge.placeCard(cardXV);
 
-        ArrayList<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
+        List<PeepPosition> unmarkedBorders = new ArrayList<PeepPosition>();
         unmarkedBorders = ge.getUnmarkedBorders(cardI, STREET);
 
-        ArrayList<PeepPosition> allUnmarkedBorders = new ArrayList<PeepPosition>();
+        List<PeepPosition> allUnmarkedBorders = new ArrayList<PeepPosition>();
         allUnmarkedBorders = ge.getALLFigurePos(cardI);
-        Assert.assertTrue(allUnmarkedBorders.size()==1);
+        Assert.assertTrue(allUnmarkedBorders.size() == 1);
         //Assert.assertTrue(allUnmarkedBorders.contains(Bottom));
         //Assert.assertTrue(allUnmarkedBorders.contains(Right));
         //Assert.assertTrue(allUnmarkedBorders.contains(Left));
@@ -378,10 +319,10 @@ public class TestPlacePeeps {
         ge.placeCard(cardXXIV);
 
         cardIX.setMark(Top);
-        ge.markCard(cardXII,Left,CASTLE);
-        ArrayList<Integer> markedPos = cardXII.getMarks();
+        ge.markCard(cardXII, Left, CASTLE);
+        List<Integer> markedPos = cardXII.getMarks();
 
-        Assert.assertTrue(markedPos.size()==2);
+        Assert.assertTrue(markedPos.size() == 2);
         Assert.assertTrue(markedPos.contains(PeepPosition.fromPosition(Bottom)));
         //Assert.assertTrue(markedPos.contains(Right));
         Assert.assertTrue(markedPos.contains(PeepPosition.fromPosition(Left)));
@@ -390,7 +331,7 @@ public class TestPlacePeeps {
     }
 
     @Test
-    public void checkPlacePeep(){
+    public void checkPlacePeep() {
         //Settings...
         Card cardI = new Card(4, 1, 0, NORTH);
         Card cardII = new Card(52, -1, 0, EAST);
@@ -450,11 +391,11 @@ public class TestPlacePeeps {
         //ge.markAllCards();
         ge.placeCard(cardXVII);
 
-        ge.placePeep(cardXVII,Bottom,4);
-        ArrayList<Integer> marks = cardXVII.getMarks();
-        ArrayList<Peep> peeps = gs.getPeeps();
+        ge.placePeep(cardXVII, Bottom, 4);
+        List<Integer> marks = cardXVII.getMarks();
+        List<Peep> peeps = gs.getPeeps();
 
-        Assert.assertTrue(marks.size()==2);
+        Assert.assertTrue(marks.size() == 2);
         Assert.assertTrue(marks.contains(PeepPosition.fromPosition(Bottom)));
         Assert.assertTrue(marks.contains(PeepPosition.fromPosition(Left)));
         //Assert.assertTrue(marks.contains(Left));
@@ -463,16 +404,15 @@ public class TestPlacePeeps {
 
         Assert.assertTrue(peeps.size() == 1);
 
-        for (Peep peep:peeps) {
-            System.out.println("Card: "+peep.getCardId());
-            System.out.println("Pos: "+peep.getPeepPosition());
-            System.out.println("Player: "+peep.getPlayerID());
+        for (Peep peep : peeps) {
+            System.out.println("Card: " + peep.getCardId());
+            System.out.println("Pos: " + peep.getPeepPosition());
+            System.out.println("Player: " + peep.getPlayerID());
             System.out.println();
         }
     }
 
     @Test
-    @Ignore
     public void checkMarkAllCards(){
         //Settings...
         Card cardI = new Card(60, 0, -1, SOUTH);
@@ -495,9 +435,9 @@ public class TestPlacePeeps {
         ge.markCard(cardI,Right,STREET);
 
         ge.markAllCards();
-        ArrayList<Integer> marksI = cardI.getMarks();
-        ArrayList<Integer> marksII = cardII.getMarks();
-        ArrayList<Integer> marksIII = cardIII.getMarks();
+        List<Integer> marksI = cardI.getMarks();
+        List<Integer> marksII = cardII.getMarks();
+        List<Integer> marksIII = cardIII.getMarks();
 
         Assert.assertTrue(marksI.size() == 2);
         //Assert.assertTrue(marksI.contains(Bottom));
@@ -520,5 +460,38 @@ public class TestPlacePeeps {
         //Assert.assertTrue(marksIII.contains(Top));
         //Assert.assertTrue(marksIII.contains(Center));
 
+    }
+
+    @Test
+    public void checkDoubleStreet() {
+        Card cardI = new Card(57, -3, 1, NORTH);
+        Card cardII = new Card(54, -3, 2, NORTH);
+
+        ge.placeCard(cardII);
+        ge.markCard(cardII, Top, STREET);
+        ge.markAllCards();
+        ge.placeCard(cardI);
+        List<PeepPosition> marks = ge.getALLFigurePos(cardI);
+        Assert.assertTrue(marks.size() == 0);
+    }
+
+    @Test
+    public void test() {
+        Card cardI = new Card(2, -3, 1, WEST);
+        Card cardII = new Card(52, -4, 1, EAST);
+
+        ge.placeCard(cardII);
+        //ge.markCard(cardII, Right,STREET);
+        ge.markAllCards();
+        ge.placeCard(cardI);
+        List<PeepPosition> pos = ge.getALLFigurePos(cardI);
+        Assert.assertTrue(pos.size() == 2);
+        Assert.assertTrue(pos.contains(Center));
+        Assert.assertTrue(pos.contains(Left));
+        //ge.placePeep(cardI, Center, 2);
+        /*ArrayList<PeepPosition> marks = cardI.getPosMarks();
+        Assert.assertTrue(marks.size() == 1);
+        Assert.assertTrue(marks.contains(Center));
+        ArrayList<Peep> peeps = gs.getPeeps();*/
     }
 }

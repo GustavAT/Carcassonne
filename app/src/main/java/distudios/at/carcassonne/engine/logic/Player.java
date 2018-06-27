@@ -2,7 +2,6 @@ package distudios.at.carcassonne.engine.logic;
 
 public class Player {
 
-    public PlayerColors playerColor;
     public int peeps = 10;
     public int playerID;
 
@@ -16,13 +15,13 @@ public class Player {
     public float peepStrengthMultiplierPerOtherPeep = 1;
 
     //TODO: SIMON EINBAU IN MEEPLE SET
-    // Can set multiple peeps on own player ID
+    // Kann mehrere Bauwerke auf einer Karte besetzen
     public Boolean canSetMultiplePeeps = false;
-    // Can set multiple peeps on other player ID
+    // Ignorieren von marks
     public Boolean canSetOnExistingPeeps = false;
-    // Can only set peeops on other player ID
+    // Setzen nur auf markierte Seiten
     public Boolean canOnlySetOnExisitingPeeps = false;
-    // Ccan Convert other player ID peeps when they have multiple on same field.
+    // Bei geteilten Bauwerken einen Gegner-Peep in eigenen Umwandeln
     public Boolean canConvertPeeps = false;
     //CONVERTS A peep when they have multiples of his strength
     public float convertsPeepsOnMultipleOf = 1;
@@ -31,8 +30,8 @@ public class Player {
         this.playerID = playerID;
     }
 
-    public static Player getRaceFromPlayer(int race, int playerID){
-        switch (race){
+    public static Player getRaceFromPlayer(int race, int playerID) {
+        switch (race) {
             case 1:
                 return new Player(playerID);
 

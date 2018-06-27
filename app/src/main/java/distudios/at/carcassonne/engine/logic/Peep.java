@@ -21,7 +21,8 @@ public class Peep {
     @JsonField
     private int playerID;
 
-    public Peep() {}
+    public Peep() {
+    }
 
     public Peep(Card card, PeepPosition peepPosition, int playerID) {
         this.peepPosition = peepPosition;
@@ -33,7 +34,9 @@ public class Peep {
         return cardId;
     }
 
-    public void setCardId(int cardId) {this.cardId = cardId;}
+    public void setCardId(int cardId) {
+        this.cardId = cardId;
+    }
 
     public PeepPosition getPeepPosition(){return peepPosition;}
 

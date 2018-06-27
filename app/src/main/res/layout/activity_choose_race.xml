@@ -30,192 +30,192 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="24dp"
+        android:fontFamily="SF Distant Galaxy"
         android:text="@string/pick_a_race"
         android:textAlignment="center"
+        android:textColor="#d9bd00"
         android:textSize="40sp"
         android:textStyle="bold"
-        android:fontFamily="SF Distant Galaxy"
-        android:textColor="#d9bd00"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlHardcoded"
-        app:layout_constraintHorizontal_bias="0.476"/>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintTop_toBottomOf="@+id/textView_lable">
-
-    <LinearLayout
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        >
-
-        <Button
-            android:id="@+id/terran"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/terran"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/zerg"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/zerg"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/protoss"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/protoss"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </LinearLayout>
+        tools:ignore="RtlHardcoded" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/textView_lable"
-        tools:layout_editor_absoluteX="8dp">
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/textView_lable">
 
-        <Button
-            android:id="@+id/goauld"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/goauld"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
 
-        <Button
-            android:id="@+id/dalek"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/dalek"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/terran"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:text="@string/terran"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/klingon"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            <Button
+                android:id="@+id/zerg"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
 
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/klingon"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:text="@string/zerg"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <Button
+                android:id="@+id/protoss"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:text="@string/protoss"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/textView_lable"
+            tools:layout_editor_absoluteX="8dp">
+
+            <Button
+                android:id="@+id/goauld"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:text="@string/goauld"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/dalek"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:text="@string/dalek"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/klingon"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:text="@string/klingon"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/textView_lable"
+            tools:layout_editor_absoluteX="8dp">
+
+            <Button
+                android:id="@+id/federation"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:autoSizeTextType="uniform"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/federation"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/scientology"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:autoSizeTextType="uniform"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/scientology"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/supersajan"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:autoSizeTextType="uniform"
+                android:background="#00000000"
+                android:fontFamily="SF Distant Galaxy"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/superSajan"
+                android:textColor="#d9bd00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/textView_lable"
-        tools:layout_editor_absoluteX="8dp">
-
-        <Button
-            android:id="@+id/federation"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/federation"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:autoSizeTextType="uniform"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/scientology"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/scientology"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:autoSizeTextType="uniform"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <Button
-            android:id="@+id/supersajan"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:fontFamily="SF Distant Galaxy"
-            android:text="@string/superSajan"
-            android:textColor="#d9bd00"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:autoSizeTextType="uniform"/>
-
-    </LinearLayout>
-</LinearLayout>
 </android.support.constraint.ConstraintLayout>
