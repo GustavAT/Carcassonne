@@ -1,7 +1,5 @@
 package distudios.at.carcassonne;
 
-import android.graphics.Color;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +10,7 @@ public class TextCoreAndEnums {
 
     @Test
     public void testCarcassonneState() {
-       CState state =  CState.DRAW_CARD;
+        CState state = CState.DRAW_CARD;
 
         Assert.assertEquals(state.getValue(), CState.DRAW_CARD.getValue());
     }

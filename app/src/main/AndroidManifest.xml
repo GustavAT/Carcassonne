@@ -55,7 +55,9 @@
 
         <activity
             android:name=".gui.field.GameActivity"
-            android:label="@string/title_activity_game">
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_game"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.groups.Group2Activity" />

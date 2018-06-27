@@ -2,8 +2,6 @@ package distudios.at.carcassonne.engine.logic;
 
 import android.util.Pair;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public interface IGameController {

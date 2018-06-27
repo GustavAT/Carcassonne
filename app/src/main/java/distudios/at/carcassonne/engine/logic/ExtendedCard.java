@@ -14,7 +14,8 @@ public class ExtendedCard {
     private boolean wappen;
     private boolean splitStop;
 
-    public ExtendedCard() {}
+    public ExtendedCard() {
+    }
 
     public ExtendedCard(int id, CardSide top, CardSide left, CardSide right, CardSide down, CardSide topLeftCorner, CardSide topRightCorner, CardSide bottomLeftCorner, CardSide bottomRightCorner) {
         this.id = id;
